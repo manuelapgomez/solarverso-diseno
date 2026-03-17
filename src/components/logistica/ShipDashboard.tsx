@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./logistica.css";
-import { Barco, inicialBarcosData, inicialMgsHuerfanasData, MgsHuerfana } from "../../data/mockLogistica";
+import { type Barco, inicialBarcosData, inicialMgsHuerfanasData, type MgsHuerfana } from "../../data/mockLogistica";
 import { ShipCard } from "./ShipCard";
 import { ShipDetailSlide } from "./ShipDetailSlide";
 import { OrphanedPanel } from "./OrphanedPanel";

@@ -1,5 +1,5 @@
 import React from "react";
-import { MgsHuerfana } from "../../data/mockLogistica";
+import { type MgsHuerfana } from "../../data/mockLogistica";
 
 interface OrphanedPanelProps {
   orphans: MgsHuerfana[];

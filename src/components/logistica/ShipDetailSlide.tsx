@@ -1,5 +1,5 @@
 import React from "react";
-import { Barco } from "../../data/mockLogistica";
+import { type Barco } from "../../data/mockLogistica";
 
 interface ShipDetailSlideProps {
   ship: Barco | null;
@@ -16,59 +16,63 @@ export const ShipDetailSlide: React.FC<ShipDetailSlideProps> = ({ ship, isOpen, 
   return (
     <div className={`detail-slide ${isOpen ? 'open' : ''}`}>
       <div className="detail-header">
-        <div>
-          <h2 style={{ margin: 0, fontSize: '20px', color: '#f8fafc' }}>{ship.nombre}</h2>
-          <span style={{ fontSize: '13px', color: '#94a3b8' }}>BL: {ship.bl_code} | ETA: {ship.eta}</span>
-        </div>
         <button className="close-btn" onClick={onClose}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
+          ✕ Cerrar
         </button>
       </div>
 
-      <div className="detail-scroll">
-        <h3 style={{ fontSize: '14px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '16px' }}>
-          Inventario y Asignaciones
-        </h3>
+      <div className="cargo-graphic-wrapper">
+        <div style={{ position: 'absolute', top: '24px', left: '24px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#111827" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 13V9c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v4"></path>
+            <path d="M2 13l4 3 4-3 4 3 4-3 4 3"></path>
+          </svg>
+          <span style={{ fontSize: '12px', color: '#4b5563', fontFamily: 'monospace' }}>
+            BL: {ship.bl_code}
+          </span>
+        </div>
         
-        <div className="equipment-list">
-          {equiposKeys.map(key => {
-            const asig = ship.asignaciones[key];
-            return (
-              <div key={key} className="equipment-item">
-                <div className="equipment-item-header">
-                  <span className="equipment-type">{key}</span>
-                  {asig ? (
-                    <span className="equipment-status assigned">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                      Asignado
-                    </span>
-                  ) : (
-                    <span className="equipment-status unassigned">Pendiente</span>
-                  )}
-                </div>
+        {/* Gráfico representativo del barco a la derecha */}
+        <div style={{ width: '240px', height: '120px', backgroundColor: '#f3f4f6', borderRadius: '12px', borderBottom: '8px solid #ef4444', display: 'flex', alignItems: 'flex-end', padding: '12px', gap: '4px', marginLeft: 'auto' }}>
+           {/* Mockup de contenedores */}
+           <div style={{ width: '40px', height: '40px', border: '1px solid #d1d5db', background: '#fef3c7', borderRadius: '4px' }}></div>
+           <div style={{ width: '60px', height: '40px', border: '1px solid #d1d5db', background: '#fee2e2', borderRadius: '4px' }}></div>
+           <div style={{ width: '40px', height: '40px', border: '1px solid #d1d5db', background: '#e0e7ff', borderRadius: '4px' }}></div>
+        </div>
+      </div>
 
+      <div className="detail-scroll">
+        {equiposKeys.map(key => {
+          const asig = ship.asignaciones[key];
+          return (
+            <div key={key} className="equipment-category">
+              <h3 className="equipment-category-title">{key}</h3>
+              
+              <div className="pills-grid">
                 {asig ? (
-                  <div className="assignment-card">
-                    <div className="assignment-info">
-                      <span className="assignment-mgs">Destino: {asig.nombreMgs}</span>
-                      <span className="assignment-eq">ID Eq: {asig.idEquipo}</span>
-                    </div>
-                    <button className="swap-btn" onClick={() => onOpenSwap(key)}>
-                      Reubicar
-                    </button>
+                  // Pill asignado
+                  <div className="mgs-pill" onClick={() => onOpenSwap(key)} title="Reubicar Minigranja">
+                    <span>{asig.nombreMgs}</span>
+                    <svg className="edit-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
                   </div>
                 ) : (
-                  <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>
-                    No hay carga de este tipo o no ha sido asignada aún.
-                  </p>
+                  // Pill vacío (simular slots)
+                  <div className="mgs-pill unassigned">
+                    Slot Vacío
+                  </div>
+                )}
+                
+                {/* Mocking extra pills for visual density as requested by Figma composition */}
+                {key !== 'Reconectadores' && (
+                   <div className="mgs-pill unassigned">Slot Vacío</div>
                 )}
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

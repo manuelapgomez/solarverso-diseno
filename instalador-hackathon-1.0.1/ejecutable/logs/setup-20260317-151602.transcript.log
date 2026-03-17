@@ -1,0 +1,84 @@
+**********************
+Inicio de la transcripci?n de Windows PowerShell
+Hora de inicio: 20260317151602
+Nombre de usuario: DESKTOP-42RUIUA\manue
+Usuario RunAs: DESKTOP-42RUIUA\manue
+Nombre de la configuraci?n: 
+M?quina: DESKTOP-42RUIUA (Microsoft Windows NT 10.0.26200.0)
+Aplicaci?n host: powershell -NoProfile -ExecutionPolicy Bypass -File C:\Users\manue\OneDrive\Escritorio\Solarverso\instalador-hackathon-1.0.1\ejecutable\setup-hackathon.ps1
+Id. de proceso: 10404
+PSVersion: 5.1.26100.7920
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.7920
+BuildVersion: 10.0.26100.7920
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+[INFO] Archivo de logs: C:\Users\manue\OneDrive\Escritorio\Solarverso\instalador-hackathon-1.0.1\ejecutable\logs\setup-20260317-151602.log
+
+==> Validando permisos y prerequisitos
+[INFO] Se usar?? winget para instalaci??n de paquetes.
+[OK] Prerequisitos listos.
+
+==> Instalando Git
+[OK] Git instalado (o ya presente).
+
+==> Instalando Node.js LTS
+[INFO] Node.js LTS ya estaba instalado y no requiere actualizaci??n.
+[OK] Node.js LTS disponible para uso.
+
+==> Instalando Python 3.12
+[OK] Python 3.12 instalado (o ya presente).
+
+==> Habilitando Corepack y pnpm
+
+Preparing pnpm@latest for immediate activation...
+[OK] pnpm habilitado v??a Corepack.
+
+==> Validando versiones instaladas
+[OK] git -> git version 2.53.0.windows.2
+[OK] node -> v24.14.0
+[OK] pnpm -> 10.32.1
+[OK] py launcher -> Python 3.14.3
+
+==> Configuraci??n de llave SSH para GitHub
+[WARN] Correo inv??lido. Int??ntalo de nuevo.
+[WARN] Correo inv??lido. Int??ntalo de nuevo.
+[WARN] Correo inv??lido. Int??ntalo de nuevo.
+
+[OK] Git configurado con user.email=manuelap@solenium.co
+
+==> Generando llave SSH en C:\Users\manue\.ssh\id_ed25519
+Generating public/private ed25519 key pair.
+Your identification has been saved in C:\Users\manue\.ssh\id_ed25519
+Your public key has been saved in C:\Users\manue\.ssh\id_ed25519.pub
+The key fingerprint is:
+SHA256:6qmlumqtwtEJWz8V/COIqO8lJsLYW0uDoFg5PsrC0pQ manuelap@solenium.co
+The key's randomart image is:
++--[ED25519 256]--+
+|      .          |
+|       o         |
+|  . . . o        |
+| o + . o o       |
+|o O.o . S .      |
+|*BE= o .         |
+|O=X = +          |
+|*BoO * .         |
+|B=*o+.o          |
++----[SHA256]-----+
+[OK] Llave SSH generada correctamente.
+[OK] La llave p??blica fue copiada al portapapeles.
+
+Copia esta llave p??blica en GitHub > Settings > SSH and GPG keys:
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICkUNYzF1ZldTUfxl/QtIwqRlGMw8mtc6IyF956vYXbB manuelap@solenium.co
+
+Setup completado. Recomendaci??n: cerrar y abrir la terminal antes de empezar a desarrollar.
+Si PowerShell bloquea pnpm por pol??ticas, usa: pnpm.cmd --version
+Log guardado en: C:\Users\manue\OneDrive\Escritorio\Solarverso\instalador-hackathon-1.0.1\ejecutable\logs\setup-20260317-151602.log
+Transcript guardado en: C:\Users\manue\OneDrive\Escritorio\Solarverso\instalador-hackathon-1.0.1\ejecutable\logs\setup-20260317-151602.transcript.log
+**********************
+Fin de la transcripci?n de Windows PowerShell
+Hora de finalizaci?n: 20260317152431
+**********************

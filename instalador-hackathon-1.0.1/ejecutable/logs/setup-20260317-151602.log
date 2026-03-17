@@ -1,0 +1,28 @@
+[2026-03-17 15:16:02] Inicio de setup.
+[2026-03-17 15:16:02] INFO Archivo de logs: C:\Users\manue\OneDrive\Escritorio\Solarverso\instalador-hackathon-1.0.1\ejecutable\logs\setup-20260317-151602.log
+[2026-03-17 15:16:02] STEP Validando permisos y prerequisitos
+[2026-03-17 15:16:02] INFO Se usará winget para instalación de paquetes.
+[2026-03-17 15:16:02] OK Prerequisitos listos.
+[2026-03-17 15:16:02] STEP Instalando Git
+[2026-03-17 15:16:38] OK Git instalado (o ya presente).
+[2026-03-17 15:16:38] STEP Instalando Node.js LTS
+[2026-03-17 15:16:40] INFO Node.js LTS ya estaba instalado y no requiere actualización.
+[2026-03-17 15:16:40] OK Node.js LTS disponible para uso.
+[2026-03-17 15:16:40] STEP Instalando Python 3.12
+[2026-03-17 15:17:10] OK Python 3.12 instalado (o ya presente).
+[2026-03-17 15:17:10] STEP Habilitando Corepack y pnpm
+[2026-03-17 15:17:14] OK pnpm habilitado vía Corepack.
+[2026-03-17 15:17:14] STEP Validando versiones instaladas
+[2026-03-17 15:17:14] OK git -> git version 2.53.0.windows.2
+[2026-03-17 15:17:14] OK node -> v24.14.0
+[2026-03-17 15:17:15] OK pnpm -> 10.32.1
+[2026-03-17 15:17:15] OK py launcher -> Python 3.14.3
+[2026-03-17 15:17:15] STEP Configuración de llave SSH para GitHub
+[2026-03-17 15:17:15] WARN Correo inválido. Inténtalo de nuevo.
+[2026-03-17 15:24:03] WARN Correo inválido. Inténtalo de nuevo.
+[2026-03-17 15:24:07] WARN Correo inválido. Inténtalo de nuevo.
+[2026-03-17 15:24:20] OK Git configurado con user.email=manuelap@solenium.co
+[2026-03-17 15:24:20] STEP Generando llave SSH en C:\Users\manue\.ssh\id_ed25519
+[2026-03-17 15:24:21] OK Llave SSH generada correctamente.
+[2026-03-17 15:24:21] OK La llave pública fue copiada al portapapeles.
+[2026-03-17 15:24:31] Fin de setup.

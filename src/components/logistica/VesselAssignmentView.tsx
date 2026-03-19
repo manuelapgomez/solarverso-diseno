@@ -2,16 +2,22 @@ import React, { useState, useMemo } from "react";
 import "./logistica.css";
 import { VesselPremiumCard } from "./VesselPremiumCard";
 import { ShipDetailSlide } from "./ShipDetailSlide";
-import { SwapModal } from "./SwapModal";
 import { OrphanedPanel } from "./OrphanedPanel";
 import { PortfoliosPanel } from "./PortfoliosPanel";
-import { inicialBarcosData, inicialMgsHuerfanasData, mockPortfolios, type SlotCarga } from "../../data/mockLogistica";
+import { mockPortfolios, type SlotCarga, type Barco, type MgsHuerfana } from "../../data/mockLogistica";
 import { SupplyFiltersBar, type FiltersState } from "./SupplyFiltersBar";
 
-export const VesselAssignmentView: React.FC = () => {
-  const [barcos, setBarcos] = useState(inicialBarcosData);
-  const [mgsHuerfanas, setMgsHuerfanas] = useState(inicialMgsHuerfanasData);
+interface VesselAssignmentViewProps {
+  barcos: Barco[];
+  mgsHuerfanas: MgsHuerfana[];
+  onOpenSwap: (slot: SlotCarga, slotIndex: number, shipId: string) => void;
+}
 
+export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({ 
+  barcos, 
+  mgsHuerfanas, 
+  onOpenSwap 
+}) => {
   // Filters State
   const [filters, setFilters] = useState<FiltersState>({
     search: "",
@@ -24,8 +30,6 @@ export const VesselAssignmentView: React.FC = () => {
 
   const [selectedShipId, setSelectedShipId] = useState<string | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  const [isSwapModalOpen, setIsSwapModalOpen] = useState(false);
-  const [swapData, setSwapData] = useState<{ slot: SlotCarga; slotIndex: number; shipId: string } | null>(null);
 
   // Deep Filtering Logic
   const filteredBarcos = useMemo(() => {
@@ -49,50 +53,6 @@ export const VesselAssignmentView: React.FC = () => {
   const handleOpenShipDetail = (id: string) => {
     setSelectedShipId(id);
     setIsDetailOpen(true);
-  };
-
-  const handleOpenSwap = (slot: SlotCarga, slotIndex: number, shipId: string) => {
-    setSelectedShipId(shipId);
-    setSwapData({ slot, slotIndex, shipId });
-    setIsSwapModalOpen(true);
-  };
-
-  const handlePerformSwap = (slotIndex: number, targetMgsId: string, targetMgsNombre: string, equipoRequerido: string) => {
-    if (!swapData) return;
-
-    const { shipId } = swapData;
-
-    // Update ships
-    const newBarcos = barcos.map(ship => {
-      if (ship.id === shipId) {
-        const newSlots = [...ship.slots];
-        
-        // If there was something already there, it goes back to orphans
-        // const oldMgsId = newSlots[slotIndex].mgsAsignada;
-        // const oldMgsNombre = newSlots[slotIndex].nombreMgs;
-        // const oldTipo = newSlots[slotIndex].tipoEquipo || equipoRequerido;
-
-        newSlots[slotIndex] = {
-          ...newSlots[slotIndex],
-          tipoEquipo: equipoRequerido,
-          mgsAsignada: targetMgsId,
-          nombreMgs: targetMgsNombre
-        };
-        
-        return { ...ship, slots: newSlots };
-      }
-      return ship;
-    });
-
-    // Remove the new MGS from orphans
-    const newOrphans = mgsHuerfanas.filter(m => m.id !== targetMgsId);
-    
-    // Add the old one back if it existed (Logic can be refined, but for now just replacing)
-
-    setBarcos(newBarcos);
-    setMgsHuerfanas(newOrphans);
-    setIsSwapModalOpen(false);
-    setSwapData(null);
   };
 
   const selectedShip = barcos.find(s => s.id === selectedShipId);
@@ -136,11 +96,11 @@ export const VesselAssignmentView: React.FC = () => {
             <div className="ships-grid-container" onClick={() => setSelectedShipId(null)}>
               {filteredBarcos.map(ship => (
                 <VesselPremiumCard
-                  key={ship.id}
-                  ship={ship}
-                  isActive={ship.id === selectedShipId}
-                  onClick={() => handleOpenShipDetail(ship.id)}
-                  onOpenSwap={(slot, index) => handleOpenSwap(slot, index, ship.id)}
+                   key={ship.id}
+                   ship={ship}
+                   isActive={ship.id === selectedShipId}
+                   onClick={() => handleOpenShipDetail(ship.id)}
+                   onOpenSwap={(slot, index) => onOpenSwap(slot, index, ship.id)}
                 />
               ))}
             </div>
@@ -163,23 +123,12 @@ export const VesselAssignmentView: React.FC = () => {
             <ShipDetailSlide 
               ship={selectedShip} 
               onClose={() => setIsDetailOpen(false)} 
-              onOpenSwap={(slot, index) => handleOpenSwap(slot, index, selectedShipId!)}
+              onOpenSwap={(slot, index) => onOpenSwap(slot, index, selectedShipId!)}
               isOpen={isDetailOpen}
             />
           )}
         </div>
       </div>
-
-      {/* Modal de Reasignación */}
-      <SwapModal 
-        isOpen={isSwapModalOpen}
-        onClose={() => setIsSwapModalOpen(false)}
-        ship={selectedShip!}
-        slot={swapData?.slot || null}
-        slotIndex={swapData?.slotIndex ?? null}
-        orphans={mgsHuerfanas}
-        onSwap={handlePerformSwap}
-      />
     </div>
   );
 };

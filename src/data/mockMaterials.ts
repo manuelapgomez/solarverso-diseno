@@ -1,6 +1,8 @@
 export interface MaterialStatus {
   status: 'Zarpe' | 'Ingreso a Zona Franca' | 'Licencia de importación' | 'Nacionalización' | 'Faltante';
   date?: string;
+  shipId?: string;
+  slotIndex?: number;
 }
 
 export interface MaterialProject {
@@ -44,23 +46,23 @@ export const mockMaterialTrackingData: InvestorGroup[] = [
             name: 'MiniGranja 0001 — Uruaco1',
             location: 'COLATLT14P2_LURUACO_SUR',
             materials: {
-              panels: { status: 'Zarpe', date: 'FEB.26/25' },
-              inverters: { status: 'Zarpe', date: 'FEB.26/25' },
-              reconectador: { status: 'Ingreso a Zona Franca', date: 'FEB.26/25' },
-              tracker: { status: 'Licencia de importación', date: 'FEB.26/25' },
-              shelter: { status: 'Nacionalización', date: 'FEB.26/25' }
+              panels: { status: 'Zarpe', date: 'FEB.26/25', shipId: 'SHIP-001', slotIndex: 0 },
+              inverters: { status: 'Zarpe', date: 'FEB.26/25', shipId: 'SHIP-001', slotIndex: 1 },
+              reconectador: { status: 'Ingreso a Zona Franca', date: 'FEB.26/25', shipId: 'SHIP-001', slotIndex: 2 },
+              tracker: { status: 'Licencia de importación', date: 'FEB.26/25', shipId: 'SHIP-001', slotIndex: 3 },
+              shelter: { status: 'Nacionalización', date: 'FEB.26/25', shipId: 'SHIP-001', slotIndex: 4 }
             }
           },
           {
             id: 'proj-2',
-            name: 'MiniGranja 0001 — Uruaco1',
+            name: 'MiniGranja 0001 — Uruaco2',
             location: 'COLATLT14P2_LURUACO_SUR',
             materials: {
               panels: { status: 'Faltante' },
               inverters: { status: 'Faltante' },
-              reconectador: { status: 'Ingreso a Zona Franca', date: 'FEB.26/25' },
-              tracker: { status: 'Licencia de importación', date: 'FEB.26/25' },
-              shelter: { status: 'Nacionalización', date: 'FEB.26/25' }
+              reconectador: { status: 'Ingreso a Zona Franca', date: 'FEB.26/25', shipId: 'SHIP-002', slotIndex: 1 },
+              tracker: { status: 'Licencia de importación', date: 'FEB.26/25', shipId: 'SHIP-002', slotIndex: 0 },
+              shelter: { status: 'Nacionalización', date: 'FEB.26/25', shipId: 'SHIP-002', slotIndex: 5 }
             }
           }
         ]
@@ -76,10 +78,10 @@ export const mockMaterialTrackingData: InvestorGroup[] = [
             name: 'MiniGranja 0005 — Atlántico',
             location: 'COL_ATL_005',
             materials: {
-              panels: { status: 'Zarpe', date: 'MAR.10/25' },
-              inverters: { status: 'Zarpe', date: 'MAR.10/25' },
+              panels: { status: 'Zarpe', date: 'MAR.10/25', shipId: 'SHIP-001', slotIndex: 10 },
+              inverters: { status: 'Zarpe', date: 'MAR.10/25', shipId: 'SHIP-001', slotIndex: 11 },
               reconectador: { status: 'Faltante' },
-              tracker: { status: 'Zarpe', date: 'MAR.10/25' },
+              tracker: { status: 'Zarpe', date: 'MAR.10/25', shipId: 'SHIP-001', slotIndex: 12 },
               shelter: { status: 'Faltante' }
             }
           }
@@ -108,11 +110,11 @@ export const mockMaterialTrackingData: InvestorGroup[] = [
             name: 'Sol de la Guajira',
             location: 'COL_GUA_001',
             materials: {
-              panels: { status: 'Nacionalización', date: 'FEB.15/25' },
-              inverters: { status: 'Nacionalización', date: 'FEB.15/25' },
-              reconectador: { status: 'Nacionalización', date: 'FEB.15/25' },
+              panels: { status: 'Nacionalización', date: 'FEB.15/25', shipId: 'SHIP-003', slotIndex: 0 },
+              inverters: { status: 'Nacionalización', date: 'FEB.15/25', shipId: 'SHIP-003', slotIndex: 1 },
+              reconectador: { status: 'Nacionalización', date: 'FEB.15/25', shipId: 'SHIP-003', slotIndex: 2 },
               tracker: { status: 'Faltante' },
-              shelter: { status: 'Zarpe', date: 'MAR.01/25' }
+              shelter: { status: 'Zarpe', date: 'MAR.01/25', shipId: 'SHIP-003', slotIndex: 3 }
             }
           }
         ]
@@ -128,11 +130,11 @@ export const mockMaterialTrackingData: InvestorGroup[] = [
             name: 'Viento del Sur',
             location: 'COL_NAR_002',
             materials: {
-              panels: { status: 'Licencia de importación', date: 'MAR.20/25' },
-              inverters: { status: 'Licencia de importación', date: 'MAR.20/25' },
-              reconectador: { status: 'Licencia de importación', date: 'MAR.20/25' },
-              tracker: { status: 'Licencia de importación', date: 'MAR.20/25' },
-              shelter: { status: 'Licencia de importación', date: 'MAR.20/25' }
+              panels: { status: 'Licencia de importación', date: 'MAR.20/25', shipId: 'SHIP-004', slotIndex: 0 },
+              inverters: { status: 'Licencia de importación', date: 'MAR.20/25', shipId: 'SHIP-004', slotIndex: 1 },
+              reconectador: { status: 'Licencia de importación', date: 'MAR.20/25', shipId: 'SHIP-004', slotIndex: 2 },
+              tracker: { status: 'Licencia de importación', date: 'MAR.20/25', shipId: 'SHIP-004', slotIndex: 3 },
+              shelter: { status: 'Licencia de importación', date: 'MAR.20/25', shipId: 'SHIP-004', slotIndex: 4 }
             }
           }
         ]

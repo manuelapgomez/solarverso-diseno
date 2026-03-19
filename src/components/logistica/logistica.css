@@ -1167,9 +1167,13 @@
   border-radius: 16px;
   width: 100%;
   max-width: 720px;
+  max-height: 90vh; /* Ensure it doesn't exceed screen height */
   box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
   transform: translateY(20px);
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent content from leaking out of rounded corners */
 }
 
 .modal-overlay.open .modal-content {
@@ -1196,6 +1200,9 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  flex: 1;                /* Take up remaining space */
+  overflow-y: auto;       /* Enable vertical scrolling */
+  min-height: 0;          /* Important for flex children to scroll */
 }
 
 .swap-direction {
@@ -1298,6 +1305,38 @@
 .text-high { color: #ea580c; }        /* Orange */
 .text-medium { color: #2563eb; }      /* Blue */
 .text-low { color: var(--brand-secondary); }         /* Green */
+
+.material-cell-premium.status-nacionalización {
+  background: #f5f3ff;
+  border: 1px solid #ddd6fe;
+}
+
+.hv-mini-btn {
+  margin-top: 8px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #2563eb;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hv-mini-btn:hover {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
 
 /* =========================================
    ShipCard (VesselPremiumCard) Styles
@@ -2490,4 +2529,158 @@
   font-size: 16px;
   font-weight: 800;
   color: #1e293b;
+}
+
+/* Notion-Style Equipment Modal */
+.notion-modal-header {
+  margin-bottom: 24px;
+}
+
+.notion-equipment-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.notion-property-grid {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 8px 16px;
+  margin-bottom: 24px;
+}
+
+.notion-prop-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.notion-prop-value {
+  color: #111827;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.notion-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notion-section-title::after {
+  content: "";
+  height: 1px;
+  background: #f3f4f6;
+  flex: 1;
+}
+
+/* Timeline Tracker */
+.timeline-tracker {
+  display: flex;
+  justify-content: space-between;
+  margin: 16px 0 24px;
+  padding: 0 8px;
+  position: relative;
+}
+
+.timeline-tracker::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 32px;
+  right: 32px;
+  height: 2px;
+  background: #f3f4f6;
+  z-index: 1;
+}
+
+.timeline-step {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 80px;
+}
+
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d1d5db;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px #f3f4f6;
+}
+
+.timeline-step.completed .timeline-dot {
+  background: var(--brand-primary);
+  box-shadow: 0 0 0 2px rgba(29, 153, 204, 0.2);
+}
+
+.timeline-step.current .timeline-dot {
+  background: #fff;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 4px rgba(29, 153, 204, 0.1);
+}
+
+.timeline-info {
+  text-align: center;
+}
+
+.timeline-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.timeline-date {
+  font-size: 10px;
+  color: #9ca3af;
+}
+
+/* History List */
+.history-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.history-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.history-content {
+  flex: 1;
+}
+
+.history-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.history-meta {
+  font-size: 11px;
+  color: #9ca3af;
 }

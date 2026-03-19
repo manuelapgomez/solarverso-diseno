@@ -1,10 +1,29 @@
 // Data Base Central de UI - Proyecto Solenium Vista Suministro
 
+export type LogisticaState = {
+  label: string;
+  fechaObjetivo: string;
+  fechaReal?: string;
+  status: "completed" | "current" | "pending";
+};
+
+export type HistorialAsignacion = {
+  mgsNombre: string;
+  fecha: string;
+  motivo: string;
+};
+
 export type SlotCarga = {
   idSlot: string;
   tipoEquipo: "Tracker" | "Shelter" | "Inversor" | "Paneles" | "Reconectadores" | string | null;
   mgsAsignada: string | null;
   nombreMgs: string | null;
+  // Propiedades Notion-Style
+  proveedor?: string;
+  oc?: string;
+  detallesDiseno?: Record<string, string | number>;
+  timeline?: LogisticaState[];
+  historial?: HistorialAsignacion[];
 };
 
 export type Barco = {
@@ -48,38 +67,72 @@ export type Portfolio = {
 // Generador auxiliar de 15 slots por defecto (Pre-cargados con equipo aleatorio)
 const generarSlotsPreCargados = (prefijo: string): SlotCarga[] => {
   const tipos = ["Tracker", "Shelter", "Inversor", "Paneles", "Reconectadores"];
-  return Array.from({ length: 15 }).map((_, i) => ({
-    idSlot: `${prefijo}-SLOT-${i + 1}`,
-    tipoEquipo: tipos[Math.floor(Math.random() * tipos.length)], // Tipo de equipo aleatorio
-    mgsAsignada: null,
-    nombreMgs: null,
-  }));
+  return Array.from({ length: 15 }).map((_, i) => {
+    const tipo = tipos[Math.floor(Math.random() * tipos.length)];
+    return {
+      idSlot: `${prefijo}-SLOT-${i + 1}`,
+      tipoEquipo: tipo,
+      mgsAsignada: null,
+      nombreMgs: null,
+      proveedor: "Zentrack Industries",
+      oc: `OC-2024-${Math.floor(Math.random() * 9000) + 1000}`,
+      detallesDiseno: (tipo === "Tracker" ? { "Modelo": "1V84", "Config": "Self-Powered" } : { "Capacidad": "2.5MW", "Tipo": "Outdoor" }) as Record<string, string>,
+      timeline: [
+        { label: "Zarpe", fechaObjetivo: "2024-03-10", fechaReal: "2024-03-11", status: "completed" },
+        { label: "En Barco", fechaObjetivo: "2024-04-15", status: "current" },
+        { label: "Nacionalización", fechaObjetivo: "2024-05-01", status: "pending" }
+      ],
+      historial: []
+    };
+  });
 };
 
 const slotsMSC = generarSlotsPreCargados("MSC");
 // Asignamos algunos quemados para la demostración
-slotsMSC[0] = { idSlot: "MSC-SLOT-1", tipoEquipo: "Tracker", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2" };
-slotsMSC[1] = { idSlot: "MSC-SLOT-2", tipoEquipo: "Shelter", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2" };
-slotsMSC[2] = { idSlot: "MSC-SLOT-3", tipoEquipo: "Inversor", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2" };
-slotsMSC[3] = { idSlot: "MSC-SLOT-4", tipoEquipo: "Paneles", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2" };
-slotsMSC[4] = { idSlot: "MSC-SLOT-5", tipoEquipo: "Tracker", mgsAsignada: "MGS-005", nombreMgs: "Valle 5" };
+slotsMSC[0] = { 
+  idSlot: "MSC-SLOT-1", 
+  tipoEquipo: "Tracker", 
+  mgsAsignada: "MGS-002", 
+  nombreMgs: "Uruaco 2",
+  proveedor: "NextTracker",
+  oc: "OC-7782",
+  detallesDiseno: { "Hileras": "24 Mesas", "Viento": "140km/h" },
+  timeline: [
+    { label: "Zarpe", fechaObjetivo: "2024-01-05", fechaReal: "2024-01-05", status: "completed" },
+    { label: "En Barco", fechaObjetivo: "2024-02-10", fechaReal: "2024-02-12", status: "completed" },
+    { label: "Nacionalización", fechaObjetivo: "2024-03-01", status: "current" }
+  ],
+  historial: [
+    { mgsNombre: "Galapa Elite", fecha: "2023-12-01", motivo: "Repriorización de Portafolio" }
+  ]
+};
+slotsMSC[1] = { idSlot: "MSC-SLOT-2", tipoEquipo: "Shelter", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2", historial: [] };
+slotsMSC[2] = { idSlot: "MSC-SLOT-3", tipoEquipo: "Inversor", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2", historial: [] };
+slotsMSC[3] = { idSlot: "MSC-SLOT-4", tipoEquipo: "Paneles", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2", historial: [] };
+slotsMSC[4] = { idSlot: "MSC-SLOT-5", tipoEquipo: "Tracker", mgsAsignada: "MGS-005", nombreMgs: "Valle 5", historial: [] };
 // 10 vacíos...
 
 const slotsPacific = generarSlotsPreCargados("PAC");
-slotsPacific[0] = { idSlot: "PAC-SLOT-1", tipoEquipo: "Tracker", mgsAsignada: "MGS-003", nombreMgs: "Solar Delta" };
-slotsPacific[1] = { idSlot: "PAC-SLOT-2", tipoEquipo: "Inversor", mgsAsignada: "MGS-003", nombreMgs: "Solar Delta" };
-slotsPacific[2] = { idSlot: "PAC-SLOT-3", tipoEquipo: "Reconectadores", mgsAsignada: "MGS-003", nombreMgs: "Solar Delta" };
-slotsPacific[5] = { idSlot: "PAC-SLOT-6", tipoEquipo: "Paneles", mgsAsignada: "MGS-010", nombreMgs: "Uruaco 10" };
+slotsPacific[0] = { idSlot: "PAC-SLOT-1", tipoEquipo: "Tracker", mgsAsignada: "MGS-003", nombreMgs: "Solar Delta", historial: [] };
+slotsPacific[1] = { idSlot: "PAC-SLOT-2", tipoEquipo: "Inversor", mgsAsignada: "MGS-003", nombreMgs: "Solar Delta", historial: [] };
+slotsPacific[2] = { idSlot: "PAC-SLOT-3", tipoEquipo: "Reconectadores", mgsAsignada: "MGS-003", nombreMgs: "Solar Delta", historial: [] };
+slotsPacific[5] = { idSlot: "PAC-SLOT-6", tipoEquipo: "Paneles", mgsAsignada: "MGS-010", nombreMgs: "Uruaco 10", historial: [] };
+
+const slotsKraken = generarSlotsPreCargados("KRK");
+slotsKraken[0] = { idSlot: "KRK-SLOT-1", tipoEquipo: "Inversor", mgsAsignada: "MGS-120", nombreMgs: "Galapa 4", historial: [] };
+slotsKraken[2] = { idSlot: "KRK-SLOT-3", tipoEquipo: "Transformer", mgsAsignada: "MGS-120", nombreMgs: "Galapa 4", historial: [] };
 
 const slotsAtlantic = generarSlotsPreCargados("ATL");
-slotsAtlantic[0] = { idSlot: "ATL-SLOT-1", tipoEquipo: "Inversor", mgsAsignada: "MGS-014", nombreMgs: "Solaris 3" };
-slotsAtlantic[1] = { idSlot: "ATL-SLOT-2", tipoEquipo: "Tracker", mgsAsignada: "MGS-025", nombreMgs: "Uruaco 1" };
+slotsAtlantic[0] = { idSlot: "ATL-SLOT-1", tipoEquipo: "Inversor", mgsAsignada: "MGS-014", nombreMgs: "Solaris 3", historial: [] };
+slotsAtlantic[1] = { idSlot: "ATL-SLOT-2", tipoEquipo: "Tracker", mgsAsignada: "MGS-025", nombreMgs: "Uruaco 1", historial: [] };
 
 const slotsSolaris = generarSlotsPreCargados("SOL");
-slotsSolaris[0] = { idSlot: "SOL-SLOT-1", tipoEquipo: "Inversor", mgsAsignada: "MGS-101", nombreMgs: "Andes 1" };
+slotsSolaris[0] = { idSlot: "SOL-SLOT-1", tipoEquipo: "Inversor", mgsAsignada: "MGS-101", nombreMgs: "Andes 1", historial: [] };
+slotsSolaris[1] = { idSlot: "SOL-SLOT-2", tipoEquipo: "Tracker", mgsAsignada: "MGS-101", nombreMgs: "Andes 1", historial: [] };
+slotsSolaris[4] = { idSlot: "SOL-SLOT-5", tipoEquipo: "Paneles", mgsAsignada: "MGS-101", nombreMgs: "Andes 1", historial: [] };
 
 const slotsEverest = generarSlotsPreCargados("EVE");
-slotsEverest[0] = { idSlot: "EVE-SLOT-1", tipoEquipo: "Tracker", mgsAsignada: "MGS-401", nombreMgs: "Bucaramanga 1" };
+slotsEverest[0] = { idSlot: "EVE-SLOT-1", tipoEquipo: "Tracker", mgsAsignada: "MGS-401", nombreMgs: "Bucaramanga 1", historial: [] };
 
 export const inicialBarcosData: Barco[] = [
   {

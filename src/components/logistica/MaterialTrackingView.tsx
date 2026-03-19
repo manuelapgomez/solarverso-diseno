@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import { mockMaterialTrackingData, type InvestorGroup, type Portfolio, type MaterialProject, type MaterialStatus } from '../../data/mockMaterials';
+import { type Barco, type SlotCarga } from '../../data/mockLogistica';
 import './logistica.css';
 
 interface MaterialTrackingViewProps {
   onSwitchToVessels: () => void;
+  onOpenSwap: (slot: SlotCarga, slotIndex: number, shipId: string) => void;
+  barcos: Barco[];
 }
 
-export const MaterialTrackingView: React.FC<MaterialTrackingViewProps> = ({ onSwitchToVessels }) => {
+export const MaterialTrackingView: React.FC<MaterialTrackingViewProps> = ({ 
+  onSwitchToVessels, 
+  onOpenSwap,
+  barcos
+}) => {
   // State to track selected portfolio ID for each investor
   const [selectedPortfolios, setSelectedPortfolios] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
@@ -25,8 +32,19 @@ export const MaterialTrackingView: React.FC<MaterialTrackingViewProps> = ({ onSw
     }));
   };
 
-  const renderMaterialCell = (data: MaterialStatus) => {
+  const handleHVClick = (e: React.MouseEvent, data: MaterialStatus) => {
+    e.stopPropagation();
+    if (!data.shipId || data.slotIndex === undefined) return;
+
+    const ship = barcos.find(s => s.id === data.shipId);
+    if (ship && ship.slots[data.slotIndex]) {
+      onOpenSwap(ship.slots[data.slotIndex], data.slotIndex, ship.id);
+    }
+  };
+
+  const renderMaterialCell = (data: MaterialStatus, equipmentType: string) => {
     const isFaltante = data.status === 'Faltante';
+    const isAssigned = data.shipId && data.slotIndex !== undefined;
     
     // Status-specific icons based on label
     const getStatusIcon = (status: string) => {
@@ -50,6 +68,7 @@ export const MaterialTrackingView: React.FC<MaterialTrackingViewProps> = ({ onSw
       <div 
         className={`material-cell-premium ${isFaltante ? 'status-faltante' : ''} status-${data.status.replace(/\s+/g, '-').toLowerCase()}`}
         onClick={isFaltante ? onSwitchToVessels : undefined}
+        style={{ cursor: isFaltante || isAssigned ? 'pointer' : 'default' }}
       >
         <div className="status-icon-wrapper">
           {getStatusIcon(data.status)}
@@ -57,6 +76,15 @@ export const MaterialTrackingView: React.FC<MaterialTrackingViewProps> = ({ onSw
         <div className="status-info">
           <span className="status-label">{data.status}</span>
           {data.date && <span className="status-date">{data.date}</span>}
+          
+          {isAssigned && (
+            <button 
+              className="hv-mini-btn" 
+              onClick={(e) => handleHVClick(e, data)}
+            >
+              HV: {equipmentType}
+            </button>
+          )}
         </div>
       </div>
     );
@@ -135,11 +163,11 @@ export const MaterialTrackingView: React.FC<MaterialTrackingViewProps> = ({ onSw
                       </div>
                     </div>
                     <div className="project-status-cells">
-                      <div className="status-grid-item">{renderMaterialCell(project.materials.panels)}</div>
-                      <div className="status-grid-item">{renderMaterialCell(project.materials.inverters)}</div>
-                      <div className="status-grid-item">{renderMaterialCell(project.materials.reconectador)}</div>
-                      <div className="status-grid-item">{renderMaterialCell(project.materials.tracker)}</div>
-                      <div className="status-grid-item">{renderMaterialCell(project.materials.shelter)}</div>
+                      <div className="status-grid-item">{renderMaterialCell(project.materials.panels, 'Panel')}</div>
+                      <div className="status-grid-item">{renderMaterialCell(project.materials.inverters, 'Inversor')}</div>
+                      <div className="status-grid-item">{renderMaterialCell(project.materials.reconectador, 'Reconectador')}</div>
+                      <div className="status-grid-item">{renderMaterialCell(project.materials.tracker, 'Tracker')}</div>
+                      <div className="status-grid-item">{renderMaterialCell(project.materials.shelter, 'Shelter')}</div>
                     </div>
                   </div>
                 ))}

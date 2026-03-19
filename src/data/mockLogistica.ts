@@ -87,7 +87,7 @@ export const inicialBarcosData: Barco[] = [
     bl_code: "BL-7890123",
     nombre: "MSC Katrina",
     eta: "2026-04-15",
-    loading_progress: 40,
+    loading_progress: 100,
     slots: slotsMSC,
     portfolio: "Portafolio Andino",
     estado: "On Route"
@@ -97,7 +97,7 @@ export const inicialBarcosData: Barco[] = [
     bl_code: "BL-8901234",
     nombre: "Pacific Voyager",
     eta: "2026-05-02",
-    loading_progress: 27,
+    loading_progress: 100,
     slots: slotsPacific,
     portfolio: "Caribe Solar Grid",
     estado: "Pending"
@@ -107,7 +107,7 @@ export const inicialBarcosData: Barco[] = [
     bl_code: "BL-9012345",
     nombre: "Atlantic Express",
     eta: "2026-05-20",
-    loading_progress: 12,
+    loading_progress: 100,
     slots: slotsAtlantic,
     portfolio: "Valle del Cauca Hub",
     estado: "Arrived"
@@ -117,7 +117,7 @@ export const inicialBarcosData: Barco[] = [
     bl_code: "BL-1122334",
     nombre: "Solaris Carrier",
     eta: "2026-06-10",
-    loading_progress: 85,
+    loading_progress: 100,
     slots: slotsSolaris,
     portfolio: "Portafolio Andino",
     estado: "On Route"
@@ -127,7 +127,7 @@ export const inicialBarcosData: Barco[] = [
     bl_code: "BL-5566778",
     nombre: "Everest Line",
     eta: "2026-06-25",
-    loading_progress: 60,
+    loading_progress: 100,
     slots: slotsEverest,
     portfolio: "Santander Energy Plus",
     estado: "Pending"

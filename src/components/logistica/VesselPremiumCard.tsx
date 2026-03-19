@@ -63,13 +63,21 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({ ship, isAc
           </div>
         </div>
         
-        {/* 3. PROGRESO DE CARGA (DARK SLEEK BAR) */}
+        {/* 3. PROGRESO DE CARGA Y ASIGNACIÓN */}
         <div className="progress-container">
-          <div className="progress-header" style={{ marginBottom: '8px', fontSize: '13px', fontFamily: 'var(--font-family-inter)' }}>
-            <span style={{color: '#64748b', fontWeight: 600}}>Loading Progress</span>
-            <span style={{color: '#1e293b', fontWeight: 700}}>{capacityPercent}%</span>
+          <div className="progress-header" style={{ marginBottom: '6px', fontSize: '13px' }}>
+            <span style={{color: '#64748b', fontWeight: 600}}>Vessel Capacity (Physical)</span>
+            <span style={{color: '#10b981', fontWeight: 800}}>100% Full</span>
           </div>
-          <div className="progress-bar-bg">
+          <div className="progress-bar-bg" style={{ height: '6px' }}>
+            <div className="progress-bar-fill" style={{ width: '100%', background: '#10b981' }}></div>
+          </div>
+          
+          <div className="progress-header" style={{ marginTop: '12px', marginBottom: '6px', fontSize: '13px' }}>
+            <span style={{color: '#64748b', fontWeight: 600}}>Destination Assignment</span>
+            <span style={{color: 'var(--brand-primary)', fontWeight: 800}}>{capacityPercent}%</span>
+          </div>
+          <div className="progress-bar-bg" style={{ height: '6px' }}>
             <div className="progress-bar-fill" style={{ width: `${capacityPercent}%` }}></div>
           </div>
         </div>

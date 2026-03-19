@@ -129,7 +129,7 @@
 
 /* Material Tracking View Styles */
 .material-tracking-container {
-  padding: 32px 24px;
+  padding: 32px 80px; /* Matched for consistent breathing room */
   flex: 1;
   overflow-y: auto;
 }
@@ -370,10 +370,10 @@
 }
 
 .dashboard-header {
-  padding: 40px 24px 20px 24px !important; /* INCREASED TOP SPACING */
+  padding: 40px 80px 20px 80px !important; /* INCREASED SIDE SPACING FOR BREATHABILITY */
   background: transparent;
   width: 100%;
-  flex-shrink: 0; /* Header stays fixed */
+  flex-shrink: 0; 
 }
 
 .dashboard-main {
@@ -584,13 +584,12 @@
 }
 
 .ships-grid-container {
-  padding: 24px 0 60px 0;
+  padding: 24px 80px 600px 80px; /* Aligned with Header padding */
   display: grid;
-  /* Use auto-fill to preserve empty slots and 1fr is capped by minmax when alone */
-  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); 
-  justify-content: start; /* Align cards to the left */
+  grid-template-columns: repeat(3, 1fr); /* FORCED 3-COLUMN LAYOUT */
+  justify-content: start; 
   align-content: start;
-  gap: 24px;
+  gap: 32px; /* Increased gap for breathing room */
 }
 
 /* Figma Ship Card Style */
@@ -1295,11 +1294,11 @@
 .vessel-card-premium-v2 {
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  border-radius: 46px; /* Ideal Border Radius */
-  padding: 32px;
+  border-radius: 46px; 
+  padding: 24px; /* Reduced from 32px to fit 3 columns better */
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
@@ -1307,7 +1306,7 @@
   box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.12), 
               0px 4px 5px 0px rgba(0,0,0,0.14), 
               0px 2px 4px -1px rgba(0,0,0,0.2);
-  min-height: 540px;
+  min-height: 500px; /* Reduced from 540px */
 }
 
 .vessel-card-premium-v2:hover {
@@ -1363,7 +1362,7 @@
 }
 
 .cargo-slot.mini-slot {
-  height: 48px;
+  height: 44px; /* Slightly more compact */
   padding: 4px;
 }
 

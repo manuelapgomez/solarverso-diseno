@@ -52,6 +52,7 @@ export const VesselAssignmentView: React.FC = () => {
   };
 
   const handleOpenSwap = (slot: SlotCarga, slotIndex: number, shipId: string) => {
+    setSelectedShipId(shipId);
     setSwapData({ slot, slotIndex, shipId });
     setIsSwapModalOpen(true);
   };

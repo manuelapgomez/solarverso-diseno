@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import "./logistica.css";
-import { ShipCard } from "./ShipCard";
+import { VesselPremiumCard } from "./VesselPremiumCard";
 import { ShipDetailSlide } from "./ShipDetailSlide";
 import { SwapModal } from "./SwapModal";
 import { OrphanedPanel } from "./OrphanedPanel";
@@ -8,7 +8,7 @@ import { PortfoliosPanel } from "./PortfoliosPanel";
 import { inicialBarcosData, inicialMgsHuerfanasData, mockPortfolios, type SlotCarga } from "../../data/mockLogistica";
 import { SupplyFiltersBar, type FiltersState } from "./SupplyFiltersBar";
 
-export const ShipDashboard: React.FC = () => {
+export const VesselAssignmentView: React.FC = () => {
   const [barcos, setBarcos] = useState(inicialBarcosData);
   const [mgsHuerfanas, setMgsHuerfanas] = useState(inicialMgsHuerfanasData);
 
@@ -67,9 +67,9 @@ export const ShipDashboard: React.FC = () => {
         const newSlots = [...ship.slots];
         
         // If there was something already there, it goes back to orphans
-        const oldMgsId = newSlots[slotIndex].mgsAsignada;
-        const oldMgsNombre = newSlots[slotIndex].nombreMgs;
-        const oldTipo = newSlots[slotIndex].tipoEquipo || equipoRequerido;
+        // const oldMgsId = newSlots[slotIndex].mgsAsignada;
+        // const oldMgsNombre = newSlots[slotIndex].nombreMgs;
+        // const oldTipo = newSlots[slotIndex].tipoEquipo || equipoRequerido;
 
         newSlots[slotIndex] = {
           ...newSlots[slotIndex],
@@ -125,17 +125,16 @@ export const ShipDashboard: React.FC = () => {
 
         {/* Content Area */}
         <div 
-          style={{ padding: '0 24px 24px 24px', display: 'flex', gap: '24px', flex: 1, overflow: 'hidden', flexDirection: 'column' }}
-          onClick={() => setSelectedShipId(null)}
+          style={{ padding: '0 24px 24px 24px', display: 'flex', gap: '24px', flex: 1, overflowY: 'auto', flexDirection: 'column' }}
         >
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '24px', overflowY: 'auto', paddingBottom: '100px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingBottom: '200px' }}>
             <OrphanedPanel orphans={mgsHuerfanas} />
 
             <SupplyFiltersBar filters={filters} setFilters={setFilters} />
 
-            <div className="ships-grid-container">
+            <div className="ships-grid-container" onClick={() => setSelectedShipId(null)}>
               {filteredBarcos.map(ship => (
-                <ShipCard
+                <VesselPremiumCard
                   key={ship.id}
                   ship={ship}
                   isActive={ship.id === selectedShipId}
@@ -148,10 +147,12 @@ export const ShipDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Slide Lateral de Detalles */}
+      {/* Slide Lateral de Detalles con Backdrop */}
+      {isDetailOpen && (
+        <div className="detail-backdrop" onClick={() => setIsDetailOpen(false)}></div>
+      )}
       <div 
         className={`detail-slide ${isDetailOpen ? 'open' : ''}`}
-        onClick={() => setIsDetailOpen(false)}
       >
         <div 
           className="detail-slide-content"

@@ -65,19 +65,14 @@ export const ShipDetailSlide: React.FC<ShipDetailSlideProps> = ({ ship, isOpen, 
               return (
                 <div 
                   key={slot.idSlot} 
-                  className={`cargo-slot ${isFilled ? 'filled' : ''}`}
+                  className={`cargo-slot ${isFilled ? 'filled' : 'unassigned'}`}
                   onClick={() => onOpenSwap(slot, index)}
-                  title={isFilled ? `Reubicar contenedor de ${slot.tipoEquipo}` : `Asignar Minigranja a Slot Vacío`}
+                  title={isFilled ? `Reasignar: ${slot.tipoEquipo}` : `Asignar destino para: ${slot.tipoEquipo}`}
                 >
-                  <span className="cargo-type-label">{slot.tipoEquipo || 'SLOT'}</span>
+                  <span className="cargo-type-label">{slot.tipoEquipo}</span>
                   
-                  {isFilled ? (
+                  {isFilled && (
                     <span className="cargo-mgs-name" title={slot.nombreMgs!}>{slot.nombreMgs}</span>
-                  ) : (
-                    <svg className="slot-add-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                      <line x1="12" y1="5" x2="12" y2="19"></line>
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
                   )}
 
                   {/* Overlay Action on Hover */}
@@ -86,7 +81,7 @@ export const ShipDetailSlide: React.FC<ShipDetailSlideProps> = ({ ship, isOpen, 
                       <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                     </svg>
-                    <span style={{fontSize: '9px'}}>{isFilled ? "Reubicar" : "Llenar"}</span>
+                    <span style={{fontSize: '9px'}}>{isFilled ? "Reasignar" : "Asignar"}</span>
                   </div>
                 </div>
               );

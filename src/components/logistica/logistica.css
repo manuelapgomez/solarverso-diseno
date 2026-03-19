@@ -1295,7 +1295,7 @@
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 46px; 
-  padding: 24px; /* Reduced from 32px to fit 3 columns better */
+  padding: 24px 32px; /* Increased horizontal padding for more breathing room */
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -1306,7 +1306,7 @@
   box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.12), 
               0px 4px 5px 0px rgba(0,0,0,0.14), 
               0px 2px 4px -1px rgba(0,0,0,0.2);
-  min-height: 500px; /* Reduced from 540px */
+  min-height: 480px; /* Adjusted */
 }
 
 .vessel-card-premium-v2:hover {
@@ -1340,45 +1340,82 @@
   margin-bottom: 32px; /* MORE SPACE BELOW HULL */
 }
 
-.ship-hull-graphic.mini {
-  height: 160px;
-  padding-bottom: 20px;
-  width: 100%;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 800 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 150 L750 150 C770 150 780 130 780 100 L790 50 L10 50 L20 100 C20 130 30 150 50 150Z' fill='%23f1f5f9' stroke='%23e2e8f0' stroke-width='2'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: bottom center;
-  background-size: 90% auto;
+.vessel-details-content {
+  padding: 0 16px; /* Additional internal margin for info section */
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  gap: 16px; /* Consistent spacing between blocks */
+}
+
+.ship-hull-graphic.mini {
+  height: 180px;
+  width: 100%;
+  /* New More Realistic Ship Hull SVG */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 800 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 60 L780 60 L760 140 C750 170 720 185 680 185 L120 185 C80 185 50 170 40 140 L20 60Z' fill='%23f1f5f9' stroke='%23e2e8f0' stroke-width='2'/%3E%3Cpath d='M700 60 L700 30 L740 30 L740 60' fill='%23f1f5f9' stroke='%23e2e8f0' stroke-width='2'/%3E%3Cline x1='20' y1='62' x2='780' y2='62' stroke='%23e2e8f0' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 100% auto;
+  display: flex;
+  align-items: flex-start; /* Containers on deck! */
   justify-content: center;
-  opacity: 0.8;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.02));
+  padding-top: 15px; /* Adjusting gap to the top deck line */
+  position: relative;
+  z-index: 1;
 }
 
 .cargo-grid.mini {
-  gap: 6px; /* Tight */
-  width: 98%;
-  margin-bottom: 5px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px; 
+  width: 88%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
 }
 
 .cargo-slot.mini-slot {
-  height: 44px; /* Slightly more compact */
-  padding: 4px;
+  height: 36px; 
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px dashed #cbd5e1;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(2px);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.cargo-slot.mini-slot:hover {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: var(--brand-primary);
+}
+
+.cargo-slot.mini-slot.unassigned {
+  background: rgba(248, 250, 252, 0.5);
+  border: 1px dashed #94a3b8;
+}
+
+.cargo-slot.mini-slot.filled {
+  background: var(--brand-primary);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 8px rgba(29, 153, 204, 0.3);
 }
 
 .cargo-slot.mini-slot .cargo-type-label {
-  font-size: 8px;
+  font-size: 7.5px;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  line-height: 1.1;
+  padding: 0 2px;
 }
 
-.cargo-slot.mini-slot .cargo-mgs-name {
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.cargo-slot.mini-slot .slot-add-icon {
-  width: 18px;
-  height: 18px;
-  margin-top: 4px;
+.cargo-slot.mini-slot.filled .cargo-type-label {
+  color: #ffffff;
 }
 
 .capacity-section {
@@ -1715,5 +1752,359 @@
 @media (max-width: 768px) {
   .pills-container {
     justify-content: flex-start;
+  }
+}
+
+/* =========================================
+   Investor Tracking Premium Overhaul
+   ========================================= */
+
+.investor-title-premium {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 48px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: -0.5px;
+}
+
+.investor-title-premium .title-tag {
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 2px 10px;
+  border-radius: 20px;
+  text-transform: lowercase;
+}
+
+.portfolio-tabs-premium {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.portfolio-taskello-card {
+  min-width: 150px;
+  height: 160px;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+  border: 1px solid #e2e8f0;
+  box-shadow: none;
+}
+
+.portfolio-taskello-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--brand-primary);
+}
+
+.portfolio-taskello-card.active {
+  border-color: var(--brand-primary);
+  background: #f0f9ff;
+}
+
+/* Header Area with Gradient */
+.card-tab-area {
+  height: 60px;
+  position: relative;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+.tab-gradient-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+  opacity: 0.5;
+  transition: all 0.4s;
+}
+
+.portfolio-taskello-card.active .tab-gradient-bg {
+  background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+  opacity: 0.2;
+}
+
+.portfolio-taskello-card.priority .tab-gradient-bg {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  opacity: 0.25;
+}
+
+.priority-star-glow {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #f59e0b;
+  filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.3));
+  z-index: 10;
+}
+
+/* Body with Custom Folder Shape */
+.card-main-body {
+  flex: 1;
+  background: #ffffff;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  z-index: 5;
+  margin-top: -15px;
+  border-radius: 16px 0 0 0;
+  /* Balanced folder cutout shape for smaller size */
+  clip-path: polygon(0 0, 75px 0, 90px 12px, 100% 12px, 100% 100%, 0 100%);
+}
+
+.card-text-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding-top: 12px;
+}
+
+.card-title-main {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.2px;
+}
+
+.card-subtitle-sub {
+  font-size: 10px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.card-stats-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.left-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.count-big {
+  font-size: 24px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.unit-small {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.right-stat {
+  font-size: 9px;
+  font-weight: 800;
+  color: #cbd5e1;
+  letter-spacing: 0.5px;
+}
+
+.portfolio-taskello-card.active .right-stat {
+  color: var(--brand-primary);
+}
+
+.portfolio-taskello-card {
+  animation: folder-slide 0.4s ease-out forwards;
+}
+
+
+/* Material Projects Grid */
+.material-projects-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.grid-header-row {
+  display: grid;
+  grid-template-columns: 280px repeat(5, 1fr);
+  padding: 0 20px;
+  margin-bottom: 8px;
+}
+
+.header-cell {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.project-row-premium {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  background: #ffffff;
+  border: 1px solid #eef2f6;
+  border-radius: 16px;
+  padding: 24px;
+  align-items: center;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.project-row-premium:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.08);
+}
+
+.project-info-main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.name-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
+.project-name-text {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.4px;
+}
+
+.location-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.location-code {
+  font-size: 13px;
+  font-family: var(--font-family-monospace);
+  color: #64748b;
+  letter-spacing: 0.2px;
+}
+
+.geo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.project-status-cells {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.material-cell-premium {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.material-cell-premium:hover {
+  background: #f1f5f9;
+}
+
+.status-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  background: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand-primary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.status-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.status-date {
+  font-size: 10px;
+  font-weight: 700;
+  color: #10b981;
+  background: #ecfdf5;
+  padding: 1px 6px;
+  border-radius: 4px;
+  width: fit-content;
+  margin-top: 2px;
+}
+
+/* Status Variants */
+.status-faltante {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  cursor: pointer;
+}
+
+.status-faltante .status-icon-wrapper {
+  color: #ef4444;
+}
+
+.status-faltante .status-label {
+  color: #9f1239;
+}
+
+.status-zarpe .status-icon-wrapper { background: #eff6ff; color: #2563eb; }
+.status-ingreso-a-zona-franca .status-icon-wrapper { background: #f0fdf4; color: #16a34a; }
+.status-licencia-de-importación .status-icon-wrapper { background: #fff7ed; color: #ea580c; }
+.status-nacionalización .status-icon-wrapper { background: #f5f3ff; color: #7c3aed; }
+
+.empty-portfolio-message-premium {
+  padding: 60px;
+  background: #ffffff;
+  border: 2px dashed #f1f5f9;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+@media (max-width: 1400px) {
+  .project-row-premium {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .grid-header-row {
+    display: none;
   }
 }

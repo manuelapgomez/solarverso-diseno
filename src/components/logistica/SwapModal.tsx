@@ -16,8 +16,6 @@ export const SwapModal: React.FC<SwapModalProps> = ({
 }) => {
   const [selectedMgsId, setSelectedMgsId] = useState<string>("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
-  const [selectedEquipoVacios, setSelectedEquipoVacios] = useState<string>("Tracker");
 
   useEffect(() => {
     setSelectedMgsId("");
@@ -27,7 +25,7 @@ export const SwapModal: React.FC<SwapModalProps> = ({
   if (!isOpen || !slot || slotIndex === null) return null;
 
   const isFilled = slot.mgsAsignada !== null;
-  const equipoAFiltrar = isFilled ? slot.tipoEquipo : selectedEquipoVacios;
+  const equipoAFiltrar = slot.tipoEquipo;
   
   const validOrphans = orphans.filter(o => o.equipoFaltante === equipoAFiltrar);
 
@@ -45,7 +43,7 @@ export const SwapModal: React.FC<SwapModalProps> = ({
     <div className={`modal-overlay ${isOpen ? 'open' : ''}`}>
       <div className="modal-content">
         <div className="modal-header">
-          <h2>{isFilled ? `Reubicar: ${slot.tipoEquipo}` : "Llenar Slot Vacío"}</h2>
+          <h2>{isFilled ? "Reasignar Destino" : "Asignar Destino"}</h2>
           <button className="close-btn" onClick={onClose}>
             ✕
           </button>
@@ -56,75 +54,23 @@ export const SwapModal: React.FC<SwapModalProps> = ({
              Estás {isFilled ? "reasignando código" : "cargando"} a bordo del <strong>{ship.nombre}</strong>.
           </p>
 
-          {!isFilled && (
-             <div style={{ marginTop: '16px', marginBottom: '8px', position: 'relative' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: '500', color: '#6b7280', marginBottom: '6px' }}>Tipo de Equipo a Cargar:</label>
-                
-                {/* Custom Type Select */}
-                <div 
-                  className="custom-select-trigger" 
-                   style={{ 
-                    width: '100%', 
-                    boxSizing: 'border-box', 
-                    padding: '10px 14px', 
-                    borderRadius: '8px', 
-                    border: '1px solid #d1d5db', 
-                    backgroundColor: '#ffffff',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    fontSize: '13px',
-                    color: 'var(--color-text-dark)',
-                    fontFamily: 'var(--font-family-primary)'
-                  }}
-                  onClick={() => setIsTypeDropdownOpen(!isTypeDropdownOpen)}
-                >
-                  <span>{selectedEquipoVacios}</span>
-                  <span style={{ fontSize: '10px', color: '#6b7280' }}>▼</span>
-                </div>
-
-                {isTypeDropdownOpen && (
-                  <div style={{ 
-                    position: 'absolute', 
-                    top: 'calc(100% + 4px)', 
-                    left: '0', 
-                    width: '100%', 
-                    background: '#ffffff', 
-                    borderRadius: '8px', 
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', 
-                    border: '1px solid #e5e7eb', 
-                    zIndex: 101, 
-                    overflow: 'hidden' 
-                  }}>
-                    {["Tracker", "Shelter", "Inversor", "Paneles", "Reconectadores"].map(tipo => (
-                      <div 
-                        key={tipo}
-                        style={{ 
-                          padding: '8px 12px', 
-                          fontSize: '13px', 
-                          cursor: 'pointer', 
-                          backgroundColor: selectedEquipoVacios === tipo ? 'rgba(29, 153, 204, 0.1)' : 'white',
-                          color: selectedEquipoVacios === tipo ? 'var(--brand-primary)' : 'var(--color-text-light)',
-                          fontWeight: selectedEquipoVacios === tipo ? 'var(--font-weight-medium)' : 'var(--font-weight-regular)',
-                          fontFamily: 'var(--font-family-primary)',
-                          transition: 'background-color 0.2s'
-                        }}
-                        onClick={() => { 
-                          setSelectedEquipoVacios(tipo); 
-                          setSelectedMgsId(""); 
-                          setIsTypeDropdownOpen(false); 
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
-                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = selectedEquipoVacios === tipo ? '#eff6ff' : 'white'}
-                      >
-                        {tipo}
-                      </div>
-                    ))}
-                  </div>
-                )}
-             </div>
-          )}
+          <div style={{ marginTop: '16px', marginBottom: '8px' }}>
+            <span style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Equipo Pre-cargado
+            </span>
+            <div style={{ 
+              marginTop: '4px',
+              fontSize: '16px', 
+              fontWeight: '700', 
+              color: '#1e293b',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+              {slot.tipoEquipo}
+            </div>
+          </div>
 
           <div className="swap-direction" style={{ overflow: 'visible', marginTop: '16px' }}>
             <div className="swap-box">
@@ -239,7 +185,7 @@ export const SwapModal: React.FC<SwapModalProps> = ({
             onClick={handleAction}
             disabled={!selectedMgsId}
           >
-            {isFilled ? "Confirmar Reubicación" : "Asignar Carga"}
+            {isFilled ? "Confirmar Reasignación" : "Confirmar Asignación"}
           </button>
         </div>
       </div>

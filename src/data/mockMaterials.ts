@@ -9,6 +9,7 @@ export interface MaterialProject {
   location: string;
   materials: {
     panels: MaterialStatus;
+    inverters: MaterialStatus;
     reconectador: MaterialStatus;
     tracker: MaterialStatus;
     shelter: MaterialStatus;
@@ -44,6 +45,7 @@ export const mockMaterialTrackingData: InvestorGroup[] = [
             location: 'COLATLT14P2_LURUACO_SUR',
             materials: {
               panels: { status: 'Zarpe', date: 'FEB.26/25' },
+              inverters: { status: 'Zarpe', date: 'FEB.26/25' },
               reconectador: { status: 'Ingreso a Zona Franca', date: 'FEB.26/25' },
               tracker: { status: 'Licencia de importación', date: 'FEB.26/25' },
               shelter: { status: 'Nacionalización', date: 'FEB.26/25' }
@@ -55,6 +57,7 @@ export const mockMaterialTrackingData: InvestorGroup[] = [
             location: 'COLATLT14P2_LURUACO_SUR',
             materials: {
               panels: { status: 'Faltante' },
+              inverters: { status: 'Faltante' },
               reconectador: { status: 'Ingreso a Zona Franca', date: 'FEB.26/25' },
               tracker: { status: 'Licencia de importación', date: 'FEB.26/25' },
               shelter: { status: 'Nacionalización', date: 'FEB.26/25' }
@@ -74,6 +77,7 @@ export const mockMaterialTrackingData: InvestorGroup[] = [
             location: 'COL_ATL_005',
             materials: {
               panels: { status: 'Zarpe', date: 'MAR.10/25' },
+              inverters: { status: 'Zarpe', date: 'MAR.10/25' },
               reconectador: { status: 'Faltante' },
               tracker: { status: 'Zarpe', date: 'MAR.10/25' },
               shelter: { status: 'Faltante' }
@@ -105,6 +109,7 @@ export const mockMaterialTrackingData: InvestorGroup[] = [
             location: 'COL_GUA_001',
             materials: {
               panels: { status: 'Nacionalización', date: 'FEB.15/25' },
+              inverters: { status: 'Nacionalización', date: 'FEB.15/25' },
               reconectador: { status: 'Nacionalización', date: 'FEB.15/25' },
               tracker: { status: 'Faltante' },
               shelter: { status: 'Zarpe', date: 'MAR.01/25' }
@@ -124,6 +129,7 @@ export const mockMaterialTrackingData: InvestorGroup[] = [
             location: 'COL_NAR_002',
             materials: {
               panels: { status: 'Licencia de importación', date: 'MAR.20/25' },
+              inverters: { status: 'Licencia de importación', date: 'MAR.20/25' },
               reconectador: { status: 'Licencia de importación', date: 'MAR.20/25' },
               tracker: { status: 'Licencia de importación', date: 'MAR.20/25' },
               shelter: { status: 'Licencia de importación', date: 'MAR.20/25' }

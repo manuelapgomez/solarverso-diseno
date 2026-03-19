@@ -45,17 +45,18 @@ export type Portfolio = {
   minigranjas: Minigranja[];
 };
 
-// Generador auxiliar de 15 slots por defecto
-const generarSlotsVacios = (prefijo: string): SlotCarga[] => {
+// Generador auxiliar de 15 slots por defecto (Pre-cargados con equipo aleatorio)
+const generarSlotsPreCargados = (prefijo: string): SlotCarga[] => {
+  const tipos = ["Tracker", "Shelter", "Inversor", "Paneles", "Reconectadores"];
   return Array.from({ length: 15 }).map((_, i) => ({
     idSlot: `${prefijo}-SLOT-${i + 1}`,
-    tipoEquipo: null,
+    tipoEquipo: tipos[Math.floor(Math.random() * tipos.length)], // Tipo de equipo aleatorio
     mgsAsignada: null,
     nombreMgs: null,
   }));
 };
 
-const slotsMSC = generarSlotsVacios("MSC");
+const slotsMSC = generarSlotsPreCargados("MSC");
 // Asignamos algunos quemados para la demostración
 slotsMSC[0] = { idSlot: "MSC-SLOT-1", tipoEquipo: "Tracker", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2" };
 slotsMSC[1] = { idSlot: "MSC-SLOT-2", tipoEquipo: "Shelter", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2" };
@@ -64,20 +65,20 @@ slotsMSC[3] = { idSlot: "MSC-SLOT-4", tipoEquipo: "Paneles", mgsAsignada: "MGS-0
 slotsMSC[4] = { idSlot: "MSC-SLOT-5", tipoEquipo: "Tracker", mgsAsignada: "MGS-005", nombreMgs: "Valle 5" };
 // 10 vacíos...
 
-const slotsPacific = generarSlotsVacios("PAC");
+const slotsPacific = generarSlotsPreCargados("PAC");
 slotsPacific[0] = { idSlot: "PAC-SLOT-1", tipoEquipo: "Tracker", mgsAsignada: "MGS-003", nombreMgs: "Solar Delta" };
 slotsPacific[1] = { idSlot: "PAC-SLOT-2", tipoEquipo: "Inversor", mgsAsignada: "MGS-003", nombreMgs: "Solar Delta" };
 slotsPacific[2] = { idSlot: "PAC-SLOT-3", tipoEquipo: "Reconectadores", mgsAsignada: "MGS-003", nombreMgs: "Solar Delta" };
 slotsPacific[5] = { idSlot: "PAC-SLOT-6", tipoEquipo: "Paneles", mgsAsignada: "MGS-010", nombreMgs: "Uruaco 10" };
 
-const slotsAtlantic = generarSlotsVacios("ATL");
+const slotsAtlantic = generarSlotsPreCargados("ATL");
 slotsAtlantic[0] = { idSlot: "ATL-SLOT-1", tipoEquipo: "Inversor", mgsAsignada: "MGS-014", nombreMgs: "Solaris 3" };
 slotsAtlantic[1] = { idSlot: "ATL-SLOT-2", tipoEquipo: "Tracker", mgsAsignada: "MGS-025", nombreMgs: "Uruaco 1" };
 
-const slotsSolaris = generarSlotsVacios("SOL");
+const slotsSolaris = generarSlotsPreCargados("SOL");
 slotsSolaris[0] = { idSlot: "SOL-SLOT-1", tipoEquipo: "Inversor", mgsAsignada: "MGS-101", nombreMgs: "Andes 1" };
 
-const slotsEverest = generarSlotsVacios("EVE");
+const slotsEverest = generarSlotsPreCargados("EVE");
 slotsEverest[0] = { idSlot: "EVE-SLOT-1", tipoEquipo: "Tracker", mgsAsignada: "MGS-401", nombreMgs: "Bucaramanga 1" };
 
 export const inicialBarcosData: Barco[] = [

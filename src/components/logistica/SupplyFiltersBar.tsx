@@ -1,13 +1,14 @@
 import React from "react";
 import { mockPortfolios } from "../../data/mockLogistica";
+import { mockMaterialTrackingData } from "../../data/mockMaterials";
 
 export interface FiltersState {
   search: string;
-  portfolio: string;
+  portfolio: string[];
+  investor: string[];
+  status: string[];
   period: string;
   assigned: string;
-  investor: string;
-  status: string;
 }
 
 interface SupplyFiltersBarProps {
@@ -22,10 +23,22 @@ export const SupplyFiltersBar: React.FC<SupplyFiltersBarProps> = ({ filters, set
   };
 
   const toggleFilter = (key: keyof FiltersState, value: string) => {
-    setFilters(prev => ({
-      ...prev,
-      [key]: prev[key] === value ? "All" : value
-    }));
+    setFilters(prev => {
+      const current = prev[key];
+      if (Array.isArray(current)) {
+        const isSelected = current.includes(value);
+        return {
+          ...prev,
+          [key]: isSelected 
+            ? current.filter(item => item !== value)
+            : [...current, value]
+        };
+      }
+      return {
+        ...prev,
+        [key]: prev[key] === value ? "All" : value
+      };
+    });
   };
 
   return (
@@ -45,21 +58,51 @@ export const SupplyFiltersBar: React.FC<SupplyFiltersBarProps> = ({ filters, set
       </div>
 
       <div className="pills-container">
-        {/* Attribute Pills */}
+        {/* Inversionista Category (Always visible) */}
         <div className="filter-group">
-          <span className="group-label">Portafolio:</span>
-          {mockPortfolios.map(p => (
+          <span className="group-label">Inversionista:</span>
+          {["FMO", "IDB Invest"].map(inv => (
             <button 
-              key={p.id}
-              className={`filter-pill ${filters.portfolio === p.id ? "active" : ""}`}
-              onClick={() => toggleFilter("portfolio", p.id)}
+              key={inv}
+              className={`filter-pill ${filters.investor.includes(inv) ? "active" : ""}`}
+              onClick={() => toggleFilter("investor", inv)}
             >
-              {p.nombre}
+              {inv}
             </button>
           ))}
         </div>
 
         <div className="v-divider"></div>
+
+        {/* Portafolio Category (Dependent on Investor) */}
+        {filters.investor.length > 0 && (
+          <>
+            <div className="filter-group">
+              <span className="group-label">Portafolio:</span>
+              {mockPortfolios
+                .filter(p => {
+                  // If we need strict data binding, we would use mockMaterialTrackingData here
+                  // For now, let's assume mockPortfolios IDs or names can be matched roughly or just show all if investor selected
+                  // To be precise: match investor name prefix or cross-ref with mockMaterialTrackingData
+                  const investorPortfolios = filters.investor.flatMap(invName => {
+                    const group = mockMaterialTrackingData.find(g => g.investor === invName);
+                    return group ? group.portfolios.map(p => p.id) : [];
+                  });
+                  return investorPortfolios.includes(p.id);
+                })
+                .map(p => (
+                  <button 
+                    key={p.id}
+                    className={`filter-pill ${filters.portfolio.includes(p.id) ? "active" : ""}`}
+                    onClick={() => toggleFilter("portfolio", p.id)}
+                  >
+                    {p.nombre}
+                  </button>
+                ))}
+            </div>
+            <div className="v-divider"></div>
+          </>
+        )}
 
         {/* Status Pills (Outline) */}
         <div className="filter-group">
@@ -67,7 +110,7 @@ export const SupplyFiltersBar: React.FC<SupplyFiltersBarProps> = ({ filters, set
           {["On Route", "Pending", "Arrived"].map(st => (
             <button 
               key={st}
-              className={`filter-pill-outline ${filters.status === st ? "active" : ""} status-${st.toLowerCase().replace(" ", "-")}`}
+              className={`filter-pill-outline ${filters.status.includes(st) ? "active" : ""} status-${st.toLowerCase().replace(" ", "-")}`}
               onClick={() => toggleFilter("status", st)}
             >
               {st}

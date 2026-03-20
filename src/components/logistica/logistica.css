@@ -1211,8 +1211,8 @@
   justify-content: space-between;
   padding: 16px;
   background: #f9fafb;
-  border-radius: 12px;
   border: 1px dashed #d1d5db;
+  border-radius: 12px;
 }
 
 .swap-box {
@@ -1672,20 +1672,24 @@
 /* Supply Filters Bar Styles */
 .filters-bar {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 16px;
   background: white;
-  padding: 16px 20px;
+  padding: 8px 16px;
   border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  margin-bottom: 20px;
   border: 1px solid #f1f5f9;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-  margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
 .search-wrapper {
   position: relative;
-  width: 100%;
-  max-width: 400px;
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  border-radius: 8px;
+  min-width: 240px;
 }
 
 .search-icon {
@@ -1730,35 +1734,35 @@
 }
 
 .group-label {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   color: #64748b;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
   margin-right: 4px;
 }
 
 /* Attribute Pill (Blue) */
 .filter-pill {
-  padding: 4px 14px;
-  background: #eff6ff;
-  border: 1px solid #dbeafe;
-  color: #1e40af;
-  border-radius: 999px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #475569;
   font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
 }
 
 .filter-pill:hover {
-  background: #dbeafe;
-  transform: translateY(-1px);
+  background: #e2e8f0;
 }
 
 .filter-pill.active {
-  background: var(--brand-primary);
-  border-color: var(--brand-primary);
+  background: #0ea5e9;
   color: white;
+  box-shadow: 0 4px 10px rgba(14, 165, 233, 0.25);
 }
 
 .v-divider {
@@ -1769,19 +1773,24 @@
 
 /* Outline Status Pill */
 .filter-pill-outline {
-  padding: 4px 14px;
+  padding: 4px 10px;
+  border-radius: 6px;
   background: white;
   border: 1.5px solid #e2e8f0;
   color: #64748b;
-  border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
-  cursor: pointer;
   transition: all 0.2s;
 }
 
 .filter-pill-outline:hover {
   background: #f8fafc;
+}
+
+.filter-pill-outline.active {
+  background: #0ea5e9;
+  color: white;
+  border-color: #0ea5e9;
 }
 
 /* Status Specific Colors (matching badge-like icons) */

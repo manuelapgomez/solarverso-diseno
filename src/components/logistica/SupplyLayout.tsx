@@ -3,10 +3,21 @@ import { VesselAssignmentView } from './VesselAssignmentView';
 import { MaterialTrackingView } from './MaterialTrackingView';
 import { SwapModal } from './SwapModal';
 import { inicialBarcosData, inicialMgsHuerfanasData, type SlotCarga } from '../../data/mockLogistica';
+import { type FiltersState } from './SupplyFiltersBar';
 import './logistica.css';
 
 export const SupplyLayout: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'vessels' | 'materials'>('materials');
+  
+  // Lifted Filter State
+  const [filters, setFilters] = useState<FiltersState>({
+    search: "",
+    investor: [],
+    portfolio: [],
+    status: [],
+    period: "All",
+    assigned: "All"
+  });
   
   // Lifted State
   const [barcos, setBarcos] = useState(inicialBarcosData);
@@ -85,12 +96,16 @@ export const SupplyLayout: React.FC = () => {
             barcos={barcos}
             mgsHuerfanas={mgsHuerfanas}
             onOpenSwap={handleOpenSwap}
+            filters={filters}
+            setFilters={setFilters}
           />
         ) : (
           <MaterialTrackingView 
             onSwitchToVessels={() => setActiveTab('vessels')} 
             onOpenSwap={handleOpenSwap}
             barcos={barcos}
+            filters={filters}
+            setFilters={setFilters}
           />
         )}
       </div>

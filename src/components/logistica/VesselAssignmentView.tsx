@@ -11,23 +11,17 @@ interface VesselAssignmentViewProps {
   barcos: Barco[];
   mgsHuerfanas: MgsHuerfana[];
   onOpenSwap: (slot: SlotCarga, slotIndex: number, shipId: string) => void;
+  filters: FiltersState;
+  setFilters: React.Dispatch<React.SetStateAction<FiltersState>>;
 }
 
 export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({ 
   barcos, 
   mgsHuerfanas, 
-  onOpenSwap 
+  onOpenSwap,
+  filters,
+  setFilters
 }) => {
-  // Filters State
-  const [filters, setFilters] = useState<FiltersState>({
-    search: "",
-    portfolio: "All",
-    period: "All",
-    assigned: "All",
-    investor: "All",
-    status: "All"
-  });
-
   const [selectedShipId, setSelectedShipId] = useState<string | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
@@ -35,16 +29,17 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
   const filteredBarcos = useMemo(() => {
     return barcos.filter(ship => {
       // Search Box (Deep Filtering)
-      const searchMatch = filters.search === "" || 
-        ship.nombre.toLowerCase().includes(filters.search.toLowerCase()) ||
-        ship.bl_code.toLowerCase().includes(filters.search.toLowerCase()) ||
-        ship.slots.some(slot => slot.nombreMgs?.toLowerCase().includes(filters.search.toLowerCase()));
+      const searchStr = (filters.search || "").toLowerCase();
+      const searchMatch = searchStr === "" || 
+        String(ship.nombre || "").toLowerCase().includes(searchStr) ||
+        String(ship.bl_code || "").toLowerCase().includes(searchStr) ||
+        ship.slots.some(slot => String(slot.nombreMgs || "").toLowerCase().includes(searchStr));
 
-      // Portfolio Filter
-      const portfolioMatch = filters.portfolio === "All" || ship.portfolio === filters.portfolio;
+      // Portfolio Filter (Multi-select)
+      const portfolioMatch = filters.portfolio.length === 0 || filters.portfolio.includes(ship.portfolio);
 
-      // Status Filter
-      const statusMatch = filters.status === "All" || ship.estado === filters.status;
+      // Status Filter (Multi-select)
+      const statusMatch = filters.status.length === 0 || filters.status.includes(ship.estado);
 
       return searchMatch && portfolioMatch && statusMatch;
     });

@@ -24,6 +24,8 @@ export type SlotCarga = {
   detallesDiseno?: Record<string, string | number>;
   timeline?: LogisticaState[];
   historial?: HistorialAsignacion[];
+  faseLogistica?: 'barco' | 'puerto' | 'camion' | 'campo';
+  BT_status?: 'pending' | 'approved';
 };
 
 export type Barco = {
@@ -82,7 +84,9 @@ const generarSlotsPreCargados = (prefijo: string): SlotCarga[] => {
         { label: "En Barco", fechaObjetivo: "2024-04-15", status: "current" },
         { label: "Nacionalización", fechaObjetivo: "2024-05-01", status: "pending" }
       ],
-      historial: []
+      historial: [],
+      faseLogistica: 'barco',
+      BT_status: Math.random() > 0.3 ? 'approved' : 'pending'
     };
   });
 };
@@ -104,7 +108,9 @@ slotsMSC[0] = {
   ],
   historial: [
     { mgsNombre: "Galapa Elite", fecha: "2023-12-01", motivo: "Repriorización de Portafolio" }
-  ]
+  ],
+  faseLogistica: 'barco',
+  BT_status: 'approved'
 };
 slotsMSC[1] = { idSlot: "MSC-SLOT-2", tipoEquipo: "Shelter", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2", historial: [] };
 slotsMSC[2] = { idSlot: "MSC-SLOT-3", tipoEquipo: "Inversor", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2", historial: [] };

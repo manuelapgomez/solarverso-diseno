@@ -46,32 +46,12 @@ export const MaterialTrackingView: React.FC<MaterialTrackingViewProps> = ({
     const isFaltante = data.status === 'Faltante';
     const isAssigned = data.shipId && data.slotIndex !== undefined;
     
-    const getStatusIcon = (status: string) => {
-      switch (status) {
-        case 'Zarpe': 
-          return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 21h20M7 21v-8l5-5 5 5v8M12 8V3M10 5h4" /></svg>;
-        case 'Ingreso a Zona Franca':
-          return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>;
-        case 'Licencia de importación':
-          return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>;
-        case 'Nacionalización':
-          return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>;
-        case 'Faltante':
-          return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /><line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>;
-        default:
-          return <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10" /><path d="M8 12l3 3 5-5" /></svg>;
-      }
-    };
-
     return (
       <div 
         className={`material-cell-premium ${isFaltante ? 'status-faltante' : ''} status-${data.status.replace(/\s+/g, '-').toLowerCase()}`}
         onClick={isFaltante ? onSwitchToVessels : undefined}
         style={{ cursor: isFaltante || isAssigned ? 'pointer' : 'default' }}
       >
-        <div className="status-icon-wrapper">
-          {getStatusIcon(data.status)}
-        </div>
         <div className="status-info">
           <span className="status-label">{data.status}</span>
           {data.date && <span className="status-date">{data.date}</span>}

@@ -64,31 +64,34 @@ export const TruckView: React.FC<TruckViewProps> = ({ barcos, onOpenSwap }) => {
                    </div>
                  </div>
 
-                 <div className="truck-info-footer">
+                 <div className="truck-info-footer" style={{ padding: '24px', background: 'rgba(248, 250, 252, 0.6)', backdropFilter: 'blur(8px)', borderTop: '1px solid rgba(226, 232, 240, 0.5)' }}>
                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
                      <div>
-                       <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 'bold', textTransform: 'uppercase' }}>
-                         MiniGranja {ship.id.substring(0, 4).toUpperCase()}
+                       <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.15em', display: 'block', marginBottom: '4px' }}>
+                         DEST. ID: <strong style={{color: '#64748b'}}>{ship.id.substring(0, 4).toUpperCase()}</strong>
                        </span>
-                       <h3 style={{ margin: '4px 0', fontSize: '20px', color: '#1e293b' }}>
+                       <h3 style={{ margin: '0 0 6px 0', fontSize: '22px', color: '#0f172a', fontWeight: 800, letterSpacing: '-0.02em' }}>
                          {assignedSlots[0]?.nombreMgs || 'Minigranja Destino'}
                        </h3>
-                       <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#64748b', fontSize: '12px' }}>
+                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '11px', fontWeight: 500 }}>
                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                          <span>Uruaco - Luruaco, Atlántico</span>
                        </div>
                      </div>
-                     <span className="status-pill" style={{ background: 'rgba(29, 153, 204, 0.1)', color: 'var(--brand-primary)', fontWeight: 'bold' }}>ON ROUTE</span>
+                     <span className="status-pill status-ready" style={{ letterSpacing: '0.1em' }}>ON ROUTE</span>
                    </div>
 
-                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px', marginTop: '20px' }}>
+                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px', marginTop: '24px', padding: '16px', background: 'rgba(255,255,255,0.7)', borderRadius: '12px' }}>
                      <div>
-                       <span style={{ fontSize: '10px', color: '#94a3b8' }}>SALIDA</span>
-                       <p style={{ margin: 0, fontWeight: 'bold', fontSize: '14px' }}>Mar 22</p>
+                       <span style={{ fontSize: '9px', color: '#94a3b8', display: 'block', letterSpacing: '0.15em', fontWeight: 600, textTransform: 'uppercase', marginBottom: '4px' }}>SALIDA</span>
+                       <p style={{ margin: 0, fontWeight: 800, fontSize: '15px', color: '#334155' }}>Mar 22</p>
                      </div>
                      <div style={{ textAlign: 'right' }}>
-                       <span style={{ fontSize: '10px', color: '#94a3b8' }}>EST. ARRIVAL</span>
-                       <p style={{ margin: 0, fontWeight: 'bold', fontSize: '14px', color: 'var(--brand-primary)' }}>Mar 25</p>
+                       <span style={{ fontSize: '9px', color: '#94a3b8', display: 'block', letterSpacing: '0.15em', fontWeight: 600, textTransform: 'uppercase', marginBottom: '4px' }}>EST. ARRIVAL</span>
+                       <p style={{ margin: 0, fontWeight: 800, fontSize: '15px', color: '#0f172a', display: 'flex', alignItems: 'center', gap: '6px', justifyContent: 'flex-end' }}>
+                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="3"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                         Mar 25
+                       </p>
                      </div>
                    </div>
                  </div>

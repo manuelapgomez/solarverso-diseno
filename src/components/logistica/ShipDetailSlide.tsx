@@ -93,10 +93,6 @@ export const ShipDetailSlide: React.FC<ShipDetailSlideProps> = ({ ship, isOpen, 
               })}
             </div>
           </div>
-          
-          <div className="vessel-hull-base-expert">
-            <div className="hull-detail-line"></div>
-          </div>
         </div>
       </div>
 

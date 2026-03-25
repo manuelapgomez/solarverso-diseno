@@ -1348,25 +1348,28 @@
   gap: 16px;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  position: relative;
+  background: white;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0px 1px 10px 0px rgba(0,0,0,0.12), 
-              0px 4px 5px 0px rgba(0,0,0,0.14), 
-              0px 2px 4px -1px rgba(0,0,0,0.2);
-  min-height: 480px; /* Adjusted */
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03), 0 1px 3px rgba(0,0,0,0.02);
+  border: 1px solid rgba(226, 232, 240, 0.4);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+  height: 100%;
 }
 
 .vessel-card-premium-v2:hover {
-  transform: translateY(-6px);
-  border-color: var(--brand-primary);
-  box-shadow: 0px 10px 30px -5px rgba(0,0,0,0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.03);
+  border-color: rgba(226, 232, 240, 0.8);
 }
 
 .vessel-card-premium-v2.active {
   border-color: var(--brand-primary);
-  border-width: 2px;
-  background: linear-gradient(to bottom, #ffffff, #f8fbff);
-  box-shadow: 0px 20px 40px -10px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 0 0 1px var(--brand-primary), 0 12px 30px rgba(29, 153, 204, 0.15);
 }
 
 /* =========================================
@@ -1402,12 +1405,11 @@
 /* Specific ship graphic styling is now handled by the .ship-hull-graphic.mini and .cargo-grid.mini classes below */
 
 .ship-hull-graphic.mini {
-  /* Dynamic height based on aspect ratio of a ship */
-  aspect-ratio: 12 / 4;
+  /* Match the 800x200 viewBox */
+  aspect-ratio: 4 / 1;
   width: 100%;
-  max-width: 800px; /* Allow ship to be wider on large screens */
-  /* Premium Minimalist Ship Hull SVG - Adjusted for better "embrace" */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 800 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 100 L780 100 L740 180 C730 195 710 200 680 200 L120 200 C90 200 70 195 60 180 L20 100Z' fill='white' fill-opacity='0.05' stroke='%23e2e8f0' stroke-width='2'/%3E%3Cpath d='M680 100 L680 60 L710 60 L710 100' fill='%23f1f5f9' stroke='%23e2e8f0' stroke-width='2'/%3E%3Cline x1='20' y1='102' x2='780' y2='102' stroke='%23e2e8f0' stroke-width='1.5' stroke-dasharray='4 4'/%3E%3C/svg%3E");
+  max-width: 800px;
+  background-image: url('../../assets/logistica/ship_realistic.svg');
   background-repeat: no-repeat;
   background-position: center bottom;
   background-size: 100% auto;
@@ -1422,9 +1424,9 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 4px; 
-  width: 92%; /* Wider grid to embrace the hull better */
-  /* Shift up so it sits exactly on the deck line (y=100 in SVG) */
-  transform: translateY(15%); 
+  width: 85%; /* Slightly narrower to avoid hitting the bridge superstructure */
+  /* Shift down to hit the deck line (y=140 out of 200 is 70% down, minus the height of the slots) */
+  margin-top: 6%; /* Push it down from the top */
   position: relative;
   z-index: 10;
 }
@@ -2194,6 +2196,44 @@
 }
 
 /* ==========================================================================
+   STATUS PILLS (Global Logistica) - Macro/Micro Aesthetic
+   ========================================================================== */
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  background: rgba(241, 245, 249, 0.8);
+  color: #64748b;
+  border: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.status-pill.status-ready {
+  background: rgba(239, 246, 255, 0.8);
+  color: var(--brand-primary);
+  border-color: rgba(219, 234, 254, 0.6);
+}
+
+.status-pill.status-alert {
+  background: rgba(254, 242, 242, 0.8);
+  color: #ef4444;
+  border-color: rgba(254, 226, 226, 0.6);
+}
+
+.status-pill.status-success {
+  background: rgba(240, 253, 244, 0.8);
+  color: #10b981;
+  border-color: rgba(209, 250, 229, 0.6);
+}
+
+/* ==========================================================================
    DETAIL VIEW: EXPERT REDESIGN (LARGE SHIP & GROUPED LIST)
    ========================================================================== */
 
@@ -2252,56 +2292,40 @@
 
 .ship-hull-graphic-expert {
   width: 100%;
+  background-image: url('../../assets/logistica/ship_realistic.svg');
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 100% auto;
   position: relative;
-  padding: 20px 0;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end; /* Sit grid exactly on the hull */
   align-items: center;
+  padding-bottom: 13%; /* Height of the hull from the bottom */
+  margin-top: 40px;
 }
 
 .vessel-slots-deck {
   width: 90%;
   background: transparent;
-  padding: 10px 30px;
   position: relative;
   z-index: 10;
-}
-
-.vessel-hull-base-expert {
-  width: 96%;
-  height: 80px;
-  background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
-  margin-top: -4px;
-  border-radius: 0 0 40px 40px;
-  clip-path: polygon(0% 0%, 100% 0%, 96% 100%, 4% 100%);
-  position: relative;
-  z-index: 5;
-  display: flex;
-  justify-content: center;
-  border-top: 1px solid #cbd5e1;
-}
-
-.hull-detail-line {
-  width: 80%;
-  height: 1px;
-  background: #cbd5e1;
-  margin-top: 20px;
-  opacity: 0.5;
 }
 
 .cargo-grid-large {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
+  gap: 8px 12px; /* tighter vertical gap, maintaining horizontal spacing */
   position: relative;
   z-index: 5;
 }
 
 .cargo-slot-large {
-  height: 60px;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px dashed rgba(100, 116, 139, 0.3);
-  border-radius: 4px; /* More industrial square-ish */
+  height: 80px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 6px; 
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -2311,14 +2335,14 @@
   transition: all 0.2s ease;
   cursor: pointer;
   position: relative;
-  backdrop-filter: blur(2px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
 }
 
 .cargo-slot-large:hover {
-  border-color: var(--brand-primary);
-  background: #f8fafc;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-color: var(--brand-primary);
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(29, 153, 204, 0.15);
 }
 
 .cargo-slot-large.filled {
@@ -3096,15 +3120,22 @@
 
 .truck-card-premium {
   background: #ffffff;
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.4);
   border-radius: 20px;
-  padding: 0; /* Remove internal padding to allow full-width illustration */
+  padding: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: all 0.4s ease;
-  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03), 0 1px 3px rgba(0,0,0,0.02);
   min-height: 420px;
+  cursor: pointer;
+}
+
+.truck-card-premium:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.06), 0 4px 10px rgba(0,0,0,0.03);
+  border-color: rgba(226, 232, 240, 0.8);
 }
 
 .truck-illustration-wrapper {
@@ -3261,29 +3292,41 @@
 }
 
 .port-container-unit {
-  height: 40px;
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 4px;
+  height: 44px;
+  background: white;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  border-radius: 6px;
   display: flex;
   align-items: center;
-  padding: 0 12px;
+  padding: 0 16px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.02);
   position: relative;
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .port-container-unit.approved {
-  border-left: 4px solid #10b981;
+  border-left: 4px solid var(--brand-primary);
+  background: linear-gradient(90deg, rgba(29, 153, 204, 0.05) 0%, transparent 100%);
+}
+
+.port-container-unit.approved::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
   background-image: linear-gradient(90deg, 
-    rgba(0,0,0,0.03) 1px, 
+    rgba(226, 232, 240, 0.6) 1px, 
     transparent 1px
   );
   background-size: 8px 100%;
+  pointer-events: none;
+  opacity: 0.6;
 }
 
 .port-container-unit:hover {
   transform: translateX(4px);
   border-color: var(--brand-primary);
+  box-shadow: 0 4px 12px rgba(29, 153, 204, 0.1);
   z-index: 10;
 }
 

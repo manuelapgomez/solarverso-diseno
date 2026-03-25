@@ -1555,10 +1555,17 @@
   width: 100%;
 }
 
+.panel-title-text {
+  font-weight: 700;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 16px;
+}
+
 .badge-count {
   background: #eff6ff;
   color: #2563eb;
-  padding: 2px 8px;
+  padding: 4px 10px;
   border-radius: 999px;
   font-size: 11px;
   font-weight: 700;
@@ -1569,7 +1576,7 @@
   padding: 0 24px 24px 24px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   max-height: 60vh;
 }
 
@@ -1578,7 +1585,7 @@
   display: flex;
   gap: 16px;
   overflow-x: auto;
-  padding-bottom: 8px;
+  padding-bottom: 12px;
   /* hide scrollbar */
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -1589,65 +1596,89 @@
 }
 
 .portfolio-card {
-  min-width: 240px;
+  min-width: 250px;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 20px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .portfolio-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+  box-shadow: 0 12px 20px -5px rgba(0,0,0,0.06);
   border-color: #cbd5e1;
 }
 
 .portfolio-card.active {
-  border-color: var(--brand-primary);
   background: #f8fafc;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  border-color: transparent;
+  box-shadow: 0 0 0 2px var(--brand-primary), 0 4px 12px rgba(59, 130, 246, 0.12);
 }
 
 .portfolio-card-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .folder-icon-wrapper {
   background: #eff6ff;
-  padding: 8px;
-  border-radius: 10px;
+  padding: 10px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid #dbeafe;
+  color: #2563eb;
 }
 
 .mgs-count-badge {
-  font-size: 11px;
-  font-weight: 600;
-  color: #4b5563;
-  background: #f3f4f6;
-  padding: 4px 8px;
-  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+  background: #f1f5f9;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.portfolio-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.portfolio-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.portfolio-investor {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
 }
 
 /* Dropdown de Minigranjas */
 .minigranjas-dropdown {
-  background: #f8fafc;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  padding: 16px;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  padding: 4px 4px 16px 4px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   overflow-y: auto;
-  max-height: 300px;
+  max-height: 400px;
   animation: slideDownFade 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -1661,21 +1692,52 @@
   justify-content: space-between;
   align-items: center;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
-  padding: 12px 16px;
-  border-radius: 12px;
-  transition: all 0.2s;
+  border: 1px solid #e2e8f0;
+  padding: 16px 20px;
+  border-radius: 16px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
 .minigranja-list-item:hover {
   border-color: #cbd5e1;
-  background: #f1f5f9;
+  background: #f8fafc;
+  transform: translateX(4px);
 }
 
 .mgs-item-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
+}
+
+.mgs-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mgs-item-name {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 15px;
+}
+
+.mgs-item-meta {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.mgs-progress {
+  font-weight: 800;
+  font-size: 14px;
+  color: #334155;
+  background: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 8px;
+  min-width: 56px;
+  text-align: center;
 }
 
 .status-dot {
@@ -3478,4 +3540,36 @@
   flex: 1;
   overflow-y: auto;
   padding: 24px 40px;
+}
+
+/* Orphan Tracking Modal (Strict Mode) */
+.orphan-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.orphan-modal-content {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 900px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  animation: orphan-modal-enter 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+.orphan-modal-body {
+  margin-top: 16px;
+}
+
+@keyframes orphan-modal-enter {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }

@@ -36,10 +36,10 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
         ship.slots.some(slot => String(slot.nombreMgs || "").toLowerCase().includes(searchStr));
 
       // Portfolio Filter (Multi-select)
-      const portfolioMatch = filters.portfolio.length === 0 || filters.portfolio.includes(ship.portfolio);
+      const portfolioMatch = filters.portfolio.length === 0 || filters.portfolio.includes(ship.portfolio as any);
 
       // Status Filter (Multi-select)
-      const statusMatch = filters.status.length === 0 || filters.status.includes(ship.estado);
+      const statusMatch = filters.status.length === 0 || filters.status.includes(ship.estado as any);
 
       return searchMatch && portfolioMatch && statusMatch;
     });
@@ -81,9 +81,10 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
 
         {/* Content Area */}
         <div 
-          style={{ padding: '0 24px 24px 24px', display: 'flex', gap: '24px', flex: 1, overflowY: 'auto', flexDirection: 'column' }}
+          className="assignment-content-scrollable"
+          style={{ padding: '0 12px 24px 12px', display: 'flex', gap: '24px', flex: 1, flexDirection: 'column' }}
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingBottom: '200px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingBottom: '100px' }}>
             <OrphanedPanel orphans={mgsHuerfanas} />
 
             <SupplyFiltersBar filters={filters} setFilters={setFilters} />

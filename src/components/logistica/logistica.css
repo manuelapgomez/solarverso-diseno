@@ -90,7 +90,8 @@
 .supply-layout-container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 56px);
+  height: auto; /* Removed fixed height to allow root scroll */
+  min-height: 100vh;
   background: #f9fafb;
 }
 
@@ -122,16 +123,14 @@
 
 .supply-view-content {
   flex: 1;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
 /* Material Tracking View Styles */
 .material-tracking-container {
-  padding: 32px 80px; /* Matched for consistent breathing room */
+  padding: 32px 24px; /* Significantly reduced lateral padding */
   flex: 1;
-  overflow-y: auto;
 }
 
 .investor-section {
@@ -353,7 +352,8 @@
 .logistica-container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 56px); /* Account for 56px header */
+  width: 100%;
+  padding: 0;
   background-color: #f9fafb; /* Light mode bg */
   color: var(--color-text-dark);
   font-family: var(--font-family-primary);
@@ -379,10 +379,10 @@
 }
 
 .dashboard-header {
-  padding: 40px 80px 20px 80px !important; /* INCREASED SIDE SPACING FOR BREATHABILITY */
+  padding: 24px 24px 20px 24px !important; /* Reduced side spacing to match new content area */
   background: transparent;
   width: 100%;
-  flex-shrink: 0; 
+  flex-shrink: 0;
 }
 
 .dashboard-main {
@@ -593,12 +593,9 @@
 }
 
 .ships-grid-container {
-  padding: 24px 80px 600px 80px; /* Aligned with Header padding */
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* FORCED 3-COLUMN LAYOUT */
-  justify-content: start; 
-  align-content: start;
-  gap: 32px; /* Increased gap for breathing room */
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); /* dynamic grid filling */
+  gap: 24px;
 }
 
 /* Figma Ship Card Style */
@@ -1345,7 +1342,7 @@
   background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 46px; 
-  padding: 24px 32px; /* Increased horizontal padding for more breathing room */
+  padding: 24px 12px; /* Reduced vertical/horizontal padding to maximize internal space */
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -1385,9 +1382,14 @@
 }
 
 .shipcard-hull-wrapper {
+  position: relative;
+  width: 100%;
+  background: transparent;
+  padding: 0 12px;
   display: flex;
-  justify-content: center;
-  margin-bottom: 32px; /* MORE SPACE BELOW HULL */
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
 .vessel-details-content {
@@ -1397,18 +1399,21 @@
   gap: 16px; /* Consistent spacing between blocks */
 }
 
+/* Specific ship graphic styling is now handled by the .ship-hull-graphic.mini and .cargo-grid.mini classes below */
+
 .ship-hull-graphic.mini {
-  height: 180px;
+  /* Dynamic height based on aspect ratio of a ship */
+  aspect-ratio: 12 / 4;
   width: 100%;
-  /* New More Realistic Ship Hull SVG */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 800 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 60 L780 60 L760 140 C750 170 720 185 680 185 L120 185 C80 185 50 170 40 140 L20 60Z' fill='%23f1f5f9' stroke='%23e2e8f0' stroke-width='2'/%3E%3Cpath d='M700 60 L700 30 L740 30 L740 60' fill='%23f1f5f9' stroke='%23e2e8f0' stroke-width='2'/%3E%3Cline x1='20' y1='62' x2='780' y2='62' stroke='%23e2e8f0' stroke-width='2'/%3E%3C/svg%3E");
+  max-width: 800px; /* Allow ship to be wider on large screens */
+  /* Premium Minimalist Ship Hull SVG - Adjusted for better "embrace" */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 800 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 100 L780 100 L740 180 C730 195 710 200 680 200 L120 200 C90 200 70 195 60 180 L20 100Z' fill='white' fill-opacity='0.05' stroke='%23e2e8f0' stroke-width='2'/%3E%3Cpath d='M680 100 L680 60 L710 60 L710 100' fill='%23f1f5f9' stroke='%23e2e8f0' stroke-width='2'/%3E%3Cline x1='20' y1='102' x2='780' y2='102' stroke='%23e2e8f0' stroke-width='1.5' stroke-dasharray='4 4'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center bottom;
   background-size: 100% auto;
   display: flex;
-  align-items: flex-start; /* Containers on deck! */
+  align-items: flex-start;
   justify-content: center;
-  padding-top: 15px; /* Adjusting gap to the top deck line */
   position: relative;
   z-index: 1;
 }
@@ -1417,55 +1422,75 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 4px; 
-  width: 88%;
-  margin: 0 auto;
+  width: 92%; /* Wider grid to embrace the hull better */
+  /* Shift up so it sits exactly on the deck line (y=100 in SVG) */
+  transform: translateY(15%); 
   position: relative;
   z-index: 10;
 }
 
 .cargo-slot.mini-slot {
-  height: 36px; 
+  height: 34px; /* Slightly shorter to avoid overwhelming the hull */
   background: rgba(255, 255, 255, 0.4);
-  border: 1px dashed #cbd5e1;
-  border-radius: 4px;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  border-radius: 4px; /* More industrial square corners */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(2px);
-  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Container Ribs Effect */
+.cargo-slot.mini-slot::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(0,0,0,0.03) 10%, 
+    transparent 20%
+  );
+  background-size: 8px 100%;
+  pointer-events: none;
 }
 
 .cargo-slot.mini-slot:hover {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.8);
   border-color: var(--brand-primary);
+  transform: scale(1.05);
+  z-index: 20;
 }
 
 .cargo-slot.mini-slot.unassigned {
-  background: rgba(248, 250, 252, 0.5);
-  border: 1px dashed #94a3b8;
+  background: rgba(241, 245, 249, 0.3);
+  border: 1px dashed rgba(148, 163, 184, 0.5);
 }
 
 .cargo-slot.mini-slot.filled {
-  background: var(--brand-primary);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 8px rgba(29, 153, 204, 0.3);
+  background: linear-gradient(135deg, var(--brand-primary) 0%, #1783b0 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(29, 153, 204, 0.25);
 }
 
 .cargo-slot.mini-slot .cargo-type-label {
-  font-size: 7.5px;
-  font-weight: 800;
-  color: #64748b;
+  font-size: 6.5px; /* Significantly smaller for consistency and fit */
+  font-weight: 700;
+  color: #94a3b8;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
   text-align: center;
-  line-height: 1.1;
-  padding: 0 2px;
+  transition: color 0.2s;
 }
 
 .cargo-slot.mini-slot.filled .cargo-type-label {
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.95);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .capacity-section {
@@ -2800,17 +2825,20 @@
 }
 
 .container-card {
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 18px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-  transition: transform 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
 }
 
 .container-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transform: translateY(-4px);
+  border-color: var(--brand-primary);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.1);
 }
 
 .container-header {
@@ -2825,8 +2853,9 @@
 .container-id {
   font-family: var(--font-family-monospace);
   font-weight: 700;
-  color: #1e293b;
-  font-size: 13px;
+  color: #64748b;
+  font-size: 11px;
+  letter-spacing: 0.05em;
 }
 
 .ship-tag {
@@ -2834,8 +2863,9 @@
   background: #eff6ff;
   color: #2563eb;
   padding: 2px 8px;
-  border-radius: 99px;
-  font-weight: 600;
+  border-radius: 6px;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .container-body {
@@ -3001,19 +3031,19 @@
 /* Port BL Grouping */
 .port-bl-group {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 20px;
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  border-radius: 24px;
   padding: 24px;
   margin-bottom: 32px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.03);
 }
 
 .bl-group-header {
   display: flex;
   align-items: center;
-  gap: 32px;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
+  gap: 40px;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
   border-bottom: 1px solid #f1f5f9;
 }
 
@@ -3024,53 +3054,239 @@
 
 .bl-label, .vessel-label {
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 700;
   color: #94a3b8;
   letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
 }
 
 .bl-value, .vessel-value {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 800;
   color: #1e293b;
+  letter-spacing: -0.02em;
 }
 
 .slot-count-tag {
   margin-left: auto;
-  background: #f1f5f9;
-  color: #475569;
-  padding: 4px 12px;
-  border-radius: 20px;
+  background: #eff6ff;
+  color: var(--brand-primary);
+  padding: 6px 16px;
+  border-radius: 12px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
+  border: 1px solid #dbeafe;
 }
 
 .badge-bt {
   font-size: 9px;
-  font-weight: 700;
+  font-weight: 800;
   background: #ecfdf5;
   color: #059669;
-  padding: 2px 6px;
-  border-radius: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
 }
 
 /* Truck Card Premium Refinement */
+/* =========================================
+   Literal Refactor: Truck & Co Style
+   ========================================= */
+
 .truck-card-premium {
   background: #ffffff;
-  border: 1.5px solid #eef2f6;
+  border: 1px solid rgba(226, 232, 240, 0.8);
   border-radius: 20px;
-  padding: 24px;
+  padding: 0; /* Remove internal padding to allow full-width illustration */
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  transition: all 0.4s ease;
+  box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.05);
+  min-height: 420px;
+}
+
+.truck-illustration-wrapper {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  background: linear-gradient(to bottom, #f8fafc, #ffffff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Trailer SVG with empty cargo area */
+.truck-trailer-graphic {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  position: relative;
+}
+
+.truck-cargo-container {
+  position: absolute;
+  top: 13.5%;
+  left: 7.8%;
+  width: 65%;
+  height: 62.5%;
+  display: flex;
+  gap: 4px;
+  padding: 2px;
+}
+
+.cargo-block {
+  height: 100%;
+  background: var(--brand-primary);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(29, 153, 204, 0.4);
+  background-image: linear-gradient(90deg, 
+    rgba(255,255,255,0.1) 1px, 
+    transparent 1px
+  );
+  background-size: 10px 100%;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.02);
+  position: relative;
+  overflow: hidden;
+}
+
+.cargo-block.paneles { background: #1d99cc; }
+.cargo-block.trackers { background: #0a84b1; }
+.cargo-block.otros { background: #64748b; }
+
+.cargo-block::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+}
+
+.cargo-block .block-label {
+  z-index: 1;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.cargo-block .block-qty {
+  font-size: 10px;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+.cargo-slot.truck-slot {
+  height: 100%;
+  border-radius: 4px;
+  font-size: 8px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #94a3b8;
+  transition: all 0.2s;
+}
+
+.cargo-slot.truck-slot.filled {
+  background: var(--brand-primary);
+  border-color: rgba(255,255,255,0.2);
+  color: white;
+  box-shadow: 0 4px 10px rgba(29, 153, 204, 0.3);
+  background-image: linear-gradient(90deg, 
+    rgba(255,255,255,0.1) 1px, 
+    transparent 1px
+  );
+  background-size: 6px 100%;
+}
+
+.truck-info-footer {
+  padding: 24px;
+  background: #ffffff;
+  border-top: 1px solid #f1f5f9;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Port Stack Visualization */
+.port-stack-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.port-terminal-area {
+  background: #f1f5f9;
+  border-bottom: 8px solid #94a3b8;
+  padding: 40px;
+  border-radius: 0 0 24px 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 48px;
+}
+
+.container-stack {
+  display: flex;
+  flex-direction: column-reverse; /* Piling from bottom up */
+  gap: 4px;
+  position: relative;
+}
+
+.container-stack::after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: -20px;
+  right: -20px;
+  height: 4px;
+  background: rgba(0,0,0,0.05);
+  border-radius: 99px;
+}
+
+.port-container-unit {
+  height: 40px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  position: relative;
+}
+
+.port-container-unit.approved {
+  border-left: 4px solid #10b981;
+  background-image: linear-gradient(90deg, 
+    rgba(0,0,0,0.03) 1px, 
+    transparent 1px
+  );
+  background-size: 8px 100%;
+}
+
+.port-container-unit:hover {
+  transform: translateX(4px);
+  border-color: var(--brand-primary);
+  z-index: 10;
 }
 
 .truck-card-premium:hover {
   border-color: var(--brand-primary);
   transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
 }
 
 .truck-visual-header {
@@ -3080,14 +3296,15 @@
 }
 
 .truck-icon-wrapper {
-  width: 48px;
-  height: 48px;
-  background: #f0f9ff;
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
   color: #0ea5e9;
-  border-radius: 12px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.8);
 }
 
 .truck-main-info {
@@ -3095,16 +3312,19 @@
 }
 
 .truck-id {
-  font-size: 11px;
-  font-weight: 800;
+  font-size: 10px;
+  font-weight: 700;
   color: #94a3b8;
-  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 2px;
 }
 
 .truck-dest {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
-  color: #0f172a;
+  color: #1e293b;
+  letter-spacing: -0.01em;
 }
 
 .truck-status-tag {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { type Barco, type SlotCarga } from '../../data/mockLogistica';
 import './logistica.css';
-import truckImg from '../../assets/logistica/truck_realistic.png';
+import truckImg from '../../assets/logistica/truck_flatbed.png';
 
 interface TruckViewProps {
   barcos: Barco[];
@@ -52,11 +52,11 @@ export const TruckView: React.FC<TruckViewProps> = ({ barcos, onOpenSwap }) => {
                            <div 
                              key={idx} 
                              className={`cargo-block ${type.toLowerCase()}`}
-                             style={{ flex: qty }} // Size proportional to qty
+                             style={{ flex: qty }}
                              onClick={firstSlotOfType ? () => onOpenSwap(firstSlotOfType, 0, ship.id) : undefined}
                            >
-                             <span className="block-label">{type}</span>
-                             <span className="block-qty">{qty} UND</span>
+                             <span className="block-label" style={{ fontSize: '9px' }}>{type}</span>
+                             <span className="block-qty" style={{ fontSize: '8px' }}>{qty} U</span>
                            </div>
                          );
                        })}

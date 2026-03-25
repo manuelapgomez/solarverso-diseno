@@ -26,7 +26,7 @@ export const PortfoliosPanel: React.FC<PortfoliosPanelProps> = ({ portfolios }) 
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--brand-primary)' }}>
             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
           </svg>
-          <span style={{ fontWeight: 600, color: 'var(--color-text-dark)', fontFamily: 'var(--font-family-primary)' }}>Portafolios Priorizados</span>
+          <span className="panel-title-text">Portafolios Priorizados</span>
           <span className="badge-count">{portfolios.length}</span>
         </div>
       </div>
@@ -53,8 +53,8 @@ export const PortfoliosPanel: React.FC<PortfoliosPanelProps> = ({ portfolios }) 
                   </div>
                 </div>
                 <div className="portfolio-info">
-                  <h4 style={{ margin: '8px 0 4px 0', fontSize: '14px', color: 'var(--color-text-dark)', fontFamily: 'var(--font-family-primary)' }}>{port.nombre}</h4>
-                  <span style={{ fontSize: '12px', color: 'var(--color-text-medium)', fontFamily: 'var(--font-family-primary)' }}>{port.inversionista}</span>
+                  <h4 className="portfolio-name">{port.nombre}</h4>
+                  <span className="portfolio-investor">{port.inversionista}</span>
                 </div>
               </div>
             ))}
@@ -69,9 +69,9 @@ export const PortfoliosPanel: React.FC<PortfoliosPanelProps> = ({ portfolios }) 
                   <div key={mgs.id} className="minigranja-list-item">
                     <div className="mgs-item-left">
                        <span className={`status-dot ${mgs.estado.replace(" ", "-").toLowerCase()}`}></span>
-                       <div>
-                         <div style={{ fontWeight: 600, color: 'var(--color-text-dark)', fontSize: '14px', fontFamily: 'var(--font-family-primary)' }}>{mgs.nombre}</div>
-                         <div style={{ fontSize: '11px', color: 'var(--color-text-medium)', fontFamily: 'var(--font-family-primary)' }}>{mgs.ubicacion} • {mgs.codigo}</div>
+                       <div className="mgs-item-text">
+                         <div className="mgs-item-name">{mgs.nombre}</div>
+                         <div className="mgs-item-meta">{mgs.ubicacion} • {mgs.codigo}</div>
                        </div>
                     </div>
                     <div className="mgs-item-right">

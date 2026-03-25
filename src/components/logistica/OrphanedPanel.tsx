@@ -1,12 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import { type MgsHuerfana } from "../../data/mockLogistica";
+import { mockMaterialTrackingData, type MaterialStatus } from "../../data/mockMaterials";
 
 interface OrphanedPanelProps {
   orphans: MgsHuerfana[];
 }
 
 export const OrphanedPanel: React.FC<OrphanedPanelProps> = ({ orphans }) => {
+  const [selectedOrphan, setSelectedOrphan] = useState<MgsHuerfana | null>(null);
+
   if (orphans.length === 0) return null;
+
+  const getOrphanMaterialData = (orphanName: string) => {
+    for (const group of mockMaterialTrackingData) {
+      for (const port of group.portfolios) {
+        const found = port.projects.find(p => p.name === orphanName);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
+  const renderMaterialCell = (data: MaterialStatus | undefined, equipmentType: string) => {
+    if (!data) return null;
+    const isFaltante = data.status === 'Faltante';
+    const isAssigned = data.shipId && data.slotIndex !== undefined;
+    
+    return (
+      <div className={`material-cell-premium ${isFaltante ? 'status-faltante' : ''} status-${data.status.replace(/\s+/g, '-').toLowerCase()}`}>
+        <div className="status-info">
+          <span className="status-label">{data.status}</span>
+          {data.date && <span className="status-date">{data.date}</span>}
+          {isAssigned && (
+             <button className="hv-mini-btn" style={{marginTop: '12px'}} onClick={(e) => e.stopPropagation()}>
+               HV: {equipmentType}
+             </button>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -33,7 +66,14 @@ export const OrphanedPanel: React.FC<OrphanedPanelProps> = ({ orphans }) => {
       
       <div className="orphaned-list">
         {orphans.map(orphan => (
-          <div key={orphan.id} className="orphaned-badge" data-priority={orphan.prioridadUnergy} title={`Esperando: ${orphan.equipoFaltante}`}>
+          <div 
+            key={orphan.id} 
+            className="orphaned-badge" 
+            data-priority={orphan.prioridadUnergy} 
+            title={`Esperando: ${orphan.equipoFaltante} - Clic para ver seguimiento`}
+            onClick={() => setSelectedOrphan(orphan)}
+            style={{ cursor: 'pointer' }}
+          >
             <strong>{orphan.nombre}</strong>
             <span className={`badge-detail ${getPriorityColor(orphan.prioridadUnergy)}`}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -47,6 +87,59 @@ export const OrphanedPanel: React.FC<OrphanedPanelProps> = ({ orphans }) => {
           </div>
         ))}
       </div>
+
+      {selectedOrphan && (() => {
+        const projectData = getOrphanMaterialData(selectedOrphan.nombre);
+        return (
+          <div className="orphan-modal-overlay">
+            <div className="orphan-modal-content" onClick={(e) => e.stopPropagation()}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
+                <h3 style={{ margin: 0, fontSize: '20px', color: '#1e293b' }}>
+                  Seguimiento de Equipos: <span style={{color: 'var(--brand-primary)'}}>{selectedOrphan.nombre}</span>
+                </h3>
+                <button 
+                   className="btn-primary" 
+                   style={{ padding: '6px 16px', borderRadius: '8px', background: '#ef4444', border: 'none', color: 'white', fontWeight: 'bold', cursor: 'pointer' }}
+                   onClick={() => setSelectedOrphan(null)}
+                >
+                  Cerrar
+                </button>
+              </div>
+              
+              <div className="orphan-modal-body">
+                {projectData ? (
+                  <div className="project-status-cells" style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px' }}>
+                    <div style={{flex: '1'}}>
+                       <div style={{fontSize: '11px', fontWeight: 'bold', color: '#64748b', marginBottom: '8px', textTransform: 'uppercase'}}>Paneles</div>
+                       {renderMaterialCell(projectData.materials.panels, 'PANELES')}
+                    </div>
+                    <div style={{flex: '1'}}>
+                       <div style={{fontSize: '11px', fontWeight: 'bold', color: '#64748b', marginBottom: '8px', textTransform: 'uppercase'}}>Inversor</div>
+                       {renderMaterialCell(projectData.materials.inverters, 'INVERSOR')}
+                    </div>
+                    <div style={{flex: '1'}}>
+                       <div style={{fontSize: '11px', fontWeight: 'bold', color: '#64748b', marginBottom: '8px', textTransform: 'uppercase'}}>Reconectador</div>
+                       {renderMaterialCell(projectData.materials.reconectador, 'RECONECTADOR')}
+                    </div>
+                    <div style={{flex: '1'}}>
+                       <div style={{fontSize: '11px', fontWeight: 'bold', color: '#64748b', marginBottom: '8px', textTransform: 'uppercase'}}>Tracker</div>
+                       {renderMaterialCell(projectData.materials.tracker, 'TRACKER')}
+                    </div>
+                    <div style={{flex: '1'}}>
+                       <div style={{fontSize: '11px', fontWeight: 'bold', color: '#64748b', marginBottom: '8px', textTransform: 'uppercase'}}>Shelter</div>
+                       {renderMaterialCell(projectData.materials.shelter, 'SHELTER')}
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>
+                    <p>No se encontraron datos de seguimiento para esta MGS en el pipeline actual.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };

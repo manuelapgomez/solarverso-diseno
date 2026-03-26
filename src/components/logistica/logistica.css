@@ -1762,13 +1762,13 @@
 .filters-bar {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
   background: white;
-  padding: 8px 16px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-  margin-bottom: 20px;
-  border: 1px solid #f1f5f9;
+  padding: 12px 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  margin-bottom: 24px;
+  border: 1px solid #e2e8f0;
   flex-wrap: wrap;
 }
 
@@ -1776,14 +1776,13 @@
   position: relative;
   display: flex;
   align-items: center;
-  background: #f8fafc;
-  border-radius: 8px;
-  min-width: 240px;
+  flex: 1;
+  min-width: 280px;
 }
 
 .search-icon {
   position: absolute;
-  left: 12px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
   color: #94a3b8;
@@ -1792,13 +1791,15 @@
 
 .search-input {
   width: 100%;
-  padding: 10px 12px 10px 40px;
+  padding: 10px 16px 10px 42px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   font-size: 14px;
-  color: #1e293b;
-  transition: all 0.2s;
+  font-weight: 500;
+  color: #0f172a;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 40px;
 }
 
 .search-input:focus {
@@ -1811,7 +1812,7 @@
 .pills-container {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
   flex-wrap: wrap;
 }
 
@@ -1823,7 +1824,7 @@
 }
 
 .group-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: #64748b;
   text-transform: uppercase;
@@ -1833,53 +1834,67 @@
 
 /* Attribute Pill (Blue) */
 .filter-pill {
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 0 16px;
+  border-radius: 8px;
   background: #f1f5f9;
   color: #475569;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   border: 1px solid transparent;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
 }
 
 .filter-pill:hover {
   background: #e2e8f0;
+  color: #1e293b;
 }
 
 .filter-pill.active {
-  background: #0ea5e9;
+  background: var(--brand-primary);
   color: white;
-  box-shadow: 0 4px 10px rgba(14, 165, 233, 0.25);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .v-divider {
   width: 1px;
-  height: 20px;
+  height: 24px;
   background: #e2e8f0;
 }
 
 /* Outline Status Pill */
 .filter-pill-outline {
-  padding: 4px 10px;
-  border-radius: 6px;
+  padding: 0 16px;
+  border-radius: 8px;
   background: white;
-  border: 1.5px solid #e2e8f0;
-  color: #64748b;
-  font-size: 12px;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  font-size: 13px;
   font-weight: 600;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
 }
 
 .filter-pill-outline:hover {
   background: #f8fafc;
+  border-color: #94a3b8;
+  color: #1e293b;
 }
 
 .filter-pill-outline.active {
-  background: #0ea5e9;
+  background: var(--brand-primary);
   color: white;
-  border-color: #0ea5e9;
+  border-color: var(--brand-primary);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 /* Status Specific Colors (matching badge-like icons) */
@@ -3330,67 +3345,171 @@
   border-bottom: 8px solid #94a3b8;
   padding: 40px;
   border-radius: 0 0 24px 24px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 48px;
-}
-
-.container-stack {
   display: flex;
-  flex-direction: column-reverse; /* Piling from bottom up */
-  gap: 4px;
-  position: relative;
+  gap: 32px;
+  overflow-x: auto;
+  align-items: stretch; /* Make all cards the same height */
+  padding-bottom: 48px; /* Extra space for scrolling */
 }
 
-.container-stack::after {
-  content: '';
-  position: absolute;
-  bottom: -12px;
-  left: -20px;
-  right: -20px;
-  height: 4px;
-  background: rgba(0,0,0,0.05);
-  border-radius: 99px;
-}
+/* =========================================
+   Literal Container Stacking UI - V2 (Premium)
+   ========================================= */
 
-.port-container-unit {
-  height: 44px;
-  background: white;
-  border: 1px solid rgba(226, 232, 240, 0.6);
-  border-radius: 6px;
+.port-section-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #334155;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
-  padding: 0 16px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-  position: relative;
-  transition: all 0.3s ease;
-  overflow: hidden;
+  gap: 12px;
 }
-
-.port-container-unit.approved {
-  border-left: 4px solid var(--brand-primary);
-  background: linear-gradient(90deg, rgba(29, 153, 204, 0.05) 0%, transparent 100%);
-}
-
-.port-container-unit.approved::after {
+.port-section-title::before {
   content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-image: linear-gradient(90deg, 
-    rgba(226, 232, 240, 0.6) 1px, 
-    transparent 1px
-  );
-  background-size: 8px 100%;
-  pointer-events: none;
-  opacity: 0.6;
+  display: block;
+  width: 12px;
+  height: 12px;
+  background: var(--brand-primary);
+  border-radius: 50%;
 }
 
-.port-container-unit:hover {
-  transform: translateX(4px);
-  border-color: var(--brand-primary);
-  box-shadow: 0 4px 12px rgba(29, 153, 204, 0.1);
+.terminal-column-base {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Header at top, containers pushed to bottom */
+  gap: 20px;
+  transition: all 0.3s ease;
+  min-width: 340px;
+  flex-shrink: 0; /* Prevent overlapping/compressing */
+}
+
+.terminal-column-base:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -15px rgba(0,0,0,0.08);
+  border-color: #cbd5e1;
+}
+
+.terminal-column-header {
+  margin-bottom: 0px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.bl-label-mini {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.bl-code-main {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  color: #0f172a;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.bl-vessel-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vessel-name-sub {
+  font-size: 13px;
+  color: #475569;
+  font-weight: 500;
+}
+
+.literal-stack {
+  display: flex;
+  flex-direction: column-reverse; /* Piling from bottom up */
+  gap: 4px; /* Small gap is cleaner than 0px */
+  position: relative;
+}
+
+.literal-container {
+  height: 52px; /* Bigger */
+  border-radius: 6px; 
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.04);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.literal-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px -4px rgba(0,0,0,0.08);
   z-index: 10;
 }
+
+/* Base Texture - softer */
+.container-ribs {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    90deg, 
+    rgba(0,0,0,0.02) 0%, 
+    rgba(0,0,0,0.02) 20%, 
+    transparent 20%, 
+    transparent 80%,
+    rgba(255,255,255,0.05) 80%, 
+    rgba(255,255,255,0.05) 100%
+  );
+  background-size: 16px 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.literal-container-content {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 16px;
+  justify-content: space-between;
+  color: #0f172a;
+}
+
+.container-logo {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+}
+
+.container-full-type {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  background: rgba(255,255,255,0.6);
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #334155;
+}
+
+/* Elegant Muted Pastel Colors */
+.type-tracker { background: #e0f2fe; border-left: 4px solid #0284c7; }   /* Light Sky Blue */
+.type-paneles { background: #dcfce7; border-left: 4px solid #16a34a; }   /* Light Green */
+.type-inversor { background: #ffedd5; border-left: 4px solid #ea580c; }  /* Light Orange */
+.type-shelter { background: #f1f5f9; border-left: 4px solid #475569; }   /* Light Slate */
+.type-reconectadores { background: #f3e8ff; border-left: 4px solid #9333ea; } /* Light Purple */
+.type-generico { background: #ffe4e6; border-left: 4px solid #e11d48; }  /* Light Rose */
 
 .truck-card-premium:hover {
   border-color: var(--brand-primary);

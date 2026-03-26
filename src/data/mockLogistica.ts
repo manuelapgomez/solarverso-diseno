@@ -140,6 +140,14 @@ slotsSolaris[4] = { idSlot: "SOL-SLOT-5", tipoEquipo: "Paneles", mgsAsignada: "M
 const slotsEverest = generarSlotsPreCargados("EVE");
 slotsEverest[0] = { idSlot: "EVE-SLOT-1", tipoEquipo: "Tracker", mgsAsignada: "MGS-401", nombreMgs: "Bucaramanga 1", historial: [] };
 
+const slotsTitan = generarSlotsPreCargados("TIT");
+slotsTitan[0] = { idSlot: "TIT-SLOT-1", tipoEquipo: "Paneles", mgsAsignada: "MGS-102", nombreMgs: "Andes 2", historial: [] };
+slotsTitan[1] = { idSlot: "TIT-SLOT-2", tipoEquipo: "Tracker", mgsAsignada: "MGS-102", nombreMgs: "Andes 2", historial: [] };
+
+const slotsAurora = generarSlotsPreCargados("AUR");
+slotsAurora[0] = { idSlot: "AUR-SLOT-1", tipoEquipo: "Inversor", mgsAsignada: "MGS-203", nombreMgs: "Bolívar Eco", historial: [] };
+slotsAurora[3] = { idSlot: "AUR-SLOT-4", tipoEquipo: "Shelter", mgsAsignada: "MGS-203", nombreMgs: "Bolívar Eco", historial: [] };
+
 export const inicialBarcosData: Barco[] = [
   {
     id: "SHIP-001",
@@ -191,6 +199,26 @@ export const inicialBarcosData: Barco[] = [
     portfolio: "Santander Energy Plus",
     estado: "Pending"
   },
+  {
+    id: "SHIP-006",
+    bl_code: "BL-3344556",
+    nombre: "Titan Ocean",
+    eta: "2026-07-12",
+    loading_progress: 100,
+    slots: slotsTitan,
+    portfolio: "Portafolio Andino",
+    estado: "Pending"
+  },
+  {
+    id: "SHIP-007",
+    bl_code: "BL-9988776",
+    nombre: "Aurora Line",
+    eta: "2026-08-05",
+    loading_progress: 100,
+    slots: slotsAurora,
+    portfolio: "Caribe Solar Grid",
+    estado: "Pending"
+  }
 ];
 
 export const inicialMgsHuerfanasData: MgsHuerfana[] = [

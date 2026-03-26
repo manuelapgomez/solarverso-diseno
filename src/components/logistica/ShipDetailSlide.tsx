@@ -8,7 +8,7 @@ interface ShipDetailSlideProps {
   onOpenSwap: (slot: SlotCarga, slotIndex: number) => void;
 }
 
-export const ShipDetailSlide: React.FC<ShipDetailSlideProps> = ({ ship, isOpen, onClose, onOpenSwap }) => {
+export const ShipDetailSlide: React.FC<ShipDetailSlideProps> = ({ ship, onClose, onOpenSwap }) => {
   const [lastShip, setLastShip] = React.useState<Barco | null>(null);
 
   React.useEffect(() => {

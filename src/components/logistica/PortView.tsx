@@ -23,45 +23,95 @@ export const PortView: React.FC<PortViewProps> = ({ barcos, onOpenSwap }) => {
         </header>
 
         <div className="port-stack-container" style={{ padding: '0 24px 60px 24px' }}>
-          <div className="port-terminal-area">
-            {barcos.map(ship => {
-              const approvedSlots = ship.slots.filter(s => s.mgsAsignada);
-              if (approvedSlots.length === 0) return null;
+          
+          <div className="port-section-wrapper">
+            <h2 className="port-section-title">Terminal Caribe (Cartagena)</h2>
+            <div className="port-terminal-area">
+              {barcos.slice(0, 4).map(ship => {
+                const approvedSlots = ship.slots.filter(s => s.mgsAsignada);
+                if (approvedSlots.length === 0) return null;
 
-              return (
-                <div key={ship.id} className="bl-group" style={{ background: 'white', padding: '24px', borderRadius: '20px', border: '1px solid rgba(226, 232, 240, 0.4)', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }}>
-                  <div style={{ marginBottom: '24px', borderBottom: '1px solid rgba(226, 232, 240, 0.5)', paddingBottom: '16px' }}>
-                    <span style={{ fontSize: '10px', fontWeight: 600, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'block', marginBottom: '4px' }}>BILL OF LADING</span>
-                    <h3 style={{ margin: '0 0 4px 0', fontSize: '24px', color: '#0f172a', fontWeight: 800, letterSpacing: '-0.02em' }}>{ship.bl_code}</h3>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span className="status-pill status-success" style={{ letterSpacing: '0.1em' }}>IN PORT</span>
-                      <span style={{ fontSize: '12px', color: '#64748b', fontWeight: 500 }}>Vessel: <strong>{ship.nombre}</strong></span>
+                return (
+                  <div key={ship.id} className="bl-group terminal-column-base">
+                    <div className="terminal-column-header">
+                      <span className="bl-label-mini">BILL OF LADING</span>
+                      <h3 className="bl-code-main">{ship.bl_code}</h3>
+                      <div className="bl-vessel-info">
+                        <span className="status-pill status-success" style={{ letterSpacing: '0.1em' }}>IN PORT</span>
+                        <span className="vessel-name-sub">Vessel: <strong>{ship.nombre}</strong></span>
+                      </div>
+                    </div>
+
+                    <div className="container-stack literal-stack">
+                      {approvedSlots.map((slot, idx) => {
+                        const equipo = slot.tipoEquipo || 'generico';
+                        const tipoClass = equipo.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                        return (
+                          <div 
+                            key={`${ship.id}-slot-${idx}`} 
+                            className={`port-container-unit literal-container type-${tipoClass}`}
+                            onClick={() => onOpenSwap(slot, idx, ship.id)}
+                            title={`Equipo: ${slot.nombreMgs} - ID: ${slot.mgsAsignada}`}
+                          >
+                            <div className="container-ribs"></div>
+                            <div className="literal-container-content">
+                              <span className="container-logo">{equipo.substring(0, 3).toUpperCase()}</span>
+                              <span className="container-full-type">{equipo.toUpperCase()}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-
-                  <div className="container-stack">
-                    {approvedSlots.map((slot, idx) => (
-                      <div 
-                        key={`${ship.id}-slot-${idx}`} 
-                        className="port-container-unit approved"
-                        onClick={() => onOpenSwap(slot, idx, ship.id)}
-                        title={`Equipo: ${slot.nombreMgs} - ID: ${slot.mgsAsignada}`}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%' }}>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="2.5">
-                            <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="2" y1="7" x2="22" y2="7"/><line x1="2" y1="13" x2="22" y2="13"/>
-                          </svg>
-                          <span style={{ fontSize: '12px', fontWeight: 700, color: '#334155', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '0.05em' }}>
-                            {slot.tipoEquipo}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
+
+          <div className="port-section-wrapper" style={{ marginTop: '48px' }}>
+            <h2 className="port-section-title">Terminal Pacífico (Buenaventura)</h2>
+            <div className="port-terminal-area">
+              {barcos.slice(4).map(ship => {
+                const approvedSlots = ship.slots.filter(s => s.mgsAsignada);
+                if (approvedSlots.length === 0) return null;
+
+                return (
+                  <div key={ship.id} className="bl-group terminal-column-base">
+                    <div className="terminal-column-header">
+                      <span className="bl-label-mini">BILL OF LADING</span>
+                      <h3 className="bl-code-main">{ship.bl_code}</h3>
+                      <div className="bl-vessel-info">
+                        <span className="status-pill status-success" style={{ letterSpacing: '0.1em' }}>IN PORT</span>
+                        <span className="vessel-name-sub">Vessel: <strong>{ship.nombre}</strong></span>
+                      </div>
+                    </div>
+
+                    <div className="container-stack literal-stack">
+                      {approvedSlots.map((slot, idx) => {
+                        const equipo = slot.tipoEquipo || 'generico';
+                        const tipoClass = equipo.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                        return (
+                          <div 
+                            key={`${ship.id}-slot-${idx}`} 
+                            className={`port-container-unit literal-container type-${tipoClass}`}
+                            onClick={() => onOpenSwap(slot, idx, ship.id)}
+                            title={`Equipo: ${slot.nombreMgs} - ID: ${slot.mgsAsignada}`}
+                          >
+                            <div className="container-ribs"></div>
+                            <div className="literal-container-content">
+                              <span className="container-logo">{equipo.substring(0, 3).toUpperCase()}</span>
+                              <span className="container-full-type">{equipo.toUpperCase()}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

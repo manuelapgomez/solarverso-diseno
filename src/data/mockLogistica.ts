@@ -34,6 +34,13 @@ export type Barco = {
   nombre: string;
   etd: string; // Estimated Time of Departure (desde China)
   eta: string; // Estimated Time of Arrival (al destino)
+  telemetry?: {
+    lat: string;
+    lng: string;
+    speed: string;
+    heading: string;
+    lastUpdate: string;
+  };
   loading_progress: number;
   slots: SlotCarga[]; // Capacidad de hasta 15 slots
   portfolio?: string;
@@ -156,6 +163,7 @@ export const inicialBarcosData: Barco[] = [
     nombre: "MSC Katrina",
     etd: "2026-03-05",
     eta: "2026-04-15",
+    telemetry: { lat: "12.3° N", lng: "74.8° W", speed: "18.5 kn", heading: "285°", lastUpdate: "3m ago" },
     loading_progress: 100,
     slots: slotsMSC,
     portfolio: "Portafolio Andino",
@@ -167,6 +175,7 @@ export const inicialBarcosData: Barco[] = [
     nombre: "Pacific Voyager",
     etd: "2026-03-24",
     eta: "2026-05-02",
+    telemetry: { lat: "22.1° N", lng: "114.2° E", speed: "14.2 kn", heading: "180°", lastUpdate: "12m ago" },
     loading_progress: 100,
     slots: slotsPacific,
     portfolio: "Caribe Solar Grid",
@@ -178,6 +187,7 @@ export const inicialBarcosData: Barco[] = [
     nombre: "Atlantic Express",
     etd: "2026-04-10",
     eta: "2026-05-20",
+    telemetry: { lat: "10.5° N", lng: "75.5° W", speed: "16.8 kn", heading: "90°", lastUpdate: "Just now" },
     loading_progress: 100,
     slots: slotsAtlantic,
     portfolio: "Valle del Cauca Hub",
@@ -189,6 +199,7 @@ export const inicialBarcosData: Barco[] = [
     nombre: "Solaris Carrier",
     etd: "2026-05-01",
     eta: "2026-06-10",
+    telemetry: { lat: "1.2° S", lng: "103.8° E", speed: "19.2 kn", heading: "270°", lastUpdate: "5m ago" },
     loading_progress: 100,
     slots: slotsSolaris,
     portfolio: "Portafolio Andino",

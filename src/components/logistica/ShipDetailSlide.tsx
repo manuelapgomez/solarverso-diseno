@@ -136,6 +136,52 @@ export const ShipDetailSlide: React.FC<ShipDetailSlideProps> = ({ ship, onClose,
         </div>
       </div>
 
+      {/* 2. SATELLITE TRACKING SECTION (ZENTRACK) */}
+      {displayShip.telemetry && (
+        <div className="satellite-tracking-section">
+          <div className="satellite-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" strokeWidth="2.5"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+              Seguimiento Satelital (BL Follow-up)
+            </h3>
+            <span className="zentrack-badge">ZENTRACK LIVE</span>
+          </div>
+
+          <div className="satellite-map-container">
+            {/* Mockup Map Image */}
+            <img 
+              src="https://images.unsplash.com/photo-1548120231-1d6f8513c73c?q=80&w=1000&auto=format&fit=crop" 
+              alt="Satellite Tracking Map" 
+              className="satellite-mockup-img" 
+            />
+            
+            <div className="map-overlay-status">
+              <div className="status-dot-pulse"></div>
+              <span className="status-text">LIVE SIGNAL: {displayShip.telemetry.lastUpdate}</span>
+            </div>
+
+            <div className="telemetry-hud">
+              <div className="telemetry-pill">
+                <span className="telemetry-label">LAT / LONG</span>
+                <span className="telemetry-value">{displayShip.telemetry.lat} / {displayShip.telemetry.lng}</span>
+              </div>
+              <div className="telemetry-pill">
+                <span className="telemetry-label">SPEED</span>
+                <span className="telemetry-value">{displayShip.telemetry.speed}</span>
+              </div>
+              <div className="telemetry-pill">
+                <span className="telemetry-label">HEADING</span>
+                <span className="telemetry-value">{displayShip.telemetry.heading}</span>
+              </div>
+              <div className="telemetry-pill">
+                <span className="telemetry-label">LAST UPD</span>
+                <span className="telemetry-value">{displayShip.telemetry.lastUpdate}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Metrics Section */}
       <div className="detail-metrics-row">
          <div className="metric-item">

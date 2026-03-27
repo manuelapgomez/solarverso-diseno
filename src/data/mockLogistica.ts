@@ -32,7 +32,8 @@ export type Barco = {
   id: string;
   bl_code: string;
   nombre: string;
-  eta: string;
+  etd: string; // Estimated Time of Departure (desde China)
+  eta: string; // Estimated Time of Arrival (al destino)
   loading_progress: number;
   slots: SlotCarga[]; // Capacidad de hasta 15 slots
   portfolio?: string;
@@ -153,6 +154,7 @@ export const inicialBarcosData: Barco[] = [
     id: "SHIP-001",
     bl_code: "BL-7890123",
     nombre: "MSC Katrina",
+    etd: "2026-03-05",
     eta: "2026-04-15",
     loading_progress: 100,
     slots: slotsMSC,
@@ -163,6 +165,7 @@ export const inicialBarcosData: Barco[] = [
     id: "SHIP-002",
     bl_code: "BL-8901234",
     nombre: "Pacific Voyager",
+    etd: "2026-03-24",
     eta: "2026-05-02",
     loading_progress: 100,
     slots: slotsPacific,
@@ -173,6 +176,7 @@ export const inicialBarcosData: Barco[] = [
     id: "SHIP-003",
     bl_code: "BL-9012345",
     nombre: "Atlantic Express",
+    etd: "2026-04-10",
     eta: "2026-05-20",
     loading_progress: 100,
     slots: slotsAtlantic,
@@ -183,6 +187,7 @@ export const inicialBarcosData: Barco[] = [
     id: "SHIP-004",
     bl_code: "BL-1122334",
     nombre: "Solaris Carrier",
+    etd: "2026-05-01",
     eta: "2026-06-10",
     loading_progress: 100,
     slots: slotsSolaris,
@@ -193,6 +198,7 @@ export const inicialBarcosData: Barco[] = [
     id: "SHIP-005",
     bl_code: "BL-5566778",
     nombre: "Everest Line",
+    etd: "2026-05-15",
     eta: "2026-06-25",
     loading_progress: 100,
     slots: slotsEverest,
@@ -203,6 +209,7 @@ export const inicialBarcosData: Barco[] = [
     id: "SHIP-006",
     bl_code: "BL-3344556",
     nombre: "Titan Ocean",
+    etd: "2026-06-02",
     eta: "2026-07-12",
     loading_progress: 100,
     slots: slotsTitan,
@@ -213,6 +220,7 @@ export const inicialBarcosData: Barco[] = [
     id: "SHIP-007",
     bl_code: "BL-9988776",
     nombre: "Aurora Line",
+    etd: "2026-06-25",
     eta: "2026-08-05",
     loading_progress: 100,
     slots: slotsAurora,

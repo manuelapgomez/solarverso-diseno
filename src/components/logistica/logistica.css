@@ -1501,6 +1501,131 @@
 }
 
 /* =========================================
+   Transit & ETD Visualization
+   ========================================= */
+.transit-node {
+  display: flex;
+  flex-direction: column;
+}
+
+.transit-connector {
+  position: relative;
+}
+
+.transit-comparison-container {
+  transition: all 0.3s ease;
+}
+
+.vessel-card-premium-v2:hover .transit-comparison-container {
+  background: rgba(248, 250, 252, 1) !important;
+  border-color: var(--brand-primary) !important;
+  transform: translateY(-2px);
+}
+
+/* Ship Detail Slide Transit Styles */
+.transit-comparison-expert {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.transit-stop {
+  flex: 1;
+}
+
+.stop-info {
+  margin-bottom: 8px;
+}
+
+.stop-label {
+  font-size: 9px;
+  font-weight: 800;
+  color: #94a3b8;
+  display: block;
+  letter-spacing: 0.1em;
+}
+
+.stop-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.stop-date-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.stop-date-pill.arrival {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.pill-type {
+  font-size: 10px;
+  font-weight: 800;
+  color: #94a3b8;
+}
+
+.stop-date-pill.arrival .pill-value {
+  color: var(--brand-primary);
+}
+
+.pill-value {
+  font-size: 14px;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.transit-visual-path {
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 0 20px;
+}
+
+.path-line-dash {
+  width: 100%;
+  height: 2px;
+  background-image: linear-gradient(90deg, #e2e8f0 50%, transparent 50%);
+  background-size: 12px 100%;
+  margin-bottom: -10px;
+  margin-top: 10px;
+}
+
+.ship-indicator {
+  background: var(--brand-primary);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid white;
+  box-shadow: 0 4px 10px rgba(29, 153, 204, 0.3);
+  z-index: 2;
+  margin-bottom: 8px;
+}
+
+.transit-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #2563eb;
+  background: #dbeafe;
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+
+/* =========================================
    Portfolios Panel (Drag-Up)
    ========================================= */
 .portfolios-panel {

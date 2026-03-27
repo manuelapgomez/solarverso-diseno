@@ -96,6 +96,46 @@ export const ShipDetailSlide: React.FC<ShipDetailSlideProps> = ({ ship, onClose,
         </div>
       </div>
 
+      {/* Transit Schedule Section - NEW */}
+      <div className="transit-schedule-section" style={{ padding: '24px', background: '#f8fafc', borderBottom: '1px solid #e5e7eb' }}>
+        <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          Transit Schedule & Route
+        </h3>
+        
+        <div className="transit-comparison-expert">
+          <div className="transit-stop departure">
+            <div className="stop-info">
+              <span className="stop-label">PORT OF ORIGIN</span>
+              <span className="stop-name">Shanghai, China (CNSHA)</span>
+            </div>
+            <div className="stop-date-pill">
+              <span className="pill-type">ETD</span>
+              <span className="pill-value">{displayShip.etd}</span>
+            </div>
+          </div>
+
+          <div className="transit-visual-path">
+            <div className="path-line-dash"></div>
+            <div className="ship-indicator">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5"><path d="M22 17H2l2-2h16l2 2z"></path><path d="M20 15V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7"></path><path d="M12 6V2"></path></svg>
+            </div>
+            <span className="transit-label">~38 Days Transit</span>
+          </div>
+
+          <div className="transit-stop arrival">
+            <div className="stop-info" style={{ textAlign: 'right' }}>
+              <span className="stop-label">PORT OF DESTINATION</span>
+              <span className="stop-name">Barranquilla, Colombia (COBAQ)</span>
+            </div>
+            <div className="stop-date-pill arrival">
+              <span className="pill-type">ETA</span>
+              <span className="pill-value">{displayShip.eta}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Metrics Section */}
       <div className="detail-metrics-row">
          <div className="metric-item">
@@ -103,12 +143,12 @@ export const ShipDetailSlide: React.FC<ShipDetailSlideProps> = ({ ship, onClose,
            <span className="m-value">100% PHYSICAL</span>
          </div>
          <div className="metric-item">
-           <span className="m-label">Assigned Slots</span>
-           <span className="m-value">{displayShip.slots.filter(s => s.mgsAsignada).length} / {displayShip.slots.length}</span>
+           <span className="m-label">Departure Port</span>
+           <span className="m-value">Shanghai, CN</span>
          </div>
          <div className="metric-item">
-           <span className="m-label">Destination Route</span>
-           <span className="m-value">Cartagena → Barranquilla</span>
+           <span className="m-label">Arrival Port</span>
+           <span className="m-value">Barranquilla, CO</span>
          </div>
       </div>
 

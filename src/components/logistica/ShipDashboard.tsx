@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import "./logistica.css";
-import { ShipCard } from "./ShipCard";
+import { VesselPremiumCard } from "./VesselPremiumCard";
 import { ShipDetailSlide } from "./ShipDetailSlide";
 import { SwapModal } from "./SwapModal";
 import { OrphanedPanel } from "./OrphanedPanel";
@@ -15,11 +15,11 @@ export const ShipDashboard: React.FC = () => {
   // Filters State
   const [filters, setFilters] = useState<FiltersState>({
     search: "",
-    portfolio: "All",
+    portfolio: [],
     period: "All",
     assigned: "All",
-    investor: "All",
-    status: "All"
+    investor: [],
+    status: []
   });
 
   const [selectedShipId, setSelectedShipId] = useState<string | null>(null);
@@ -36,11 +36,11 @@ export const ShipDashboard: React.FC = () => {
         ship.bl_code.toLowerCase().includes(filters.search.toLowerCase()) ||
         ship.slots.some(slot => slot.nombreMgs?.toLowerCase().includes(filters.search.toLowerCase()));
 
-      // Portfolio Filter
-      const portfolioMatch = filters.portfolio === "All" || ship.portfolio === filters.portfolio;
+      // Portfolio Filter (Multi-select)
+      const portfolioMatch = filters.portfolio.length === 0 || filters.portfolio.includes(ship.portfolio as any);
 
-      // Status Filter
-      const statusMatch = filters.status === "All" || ship.estado === filters.status;
+      // Status Filter (Multi-select)
+      const statusMatch = filters.status.length === 0 || filters.status.includes(ship.estado as any);
 
       return searchMatch && portfolioMatch && statusMatch;
     });
@@ -67,9 +67,9 @@ export const ShipDashboard: React.FC = () => {
         const newSlots = [...ship.slots];
         
         // If there was something already there, it goes back to orphans
-        const oldMgsId = newSlots[slotIndex].mgsAsignada;
-        const oldMgsNombre = newSlots[slotIndex].nombreMgs;
-        const oldTipo = newSlots[slotIndex].tipoEquipo || equipoRequerido;
+        // const oldMgsId = newSlots[slotIndex].mgsAsignada;
+        // const oldMgsNombre = newSlots[slotIndex].nombreMgs;
+        // const oldTipo = newSlots[slotIndex].tipoEquipo || equipoRequerido;
 
         newSlots[slotIndex] = {
           ...newSlots[slotIndex],
@@ -135,7 +135,7 @@ export const ShipDashboard: React.FC = () => {
 
             <div className="ships-grid-container">
               {filteredBarcos.map(ship => (
-                <ShipCard
+                <VesselPremiumCard
                   key={ship.id}
                   ship={ship}
                   isActive={ship.id === selectedShipId}

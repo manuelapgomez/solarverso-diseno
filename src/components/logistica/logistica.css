@@ -1747,8 +1747,8 @@
    ========================================= */
 .arrival-declare-btn {
   position: absolute;
-  top: -16px; /* Overlaps top edge as in screenshot */
-  left: 24px;
+  top: 16px; /* Fully inside the card */
+  left: 16px;
   z-index: 100;
   background: var(--brand-primary);
   color: white;

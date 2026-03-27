@@ -185,7 +185,7 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
             </div>
             
             {/* INCIDENT REPORT BUTTON */}
-            {ship.estado === 'On Route' && onReportIncident && (
+            {ship.estado !== 'Alert' && onReportIncident && (
               <button 
                 className="report-incident-btn" 
                 onClick={(e) => { e.stopPropagation(); onReportIncident(ship.id); }}

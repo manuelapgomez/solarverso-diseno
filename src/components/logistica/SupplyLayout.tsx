@@ -8,6 +8,8 @@ import { PostPortStepper } from './PostPortStepper';
 import { PortView } from './PortView';
 import { TruckView } from './TruckView';
 import { DeclareArrivalModal } from './DeclareArrivalModal';
+import { ReportIncidentModal } from './ReportIncidentModal';
+import { ResumeCourseModal } from './ResumeCourseModal';
 import './logistica.css';
 
 export const SupplyLayout: React.FC = () => {
@@ -17,6 +19,11 @@ export const SupplyLayout: React.FC = () => {
   // Arrival Modal State
   const [isArrivalModalOpen, setIsArrivalModalOpen] = useState(false);
   const [shipToDeclare, setShipToDeclare] = useState<Barco | null>(null);
+  
+  // Incident Modal States
+  const [isIncidentModalOpen, setIsIncidentModalOpen] = useState(false);
+  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
+  const [shipForIncident, setShipForIncident] = useState<Barco | null>(null);
   
   // Lifted Filter State
   const [filters, setFilters] = useState<FiltersState>({
@@ -126,6 +133,38 @@ export const SupplyLayout: React.FC = () => {
     setActivePhase('puerto');
   };
 
+  const handleOpenIncident = (shipId: string) => {
+    const ship = barcos.find(s => s.id === shipId);
+    if (ship) {
+      setShipForIncident(ship);
+      setIsIncidentModalOpen(true);
+    }
+  };
+
+  const handleOpenResume = (shipId: string) => {
+    const ship = barcos.find(s => s.id === shipId);
+    if (ship) {
+      setShipForIncident(ship);
+      setIsResumeModalOpen(true);
+    }
+  };
+
+  const handleConfirmIncident = (shipId: string, reason: string) => {
+    setBarcos(barcos.map((ship: Barco) => 
+      ship.id === shipId ? { ...ship, estado: 'Alert', incidente: reason } : ship
+    ));
+    setIsIncidentModalOpen(false);
+    setShipForIncident(null);
+  };
+
+  const handleConfirmResume = (shipId: string) => {
+    setBarcos(barcos.map((ship: Barco) => 
+      ship.id === shipId ? { ...ship, estado: 'On Route', incidente: undefined } : ship
+    ));
+    setIsResumeModalOpen(false);
+    setShipForIncident(null);
+  };
+
   const selectedShip = swapData ? barcos.find((s: Barco) => s.id === swapData.shipId) : null;
 
   const renderActiveVesselContent = () => {
@@ -139,6 +178,8 @@ export const SupplyLayout: React.FC = () => {
             filters={filters}
             setFilters={setFilters}
             onDeclareArrival={handleDeclareArrival}
+            onReportIncident={handleOpenIncident}
+            onResumeCourse={handleOpenResume}
           />
         );
       case 'puerto':
@@ -212,6 +253,30 @@ export const SupplyLayout: React.FC = () => {
           }}
           ship={shipToDeclare}
           onConfirm={handleConfirmArrival}
+        />
+      )}
+
+      {isIncidentModalOpen && shipForIncident && (
+        <ReportIncidentModal
+           isOpen={isIncidentModalOpen}
+           onClose={() => {
+             setIsIncidentModalOpen(false);
+             setShipForIncident(null);
+           }}
+           ship={shipForIncident}
+           onConfirm={handleConfirmIncident}
+        />
+      )}
+
+      {isResumeModalOpen && shipForIncident && (
+        <ResumeCourseModal
+           isOpen={isResumeModalOpen}
+           onClose={() => {
+             setIsResumeModalOpen(false);
+             setShipForIncident(null);
+           }}
+           ship={shipForIncident}
+           onConfirm={handleConfirmResume}
         />
       )}
     </div>

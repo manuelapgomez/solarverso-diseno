@@ -7,10 +7,12 @@ interface VesselPremiumCardProps {
   onClick: () => void;
   onOpenSwap: (slot: SlotCarga, slotIndex: number) => void;
   onDeclareArrival?: (shipId: string) => void;
+  onReportIncident?: (shipId: string) => void;
+  onResumeCourse?: (shipId: string) => void;
 }
 
 export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({ 
-  ship, isActive, onClick, onOpenSwap, onDeclareArrival 
+  ship, isActive, onClick, onOpenSwap, onDeclareArrival, onReportIncident, onResumeCourse
 }) => {
   // Calculamos slots llenos
   const filledSlotsCount = ship.slots.filter(s => s.mgsAsignada !== null).length;
@@ -25,10 +27,14 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
   const availableSlots = totalSlots - filledSlotsCount;
 
   return (
-    <div className={`vessel-card-premium-v2 ${isActive ? 'active' : ''}`} onClick={(e) => {
+    <div className={`vessel-card-premium-v2 ${isActive ? 'active' : ''} ${ship.estado === 'Alert' ? 'alert-state' : ''}`} onClick={(e) => {
       e.stopPropagation();
-      if ((e.target as HTMLElement).closest('.cargo-slot') || (e.target as HTMLElement).closest('.mini-slot') || (e.target as HTMLElement).closest('.arrival-declare-btn')) return;
-      onClick();
+      if ((e.target as HTMLElement).closest('.cargo-slot') || (e.target as HTMLElement).closest('.mini-slot') || (e.target as HTMLElement).closest('.arrival-declare-btn') || (e.target as HTMLElement).closest('.report-incident-btn') || (e.target as HTMLElement).closest('.alert-resume-btn')) return;
+      if (ship.estado === 'Alert' && onResumeCourse) {
+         onResumeCourse(ship.id);
+      } else {
+         onClick();
+      }
     }}>
       
       {/* BOTÓN DE LLEGADA (TOP LEFT) */}
@@ -56,12 +62,13 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
               return (
                 <div 
                   key={slot.idSlot} 
-                  className={`cargo-slot mini-slot ${isFilled ? 'filled' : 'unassigned'}`}
+                  className={`cargo-slot mini-slot ${isFilled ? 'filled' : 'unassigned'} ${ship.estado === 'Alert' ? 'disabled' : ''}`}
                   onClick={(e) => {
                     e.stopPropagation();
+                    if (ship.estado === 'Alert') return;
                     onOpenSwap(slot, index);
                   }}
-                  title={isFilled ? `Reasignar: ${slot.tipoEquipo}` : `Asignar destino para: ${slot.tipoEquipo}`}
+                  title={ship.estado === 'Alert' ? "Operaciones Suspendidas" : isFilled ? `Reasignar: ${slot.tipoEquipo}` : `Asignar destino para: ${slot.tipoEquipo}`}
                 >
                   <span className="cargo-type-label">{slot.tipoEquipo}</span>
                 </div>
@@ -165,7 +172,8 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
         </div>
 
         {/* 5. LOCATIONS & CAPACITY - Secondary disclosure */}
-        <div className="capacity-section" style={{ borderTop: '1px solid rgba(226, 232, 240, 0.5)', paddingTop: '16px', marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div className="capacity-section" style={{ borderTop: '1px solid rgba(226, 232, 240, 0.5)', paddingTop: '16px', marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', position: 'relative' }}>
+          
           <div className="meta-locations" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: '#64748b', fontWeight: 500 }}>
               <span style={{ opacity: 0.6, fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.1em', width: '30px' }}>ORG</span>
@@ -175,13 +183,36 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
               <span style={{ opacity: 0.6, fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.1em', width: '30px' }}>DST</span>
               <span style={{ color: 'var(--brand-primary)', fontWeight: 700 }}>Barranquilla, CO</span>
             </div>
+            
+            {/* INCIDENT REPORT BUTTON */}
+            {ship.estado === 'On Route' && onReportIncident && (
+              <button 
+                className="report-incident-btn" 
+                onClick={(e) => { e.stopPropagation(); onReportIncident(ship.id); }}
+                style={{ marginTop: '8px' }}
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                Reportar Incidente
+              </button>
+            )}
           </div>
           
           <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px'}}>
              <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600 }}>{minigranjasCount} MULTI-DROP</span>
-             <span className="status-pill status-ready">
-               {availableSlots} FREE SLOTS
-             </span>
+             
+             {ship.estado === 'Alert' ? (
+                <button 
+                  className="alert-resume-btn"
+                   onClick={(e) => { e.stopPropagation(); if(onResumeCourse) onResumeCourse(ship.id); }}
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  Reanudar
+                </button>
+             ) : (
+                <span className="status-pill status-ready">
+                  {availableSlots} FREE SLOTS
+                </span>
+             )}
           </div>
         </div>
       </div>

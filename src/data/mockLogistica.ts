@@ -44,8 +44,9 @@ export type Barco = {
   loading_progress: number;
   slots: SlotCarga[]; // Capacidad de hasta 15 slots
   portfolio?: string;
-  estado?: 'Pending' | 'On Route' | 'Arrived' | string;
+  estado?: 'Pending' | 'On Route' | 'Arrived' | 'Alert' | string;
   terminalArribo?: 'Cartagena' | 'Buenaventura' | null;
+  incidente?: string;
 };
 
 export type MgsHuerfana = {

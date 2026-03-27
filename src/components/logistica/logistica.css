@@ -3727,7 +3727,7 @@
   justify-content: space-between; /* Header at top, containers pushed to bottom */
   gap: 20px;
   transition: all 0.3s ease;
-  min-width: 340px;
+  min-width: 600px;
   flex-shrink: 0; /* Prevent overlapping/compressing */
 }
 
@@ -3774,32 +3774,115 @@
 }
 
 .literal-stack {
-  display: flex;
-  flex-direction: column-reverse; /* Piling from bottom up */
-  gap: 4px; /* Small gap is cleaner than 0px */
-  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 100%;
 }
 
 .literal-container {
-  height: 52px; /* Bigger */
+  height: 52px;
   border-radius: 6px; 
   position: relative;
+}
+
+.port-container-unit.literal-container {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-width: 1px;
+  border-style: solid;
+  border-left-width: 6px;
   cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  position: relative;
   overflow: hidden;
-  border: 1px solid rgba(0,0,0,0.04);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.literal-container:hover {
+.port-container-unit.literal-container:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px -4px rgba(0,0,0,0.08);
-  z-index: 10;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
 }
 
-/* Base Texture - softer */
+.literal-container-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.container-logo {
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.15em;
+  color: #1e293b;
+}
+
+.container-full-type {
+  background: rgba(255,255,255,0.9);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  border: 1px solid transparent;
+  color: #1e293b;
+}
+
+/* Colors Based on Cargo Type */
+.type-tracker {
+  border-left-color: #1D99CC;
+  background-color: rgba(29, 153, 204, 0.15);
+  border-color: rgba(29, 153, 204, 0.3);
+}
+
+.type-paneles {
+  border-left-color: #10B981;
+  background-color: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.type-inversor {
+  border-left-color: #F59E0B;
+  background-color: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.type-shelter {
+  border-left-color: #64748B;
+  background-color: rgba(100, 116, 139, 0.15);
+  border-color: rgba(100, 116, 139, 0.3);
+}
+
+.type-reconectadores {
+  border-left-color: #a855f7; /* purple-500 */
+  background-color: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+/* Unassigned Visual Distinction */
+.port-container-unit.unassigned {
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+  border-style: dashed;
+  opacity: 0.6;
+}
+.port-container-unit.unassigned .container-logo {
+  color: #94a3b8;
+}
+.port-container-unit.unassigned .container-full-type {
+  color: #94a3b8;
+  background: white;
+  border-color: #e2e8f0;
+}
+/* END OF CSS */
+
 .container-ribs {
   position: absolute;
   inset: 0;

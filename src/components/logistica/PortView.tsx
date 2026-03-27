@@ -56,6 +56,7 @@ export const PortView: React.FC<PortViewProps> = ({ barcos, onOpenSwap }) => {
                             }}
                             title={`Equipo: ${slot.nombreMgs} - ID: ${slot.mgsAsignada || 'Sin Asignar'}`}
                           >
+                            <div className="container-ribs"></div>
                             <div className="literal-container-content">
                               <span className="container-logo">{equipo.substring(0, 3).toUpperCase()}</span>
                               <span className="container-full-type">{equipo.toUpperCase()}</span>
@@ -101,6 +102,7 @@ export const PortView: React.FC<PortViewProps> = ({ barcos, onOpenSwap }) => {
                             }}
                             title={`Equipo: ${slot.nombreMgs} - ID: ${slot.mgsAsignada || 'Sin Asignar'}`}
                           >
+                            <div className="container-ribs"></div>
                             <div className="literal-container-content">
                               <span className="container-logo">{equipo.substring(0, 3).toUpperCase()}</span>
                               <span className="container-full-type">{equipo.toUpperCase()}</span>

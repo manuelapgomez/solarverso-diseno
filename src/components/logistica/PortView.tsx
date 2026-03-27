@@ -28,8 +28,8 @@ export const PortView: React.FC<PortViewProps> = ({ barcos, onOpenSwap }) => {
             <h2 className="port-section-title">Terminal Caribe (Cartagena)</h2>
             <div className="port-terminal-area">
               {barcos.filter(ship => ship.estado === 'Arrived' && ship.terminalArribo === 'Cartagena').map(ship => {
-                const approvedSlots = ship.slots.filter(s => s.mgsAsignada);
-                if (approvedSlots.length === 0) return null;
+                const allSlots = ship.slots;
+                if (allSlots.length === 0) return null;
 
                 return (
                   <div key={ship.id} className="bl-group terminal-column-base">
@@ -43,17 +43,19 @@ export const PortView: React.FC<PortViewProps> = ({ barcos, onOpenSwap }) => {
                     </div>
 
                     <div className="container-stack literal-stack">
-                      {approvedSlots.map((slot, idx) => {
+                      {allSlots.map((slot, idx) => {
                         const equipo = slot.tipoEquipo || 'generico';
                         const tipoClass = equipo.toLowerCase().replace(/[^a-z0-9]/g, '-');
                         return (
                           <div 
                             key={`${ship.id}-slot-${idx}`} 
-                            className={`port-container-unit literal-container type-${tipoClass}`}
-                            onClick={() => onOpenSwap(slot, idx, ship.id)}
-                            title={`Equipo: ${slot.nombreMgs} - ID: ${slot.mgsAsignada}`}
+                            className={`port-container-unit literal-container type-${tipoClass} ${!slot.mgsAsignada ? 'unassigned' : ''}`}
+                            onClick={() => {
+                               // Optional: interaction if unassigned vs assigned
+                               onOpenSwap(slot, idx, ship.id);
+                            }}
+                            title={`Equipo: ${slot.nombreMgs} - ID: ${slot.mgsAsignada || 'Sin Asignar'}`}
                           >
-                            <div className="container-ribs"></div>
                             <div className="literal-container-content">
                               <span className="container-logo">{equipo.substring(0, 3).toUpperCase()}</span>
                               <span className="container-full-type">{equipo.toUpperCase()}</span>
@@ -72,8 +74,8 @@ export const PortView: React.FC<PortViewProps> = ({ barcos, onOpenSwap }) => {
             <h2 className="port-section-title">Terminal Pacífico (Buenaventura)</h2>
             <div className="port-terminal-area">
               {barcos.filter(ship => ship.estado === 'Arrived' && ship.terminalArribo === 'Buenaventura').map(ship => {
-                const approvedSlots = ship.slots.filter(s => s.mgsAsignada);
-                if (approvedSlots.length === 0) return null;
+                const allSlots = ship.slots;
+                if (allSlots.length === 0) return null;
 
                 return (
                   <div key={ship.id} className="bl-group terminal-column-base">
@@ -87,17 +89,18 @@ export const PortView: React.FC<PortViewProps> = ({ barcos, onOpenSwap }) => {
                     </div>
 
                     <div className="container-stack literal-stack">
-                      {approvedSlots.map((slot, idx) => {
+                      {allSlots.map((slot, idx) => {
                         const equipo = slot.tipoEquipo || 'generico';
                         const tipoClass = equipo.toLowerCase().replace(/[^a-z0-9]/g, '-');
                         return (
                           <div 
                             key={`${ship.id}-slot-${idx}`} 
-                            className={`port-container-unit literal-container type-${tipoClass}`}
-                            onClick={() => onOpenSwap(slot, idx, ship.id)}
-                            title={`Equipo: ${slot.nombreMgs} - ID: ${slot.mgsAsignada}`}
+                            className={`port-container-unit literal-container type-${tipoClass} ${!slot.mgsAsignada ? 'unassigned' : ''}`}
+                            onClick={() => {
+                               onOpenSwap(slot, idx, ship.id);
+                            }}
+                            title={`Equipo: ${slot.nombreMgs} - ID: ${slot.mgsAsignada || 'Sin Asignar'}`}
                           >
-                            <div className="container-ribs"></div>
                             <div className="literal-container-content">
                               <span className="container-logo">{equipo.substring(0, 3).toUpperCase()}</span>
                               <span className="container-full-type">{equipo.toUpperCase()}</span>

@@ -13,6 +13,7 @@ interface VesselAssignmentViewProps {
   onOpenSwap: (slot: SlotCarga, slotIndex: number, shipId: string) => void;
   filters: FiltersState;
   setFilters: React.Dispatch<React.SetStateAction<FiltersState>>;
+  onDeclareArrival: (shipId: string) => void;
 }
 
 export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({ 
@@ -20,7 +21,8 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
   mgsHuerfanas, 
   onOpenSwap,
   filters,
-  setFilters
+  setFilters,
+  onDeclareArrival
 }) => {
   const [selectedShipId, setSelectedShipId] = useState<string | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -97,6 +99,7 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
                    isActive={ship.id === selectedShipId}
                    onClick={() => handleOpenShipDetail(ship.id)}
                    onOpenSwap={(slot, index) => onOpenSwap(slot, index, ship.id)}
+                   onDeclareArrival={onDeclareArrival}
                 />
               ))}
             </div>

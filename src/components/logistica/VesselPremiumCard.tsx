@@ -6,9 +6,12 @@ interface VesselPremiumCardProps {
   isActive: boolean;
   onClick: () => void;
   onOpenSwap: (slot: SlotCarga, slotIndex: number) => void;
+  onDeclareArrival?: (shipId: string) => void;
 }
 
-export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({ ship, isActive, onClick, onOpenSwap }) => {
+export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({ 
+  ship, isActive, onClick, onOpenSwap, onDeclareArrival 
+}) => {
   // Calculamos slots llenos
   const filledSlotsCount = ship.slots.filter(s => s.mgsAsignada !== null).length;
   const totalSlots = ship.slots.length;
@@ -24,9 +27,25 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({ ship, isAc
   return (
     <div className={`vessel-card-premium-v2 ${isActive ? 'active' : ''}`} onClick={(e) => {
       e.stopPropagation();
-      if ((e.target as HTMLElement).closest('.cargo-slot') || (e.target as HTMLElement).closest('.mini-slot')) return;
+      if ((e.target as HTMLElement).closest('.cargo-slot') || (e.target as HTMLElement).closest('.mini-slot') || (e.target as HTMLElement).closest('.arrival-declare-btn')) return;
       onClick();
     }}>
+      
+      {/* BOTÓN DE LLEGADA (TOP LEFT) */}
+      {ship.estado === 'On Route' && onDeclareArrival && (
+        <button 
+          className="arrival-declare-btn"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDeclareArrival(ship.id);
+          }}
+          title="Anunciar Llegada a Puerto"
+        >
+          <div className="btn-pulse-ring"></div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M22 17H2l2-2h16l2 2z"></path><path d="M20 15V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7"></path></svg>
+          <span className="btn-text">ANUNCIAR LLEGADA</span>
+        </button>
+      )}
       
       {/* 1. SECCIÓN DE SLOTS (TOP PRIORITY) - Premium Industrial Visualization */}
       <div className="shipcard-hull-wrapper" style={{ order: -2 }}>

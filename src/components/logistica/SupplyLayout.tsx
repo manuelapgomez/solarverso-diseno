@@ -7,11 +7,16 @@ import { type FiltersState } from './SupplyFiltersBar';
 import { PostPortStepper } from './PostPortStepper';
 import { PortView } from './PortView';
 import { TruckView } from './TruckView';
+import { DeclareArrivalModal } from './DeclareArrivalModal';
 import './logistica.css';
 
 export const SupplyLayout: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'vessels' | 'materials'>('materials');
   const [activePhase, setActivePhase] = useState<'barco' | 'puerto' | 'camion' | 'campo'>('barco');
+  
+  // Arrival Modal State
+  const [isArrivalModalOpen, setIsArrivalModalOpen] = useState(false);
+  const [shipToDeclare, setShipToDeclare] = useState<Barco | null>(null);
   
   // Lifted Filter State
   const [filters, setFilters] = useState<FiltersState>({
@@ -84,6 +89,43 @@ export const SupplyLayout: React.FC = () => {
     setSwapData(null);
   };
 
+  const handleDeclareArrival = (shipId: string) => {
+    const ship = barcos.find(s => s.id === shipId);
+    if (ship) {
+      setShipToDeclare(ship);
+      setIsArrivalModalOpen(true);
+    }
+  };
+
+  const handleConfirmArrival = (shipId: string, terminal: 'Cartagena' | 'Buenaventura') => {
+    const newBarcos = barcos.map((ship: Barco) => {
+      if (ship.id === shipId) {
+        const newSlots = ship.slots.map(slot => ({
+          ...slot,
+          historial: [
+            ...(slot.historial || []),
+            {
+              mgsNombre: `${terminal} Terminal`,
+              fecha: new Date().toLocaleDateString('es-CO'),
+              motivo: `Llegada a Puerto - BL: ${ship.bl_code}`
+            }
+          ]
+        }));
+        return { 
+          ...ship, 
+          estado: 'Arrived', 
+          terminalArribo: terminal,
+          slots: newSlots 
+        };
+      }
+      return ship;
+    });
+    setBarcos(newBarcos);
+    setIsArrivalModalOpen(false);
+    setShipToDeclare(null);
+    setActivePhase('puerto');
+  };
+
   const selectedShip = swapData ? barcos.find((s: Barco) => s.id === swapData.shipId) : null;
 
   const renderActiveVesselContent = () => {
@@ -96,6 +138,7 @@ export const SupplyLayout: React.FC = () => {
             onOpenSwap={handleOpenSwap}
             filters={filters}
             setFilters={setFilters}
+            onDeclareArrival={handleDeclareArrival}
           />
         );
       case 'puerto':
@@ -157,6 +200,18 @@ export const SupplyLayout: React.FC = () => {
           slotIndex={swapData.slotIndex}
           orphans={mgsHuerfanas}
           onSwap={handlePerformSwap}
+        />
+      )}
+
+      {isArrivalModalOpen && shipToDeclare && (
+        <DeclareArrivalModal 
+          isOpen={isArrivalModalOpen}
+          onClose={() => {
+            setIsArrivalModalOpen(false);
+            setShipToDeclare(null);
+          }}
+          ship={shipToDeclare}
+          onConfirm={handleConfirmArrival}
         />
       )}
     </div>

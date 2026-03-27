@@ -27,7 +27,7 @@ export const PortView: React.FC<PortViewProps> = ({ barcos, onOpenSwap }) => {
           <div className="port-section-wrapper">
             <h2 className="port-section-title">Terminal Caribe (Cartagena)</h2>
             <div className="port-terminal-area">
-              {barcos.slice(0, 4).map(ship => {
+              {barcos.filter(ship => ship.estado === 'Arrived' && ship.terminalArribo === 'Cartagena').map(ship => {
                 const approvedSlots = ship.slots.filter(s => s.mgsAsignada);
                 if (approvedSlots.length === 0) return null;
 
@@ -71,7 +71,7 @@ export const PortView: React.FC<PortViewProps> = ({ barcos, onOpenSwap }) => {
           <div className="port-section-wrapper" style={{ marginTop: '48px' }}>
             <h2 className="port-section-title">Terminal Pacífico (Buenaventura)</h2>
             <div className="port-terminal-area">
-              {barcos.slice(4).map(ship => {
+              {barcos.filter(ship => ship.estado === 'Arrived' && ship.terminalArribo === 'Buenaventura').map(ship => {
                 const approvedSlots = ship.slots.filter(s => s.mgsAsignada);
                 if (approvedSlots.length === 0) return null;
 

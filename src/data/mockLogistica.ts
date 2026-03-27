@@ -44,7 +44,8 @@ export type Barco = {
   loading_progress: number;
   slots: SlotCarga[]; // Capacidad de hasta 15 slots
   portfolio?: string;
-  estado?: string;
+  estado?: 'Pending' | 'On Route' | 'Arrived' | string;
+  terminalArribo?: 'Cartagena' | 'Buenaventura' | null;
 };
 
 export type MgsHuerfana = {
@@ -191,7 +192,8 @@ export const inicialBarcosData: Barco[] = [
     loading_progress: 100,
     slots: slotsAtlantic,
     portfolio: "Valle del Cauca Hub",
-    estado: "Arrived"
+    estado: "Arrived",
+    terminalArribo: "Cartagena"
   },
   {
     id: "SHIP-004",

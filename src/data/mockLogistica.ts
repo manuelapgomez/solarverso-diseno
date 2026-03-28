@@ -4,7 +4,33 @@ export type LogisticaState = {
   label: string;
   fechaObjetivo: string;
   fechaReal?: string;
-  status: "completed" | "current" | "pending";
+  status: "completed" | "current" | "pending" | "alert";
+};
+
+export type ChatMessage = {
+  id: string;
+  author: string;
+  role: string;
+  timestamp: string;
+  content: string;
+  attachment?: string;
+  side: 'left' | 'right';
+};
+
+export type DocChecklist = {
+  nombre: string;
+  fecha: string;
+  comentarios: string;
+  valoracion: 'Cumple' | 'No cumple' | 'No aplica';
+  chat?: ChatMessage[];
+};
+
+export type SpecEquipo = {
+  hileras?: string;
+  corrosionAtmosferica?: string;
+  corrosionSuelo?: string;
+  zonaVientos?: string;
+  tamanoEquipo?: { code: string; quantity: number }[];
 };
 
 export type HistorialAsignacion = {
@@ -18,14 +44,23 @@ export type SlotCarga = {
   tipoEquipo: "Tracker" | "Shelter" | "Inversor" | "Paneles" | "Reconectadores" | string | null;
   mgsAsignada: string | null;
   nombreMgs: string | null;
-  // Propiedades Notion-Style
+  // Propiedades Notion-Style (Hoja de Vida)
+  pedidoCreado?: string;
+  productoId?: string;
   proveedor?: string;
   oc?: string;
+  ocZentrak?: string;
+  estadoActual?: string;
+  fechaTentativa?: string;
+  cantidadSinStock?: number;
+  bls?: string[];
+  especificaciones?: SpecEquipo;
+  documentos?: DocChecklist[];
   detallesDiseno?: Record<string, string | number>;
   timeline?: LogisticaState[];
   historial?: HistorialAsignacion[];
   faseLogistica?: 'barco' | 'puerto' | 'camion' | 'campo';
-  BT_status?: 'pending' | 'approved';
+  BT_status?: 'pending' | 'approved' | 'rejected' | string;
 };
 
 export type Barco = {
@@ -77,6 +112,21 @@ export type Portfolio = {
 };
 
 // Generador auxiliar de 15 slots por defecto (Pre-cargados con equipo aleatorio)
+const generarTimelineFull = (): LogisticaState[] => [
+  { label: "No Pedido", fechaObjetivo: "2024-01-01", fechaReal: "2024-01-01", status: "completed" },
+  { label: "Pedido", fechaObjetivo: "2024-01-15", fechaReal: "2024-01-16", status: "completed" },
+  { label: "En Diseño", fechaObjetivo: "2024-02-01", fechaReal: "2024-02-05", status: "completed" },
+  { label: "Fabricación", fechaObjetivo: "2024-03-01", status: "current" },
+  { label: "Booking", fechaObjetivo: "2024-03-15", status: "pending" },
+  { label: "Zarpe", fechaObjetivo: "2024-04-01", status: "pending" },
+  { label: "Licencia de Importación", fechaObjetivo: "2024-04-15", status: "pending" },
+  { label: "Nacionalización", fechaObjetivo: "2024-05-01", status: "pending" },
+  { label: "Ingreso a Zona Franca", fechaObjetivo: "2024-05-15", status: "pending" },
+  { label: "Inspección", fechaObjetivo: "2024-06-01", status: "pending" },
+  { label: "Transporte al Proyecto", fechaObjetivo: "2024-06-15", status: "pending" },
+  { label: "En Inventario", fechaObjetivo: "2024-07-01", status: "pending" },
+];
+
 const generarSlotsPreCargados = (prefijo: string): SlotCarga[] => {
   const tipos = ["Tracker", "Shelter", "Inversor", "Paneles", "Reconectadores"];
   return Array.from({ length: 15 }).map((_, i) => {
@@ -86,19 +136,84 @@ const generarSlotsPreCargados = (prefijo: string): SlotCarga[] => {
       tipoEquipo: tipo,
       mgsAsignada: null,
       nombreMgs: null,
+      pedidoCreado: "4 de diciembre de 2025 11:01 a.m.",
+      productoId: `P${Math.floor(Math.random() * 900000) + 100000}`,
       proveedor: "Zentrack Industries",
       oc: `OC-2024-${Math.floor(Math.random() * 9000) + 1000}`,
-      detallesDiseno: (tipo === "Tracker" ? { "Modelo": "1V84", "Config": "Self-Powered" } : { "Capacidad": "2.5MW", "Tipo": "Outdoor" }) as Record<string, string>,
-      timeline: [
-        { label: "Zarpe", fechaObjetivo: "2024-03-10", fechaReal: "2024-03-11", status: "completed" },
-        { label: "En Barco", fechaObjetivo: "2024-04-15", status: "current" },
-        { label: "Nacionalización", fechaObjetivo: "2024-05-01", status: "pending" }
+      ocZentrak: `OC-Z-${Math.floor(Math.random() * 9000) + 1000}`,
+      estadoActual: "Fabricación",
+      fechaTentativa: "15/01/2026",
+      cantidadSinStock: Math.floor(Math.random() * 2000) + 500,
+      bls: ["# 101010101010101", "# 202020202020202"],
+      especificaciones: {
+        hileras: "24 Mesas",
+        corrosionAtmosferica: "C2",
+        corrosionSuelo: "Agresivo",
+        zonaVientos: "5",
+        tamanoEquipo: [
+          { code: "1P56", quantity: 17 },
+          { code: "1P28", quantity: 20 },
+          { code: "1P84", quantity: 5 }
+        ]
+      },
+      documentos: [
+        { 
+          nombre: "Certificado ARL", 
+          fecha: "2024-11-03", 
+          comentarios: "Vencido", 
+          valoracion: "No cumple",
+          chat: [
+            { id: "1", author: "Ana García", role: "Revisor SST", timestamp: "2024-11-03 09:00", content: "El certificado presentado se encuentra vencido con fecha de expiración 15/10/2024.", attachment: "Certificado ARL", side: "left" },
+            { id: "2", author: "Ana Gemela", role: "Contratista Y", timestamp: "2024-11-03 09:05", content: "Adjunto la versión actualizada.", attachment: "Certificado ARL v2", side: "right" }
+          ]
+        },
+        { 
+          nombre: "Ficha técnica", 
+          fecha: "2024-01-15", 
+          comentarios: "OK", 
+          valoracion: "Cumple" 
+        }
       ],
+      detallesDiseno: (tipo === "Tracker" ? { "Modelo": "1V84", "Config": "Self-Powered" } : { "Capacidad": "2.5MW", "Tipo": "Outdoor" }) as Record<string, string>,
+      timeline: generarTimelineFull(),
       historial: [],
       faseLogistica: 'barco',
       BT_status: Math.random() > 0.3 ? 'approved' : 'pending'
     };
   });
+};
+
+const baseSlot = (tipo: string, id: string): SlotCarga => {
+  const t = generarTimelineFull();
+  return {
+    idSlot: id,
+    tipoEquipo: tipo,
+    mgsAsignada: null,
+    nombreMgs: null,
+    pedidoCreado: "4 de diciembre de 2025 11:01 a.m.",
+    productoId: `P${Math.floor(Math.random() * 900000) + 100000}`,
+    proveedor: "Zentrack",
+    oc: `OC-2024-${Math.floor(Math.random() * 9000) + 1000}`,
+    ocZentrak: `OC-Z-${Math.floor(Math.random() * 9000) + 1000}`,
+    estadoActual: "Fabricación",
+    fechaTentativa: "15/01/2026",
+    cantidadSinStock: 2016,
+    bls: ["# 101010101010101"],
+    especificaciones: {
+      hileras: "24 Mesas",
+      corrosionAtmosferica: "C2",
+      corrosionSuelo: "Agresivo",
+      zonaVientos: "5",
+      tamanoEquipo: [{ code: "1P56", quantity: 17 }]
+    },
+    documentos: [
+      { nombre: "Ficha técnica", fecha: "2024-01-15", comentarios: "OK", valoracion: "Cumple" }
+    ],
+    timeline: t,
+    historial: [],
+    faseLogistica: 'barco',
+    BT_status: 'pending'
+  };
 };
 
 const slotsMSC = generarSlotsPreCargados("MSC");
@@ -108,35 +223,71 @@ slotsMSC[0] = {
   tipoEquipo: "Tracker", 
   mgsAsignada: "MGS-002", 
   nombreMgs: "Uruaco 2",
+  pedidoCreado: "4 de diciembre de 2025 11:01 a.m.",
+  productoId: "P012012",
   proveedor: "NextTracker",
   oc: "OC-7782",
-  detallesDiseno: { "Hileras": "24 Mesas", "Viento": "140km/h" },
-  timeline: [
-    { label: "Zarpe", fechaObjetivo: "2024-01-05", fechaReal: "2024-01-05", status: "completed" },
-    { label: "En Barco", fechaObjetivo: "2024-02-10", fechaReal: "2024-02-12", status: "completed" },
-    { label: "Nacionalización", fechaObjetivo: "2024-03-01", status: "current" }
+  ocZentrak: "OC-Z-9901",
+  estadoActual: "Fabricación",
+  fechaTentativa: "15/01/2026",
+  cantidadSinStock: 2016,
+  bls: ["# 101010101010101", "# 101010101010101"],
+  especificaciones: {
+    hileras: "24 Mesas",
+    corrosionAtmosferica: "C2",
+    corrosionSuelo: "Agresivo",
+    zonaVientos: "5",
+    tamanoEquipo: [
+      { code: "1P56", quantity: 17 },
+      { code: "1P28", quantity: 20 },
+      { code: "1P84", quantity: 5 }
+    ]
+  },
+  documentos: [
+    { 
+      nombre: "Memorias de Cálculo", 
+      fecha: "2024-01-15", 
+      comentarios: "2.5 MB", 
+      valoracion: "Cumple",
+      chat: [
+        { id: "c1", author: "Ingeniería Central", role: "Aprobador", timestamp: "2024-01-15 10:20", content: "Documento aprobado tras revisión de hileras.", side: "left" }
+      ]
+    },
+    { 
+      nombre: "Manual de operación", 
+      fecha: "2024-01-14", 
+      comentarios: "3.2 MB", 
+      valoracion: "No cumple",
+      chat: [
+        { id: "c2", author: "Ana García", role: "Revisor", timestamp: "2024-01-14 15:45", content: "El manual no corresponde al modelo 1V84.", side: "left" },
+        { id: "c3", author: "Soporte Zentrack", role: "Proveedor", timestamp: "2024-01-14 16:10", content: "Lo corregiremos de inmediato.", side: "right" }
+      ]
+    },
+    { nombre: "Estudio de suelos", fecha: "2024-01-15", comentarios: "5.1 MB", valoracion: "No aplica" }
   ],
+  detallesDiseno: { "Hileras": "24 Mesas", "Viento": "140km/h" },
+  timeline: generarTimelineFull(),
   historial: [
     { mgsNombre: "Galapa Elite", fecha: "2023-12-01", motivo: "Repriorización de Portafolio" }
   ],
   faseLogistica: 'barco',
   BT_status: 'approved'
 };
-slotsMSC[1] = { idSlot: "MSC-SLOT-2", tipoEquipo: "Shelter", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2", historial: [] };
-slotsMSC[2] = { idSlot: "MSC-SLOT-3", tipoEquipo: "Inversor", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2", historial: [] };
-slotsMSC[3] = { idSlot: "MSC-SLOT-4", tipoEquipo: "Paneles", mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2", historial: [] };
-slotsMSC[4] = { idSlot: "MSC-SLOT-5", tipoEquipo: "Tracker", mgsAsignada: "MGS-005", nombreMgs: "Valle 5", historial: [] };
+slotsMSC[1] = { ...baseSlot("Shelter", "MSC-SLOT-2"), mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2" };
+slotsMSC[2] = { ...baseSlot("Inversor", "MSC-SLOT-3"), mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2" };
+slotsMSC[3] = { ...baseSlot("Paneles", "MSC-SLOT-4"), mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2" };
+slotsMSC[4] = { ...baseSlot("Tracker", "MSC-SLOT-5"), mgsAsignada: "MGS-005", nombreMgs: "Valle 5" };
 // 10 vacíos...
 
 const slotsPacific = generarSlotsPreCargados("PAC");
-slotsPacific[0] = { idSlot: "PAC-SLOT-1", tipoEquipo: "Tracker", mgsAsignada: "MGS-003", nombreMgs: "Solar Delta", historial: [] };
-slotsPacific[1] = { idSlot: "PAC-SLOT-2", tipoEquipo: "Inversor", mgsAsignada: "MGS-003", nombreMgs: "Solar Delta", historial: [] };
-slotsPacific[2] = { idSlot: "PAC-SLOT-3", tipoEquipo: "Reconectadores", mgsAsignada: "MGS-003", nombreMgs: "Solar Delta", historial: [] };
-slotsPacific[5] = { idSlot: "PAC-SLOT-6", tipoEquipo: "Paneles", mgsAsignada: "MGS-010", nombreMgs: "Uruaco 10", historial: [] };
+slotsPacific[0] = { ...baseSlot("Tracker", "PAC-SLOT-1"), mgsAsignada: "MGS-003", nombreMgs: "Solar Delta" };
+slotsPacific[1] = { ...baseSlot("Inversor", "PAC-SLOT-2"), mgsAsignada: "MGS-003", nombreMgs: "Solar Delta" };
+slotsPacific[2] = { ...baseSlot("Reconectadores", "PAC-SLOT-3"), mgsAsignada: "MGS-003", nombreMgs: "Solar Delta" };
+slotsPacific[5] = { ...baseSlot("Paneles", "PAC-SLOT-6"), mgsAsignada: "MGS-010", nombreMgs: "Uruaco 10" };
 
 const slotsKraken = generarSlotsPreCargados("KRK");
-slotsKraken[0] = { idSlot: "KRK-SLOT-1", tipoEquipo: "Inversor", mgsAsignada: "MGS-120", nombreMgs: "Galapa 4", historial: [] };
-slotsKraken[2] = { idSlot: "KRK-SLOT-3", tipoEquipo: "Transformer", mgsAsignada: "MGS-120", nombreMgs: "Galapa 4", historial: [] };
+slotsKraken[0] = { ...baseSlot("Inversor", "KRK-SLOT-1"), mgsAsignada: "MGS-120", nombreMgs: "Galapa 4" };
+slotsKraken[2] = { ...baseSlot("Transformer", "KRK-SLOT-3"), mgsAsignada: "MGS-120", nombreMgs: "Galapa 4" };
 
 const slotsAtlantic = generarSlotsPreCargados("ATL");
 slotsAtlantic[0] = { idSlot: "ATL-SLOT-1", tipoEquipo: "Inversor", mgsAsignada: "MGS-014", nombreMgs: "Solaris 3", historial: [] };

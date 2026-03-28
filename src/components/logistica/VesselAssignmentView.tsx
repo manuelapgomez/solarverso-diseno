@@ -14,6 +14,8 @@ interface VesselAssignmentViewProps {
   filters: FiltersState;
   setFilters: React.Dispatch<React.SetStateAction<FiltersState>>;
   onDeclareArrival: (shipId: string) => void;
+  onReportIncident: (shipId: string) => void;
+  onResumeCourse: (shipId: string) => void;
 }
 
 export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({ 
@@ -22,7 +24,9 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
   onOpenSwap,
   filters,
   setFilters,
-  onDeclareArrival
+  onDeclareArrival,
+  onReportIncident,
+  onResumeCourse
 }) => {
   const [selectedShipId, setSelectedShipId] = useState<string | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -100,6 +104,8 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
                    onClick={() => handleOpenShipDetail(ship.id)}
                    onOpenSwap={(slot, index) => onOpenSwap(slot, index, ship.id)}
                    onDeclareArrival={onDeclareArrival}
+                   onReportIncident={onReportIncident}
+                   onResumeCourse={onResumeCourse}
                 />
               ))}
             </div>

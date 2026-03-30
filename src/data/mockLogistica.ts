@@ -61,6 +61,30 @@ export type SlotCarga = {
   historial?: HistorialAsignacion[];
   faseLogistica?: 'barco' | 'puerto' | 'camion' | 'campo';
   BT_status?: 'pending' | 'approved' | 'rejected' | string;
+  // Cantidades para despacho
+  cantidadTotal?: number;
+  cantidadDisponible?: number;
+};
+
+export type CamionItem = {
+  tipo: string;
+  cantidad: number;
+  shipId: string;
+  slotId: string;
+  idMgsDestino: string;
+  nombreMgsDestino: string;
+  fechaEntrega: string;
+};
+
+export type Camion = {
+  id: string;
+  placa: string;
+  capacidadMax: number;
+  capacidadActual: number;
+  estado: 'Loading' | 'On Route' | 'Arrived';
+  items: CamionItem[];
+  fechaRecepcion?: string;
+  recepcionista?: string;
 };
 
 export type Barco = {
@@ -178,7 +202,9 @@ const generarSlotsPreCargados = (prefijo: string): SlotCarga[] => {
       timeline: generarTimelineFull(),
       historial: [],
       faseLogistica: 'barco',
-      BT_status: Math.random() > 0.3 ? 'approved' : 'pending'
+      BT_status: Math.random() > 0.3 ? 'approved' : 'pending',
+      cantidadTotal: 30,
+      cantidadDisponible: 30
     };
   });
 };
@@ -212,7 +238,9 @@ const baseSlot = (tipo: string, id: string): SlotCarga => {
     timeline: t,
     historial: [],
     faseLogistica: 'barco',
-    BT_status: 'pending'
+    BT_status: 'pending',
+    cantidadTotal: 30,
+    cantidadDisponible: 30
   };
 };
 
@@ -391,6 +419,27 @@ export const inicialBarcosData: Barco[] = [
     slots: slotsAurora,
     portfolio: "Caribe Solar Grid",
     estado: "Pending"
+  }
+];
+
+export const inicialCamionesData: Camion[] = [
+  {
+    id: "TRK-001",
+    placa: "XYZ-123",
+    capacidadMax: 100,
+    capacidadActual: 100,
+    estado: "On Route",
+    items: [
+      { 
+        tipo: "Tracker", 
+        cantidad: 30, 
+        shipId: "SHIP-003", 
+        slotId: "ATL-SLOT-2",
+        idMgsDestino: "MGS-101",
+        nombreMgsDestino: "Andes 1",
+        fechaEntrega: "2026-04-18"
+      }
+    ]
   }
 ];
 

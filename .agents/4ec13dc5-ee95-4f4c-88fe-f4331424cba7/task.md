@@ -1,0 +1,6 @@
+- [x] Data Model Updates: `Camion` state 'Arrived' & Project Stock
+- [x] CSS: Project cards, progress rings, field reception UI
+- [x] Component: Create `FieldView.tsx` (Projects Grid + Incoming Queue)
+- [x] Logic: Update `SupplyLayout.tsx` with `handleConfirmReceipt`
+- [x] Integration: Connect `PostPortStepper` to render `FieldView`
+- [x] Verification: Test the full flow from Port -> Truck -> Field

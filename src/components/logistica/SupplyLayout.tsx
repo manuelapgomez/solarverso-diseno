@@ -2,14 +2,26 @@ import React, { useState } from 'react';
 import { VesselAssignmentView } from './VesselAssignmentView';
 import { MaterialTrackingView } from './MaterialTrackingView';
 import { SwapModal } from './SwapModal';
-import { inicialBarcosData, inicialMgsHuerfanasData, type SlotCarga, type Barco } from '../../data/mockLogistica';
+import { 
+  type SlotCarga, 
+  type Barco, 
+  type Camion, 
+  type Minigranja,
+  type MgsHuerfana,
+  inicialBarcosData, 
+  inicialMgsHuerfanasData, 
+  inicialCamionesData,
+  mockPortfolios
+} from '../../data/mockLogistica';
 import { type FiltersState } from './SupplyFiltersBar';
 import { PostPortStepper } from './PostPortStepper';
 import { PortView } from './PortView';
 import { TruckView } from './TruckView';
+import { FieldView } from './FieldView';
 import { DeclareArrivalModal } from './DeclareArrivalModal';
 import { ReportIncidentModal } from './ReportIncidentModal';
 import { ResumeCourseModal } from './ResumeCourseModal';
+import { DispatchModal } from './DispatchModal';
 import './logistica.css';
 
 export const SupplyLayout: React.FC = () => {
@@ -18,26 +30,32 @@ export const SupplyLayout: React.FC = () => {
   
   // Arrival Modal State
   const [isArrivalModalOpen, setIsArrivalModalOpen] = useState(false);
-  const [shipToDeclare, setShipToDeclare] = useState<Barco | null>(null);
-  
-  // Incident Modal States
+  const [shipToArrive, setShipToArrive] = useState<Barco | null>(null);
+
+  // Incident Modal State
   const [isIncidentModalOpen, setIsIncidentModalOpen] = useState(false);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const [shipForIncident, setShipForIncident] = useState<Barco | null>(null);
+
+  // Dispatch Modal State
+  const [isDispatchModalOpen, setIsDispatchModalOpen] = useState(false);
+  const [dispatchSelection, setDispatchSelection] = useState<{ slot: SlotCarga; slotIndex: number; shipId: string }[]>([]);
   
   // Lifted Filter State
   const [filters, setFilters] = useState<FiltersState>({
-    search: "",
-    investor: [],
+    search: '',
     portfolio: [],
+    investor: [],
     status: [],
-    period: "All",
-    assigned: "All"
+    period: 'All',
+    assigned: 'All'
   });
-  
+
   // Lifted State
-  const [barcos, setBarcos] = useState(inicialBarcosData);
-  const [mgsHuerfanas, setMgsHuerfanas] = useState(inicialMgsHuerfanasData);
+  const [barcos, setBarcos] = useState<Barco[]>(inicialBarcosData);
+  const [mgsHuerfanas, setMgsHuerfanas] = useState<MgsHuerfana[]>(inicialMgsHuerfanasData);
+  const [camiones, setCamiones] = useState<Camion[]>(inicialCamionesData);
+  const [minigranjas, setMinigranjas] = useState<Minigranja[]>(mockPortfolios.flatMap(p => p.minigranjas));
   
   // Shared Modal State
   const [isSwapModalOpen, setIsSwapModalOpen] = useState(false);
@@ -48,113 +66,53 @@ export const SupplyLayout: React.FC = () => {
     setIsSwapModalOpen(true);
   };
 
-  const handlePerformSwap = (slotIndex: number, targetMgsId: string, targetMgsNombre: string, equipoRequerido: string) => {
+  const handleConfirmSwap = (slotIndex: number, nuevaMgsId: string, nuevaMgsNombre: string) => {
     if (!swapData) return;
     const { shipId } = swapData;
 
-    const newBarcos = barcos.map((ship: Barco) => {
+    setBarcos(barcos.map((ship: Barco) => {
       if (ship.id === shipId) {
         const newSlots = [...ship.slots];
-        const oldSlot = newSlots[slotIndex];
-        const oldMgsNombre = oldSlot.nombreMgs;
-        const oldHistorial = oldSlot.historial || [];
-
-        let updatedHistorial = [...oldHistorial];
-        if (oldMgsNombre) {
-          updatedHistorial.push({
-            mgsNombre: oldMgsNombre,
-            fecha: new Date().toLocaleDateString('es-CO'),
-            motivo: "Reubicación de Equipo"
-          });
-        }
-
-        // Logic check: If moving to Puerto for the first time, inyect BL code
-        if (activePhase === 'puerto' && (!oldSlot.historial?.some(h => h.motivo.includes('Llegada a Puerto')))) {
-           updatedHistorial.push({
-             mgsNombre: "Puerto (Control Aduanero)",
-             fecha: new Date().toLocaleDateString('es-CO'),
-             motivo: `Llegada a Puerto - BL: ${ship.bl_code}`
-           });
-        }
-
-        newSlots[slotIndex] = {
-          ...oldSlot,
-          mgsAsignada: targetMgsId,
-          nombreMgs: targetMgsNombre,
-          tipoEquipo: equipoRequerido,
-          historial: updatedHistorial
-        };
+        newSlots[slotIndex] = { ...newSlots[slotIndex], mgsAsignada: nuevaMgsId, nombreMgs: nuevaMgsNombre };
         return { ...ship, slots: newSlots };
       }
       return ship;
-    });
+    }));
 
-    const newOrphans = mgsHuerfanas.filter(m => m.id !== targetMgsId);
-    setBarcos(newBarcos);
-    setMgsHuerfanas(newOrphans);
+    setMgsHuerfanas(mgsHuerfanas.filter(m => m.id !== nuevaMgsId));
     setIsSwapModalOpen(false);
     setSwapData(null);
   };
 
-  const handleDeclareArrival = (shipId: string) => {
-    const ship = barcos.find(s => s.id === shipId);
-    if (ship) {
-      setShipToDeclare(ship);
-      setIsArrivalModalOpen(true);
-    }
+  const handleOpenArrival = (ship: Barco) => {
+    setShipToArrive(ship);
+    setIsArrivalModalOpen(true);
   };
 
-  const handleConfirmArrival = (shipId: string, terminal: 'Cartagena' | 'Buenaventura') => {
-    const newBarcos = barcos.map((ship: Barco) => {
-      if (ship.id === shipId) {
-        const newSlots = ship.slots.map(slot => ({
-          ...slot,
-          historial: [
-            ...(slot.historial || []),
-            {
-              mgsNombre: `${terminal} Terminal`,
-              fecha: new Date().toLocaleDateString('es-CO'),
-              motivo: `Llegada a Puerto - BL: ${ship.bl_code}`
-            }
-          ]
-        }));
-        return { 
-          ...ship, 
-          estado: 'Arrived', 
-          terminalArribo: terminal,
-          slots: newSlots 
-        };
-      }
-      return ship;
-    });
-    setBarcos(newBarcos);
-    setIsArrivalModalOpen(false);
-    setShipToDeclare(null);
-    setActivePhase('puerto');
-  };
-
-  const handleOpenIncident = (shipId: string) => {
-    const ship = barcos.find(s => s.id === shipId);
-    if (ship) {
-      setShipForIncident(ship);
-      setIsIncidentModalOpen(true);
-    }
-  };
-
-  const handleOpenResume = (shipId: string) => {
-    const ship = barcos.find(s => s.id === shipId);
-    if (ship) {
-      setShipForIncident(ship);
-      setIsResumeModalOpen(true);
-    }
-  };
-
-  const handleConfirmIncident = (shipId: string, reason: string) => {
+  const handleConfirmArrival = (shipId: string, terminal: string) => {
     setBarcos(barcos.map((ship: Barco) => 
-      ship.id === shipId ? { ...ship, estado: 'Alert', incidente: reason } : ship
+      ship.id === shipId ? { ...ship, estado: 'Arrived', terminalArribo: terminal as any } : ship
+    ));
+    setIsArrivalModalOpen(false);
+    setShipToArrive(null);
+  };
+
+  const handleOpenIncident = (ship: Barco) => {
+    setShipForIncident(ship);
+    setIsIncidentModalOpen(true);
+  };
+
+  const handleConfirmIncident = (shipId: string, incident: string) => {
+    setBarcos(barcos.map((ship: Barco) => 
+      ship.id === shipId ? { ...ship, estado: 'Incident', incidente: incident } : ship
     ));
     setIsIncidentModalOpen(false);
     setShipForIncident(null);
+  };
+
+  const handleOpenResume = (ship: Barco) => {
+    setShipForIncident(ship);
+    setIsResumeModalOpen(true);
   };
 
   const handleConfirmResume = (shipId: string) => {
@@ -165,6 +123,82 @@ export const SupplyLayout: React.FC = () => {
     setShipForIncident(null);
   };
 
+  const handleOpenDispatch = (selection: { slot: SlotCarga; slotIndex: number; shipId: string }[]) => {
+    setDispatchSelection(selection);
+    setIsDispatchModalOpen(true);
+  };
+
+  const handleConfirmDispatch = (data: {
+    placa: string;
+    capacidadMax: number;
+    items: {
+      tipo: string;
+      cantidad: number;
+      shipId: string;
+      slotId: string;
+      idMgsDestino: string;
+      nombreMgsDestino: string;
+      fechaEntrega: string;
+    }[];
+  }) => {
+    // 1. Descontar de cada contenedor
+    let newBarcos = [...barcos];
+    data.items.forEach(item => {
+      newBarcos = newBarcos.map((s: Barco) => {
+        if (s.id === item.shipId) {
+          const newSlots = [...s.slots];
+          const slotIdx = newSlots.findIndex(sl => sl.idSlot === item.slotId);
+          if (slotIdx !== -1) {
+            newSlots[slotIdx] = { 
+              ...newSlots[slotIdx], 
+              cantidadDisponible: (newSlots[slotIdx].cantidadDisponible || 0) - item.cantidad 
+            };
+          }
+          return { ...s, slots: newSlots };
+        }
+        return s;
+      });
+    });
+
+    // 2. Crear el camión
+    const totalCargado = data.items.reduce((acc, curr) => acc + curr.cantidad, 0);
+    const newTrk: Camion = {
+      id: `TRK-${String(camiones.length + 1).padStart(3, '0')}`,
+      placa: data.placa,
+      capacidadMax: data.capacidadMax,
+      capacidadActual: totalCargado,
+      estado: totalCargado >= data.capacidadMax ? 'On Route' : 'Loading',
+      items: data.items
+    };
+
+    setBarcos(newBarcos);
+    setCamiones([...camiones, newTrk]);
+    setIsDispatchModalOpen(false);
+    setDispatchSelection([]);
+  };
+
+  const handleConfirmReceipt = (truckId: string) => {
+    const truck = camiones.find(c => c.id === truckId);
+    if (!truck) return;
+
+    // 1. Update truck status
+    const updatedCamiones = camiones.map(c => 
+      c.id === truckId ? { ...c, estado: 'Arrived' as const, fechaRecepcion: new Date().toISOString().split('T')[0] } : c
+    );
+    setCamiones(updatedCamiones);
+
+    // 2. Update project progress for all destinations in the truck
+    const destinationNames = new Set(truck.items.map(item => item.nombreMgsDestino));
+    const updatedMgs = minigranjas.map(m => {
+      if (destinationNames.has(m.nombre)) {
+        // Simple mock logic: increase progress based on equipment received
+        return { ...m, progreso: Math.min(100, m.progreso + 15) };
+      }
+      return m;
+    });
+    setMinigranjas(updatedMgs);
+  };
+
   const selectedShip = swapData ? barcos.find((s: Barco) => s.id === swapData.shipId) : null;
 
   const renderActiveVesselContent = () => {
@@ -172,22 +206,22 @@ export const SupplyLayout: React.FC = () => {
       case 'barco':
         return (
           <VesselAssignmentView 
-            barcos={barcos}
+            barcos={barcos} 
             mgsHuerfanas={mgsHuerfanas}
-            onOpenSwap={handleOpenSwap}
+            onOpenSwap={handleOpenSwap} 
             filters={filters}
             setFilters={setFilters}
-            onDeclareArrival={handleDeclareArrival}
-            onReportIncident={handleOpenIncident}
-            onResumeCourse={handleOpenResume}
+            onDeclareArrival={(id) => handleOpenArrival(barcos.find(b => b.id === id)!)}
+            onReportIncident={(id) => handleOpenIncident(barcos.find(b => b.id === id)!)}
+            onResumeCourse={(id) => handleOpenResume(barcos.find(b => b.id === id)!)}
           />
         );
       case 'puerto':
-        return <PortView barcos={barcos} onOpenSwap={handleOpenSwap} />;
+        return <PortView barcos={barcos} onOpenDispatch={handleOpenDispatch} />;
       case 'camion':
-        return <TruckView barcos={barcos} onOpenSwap={handleOpenSwap} />;
+        return <TruckView barcos={barcos} onOpenSwap={handleOpenSwap} camionesProceso={camiones} />;
       case 'campo':
-        return <div className="empty-state">Fase de Campo próximamente...</div>;
+        return <FieldView minigranjas={minigranjas} camiones={camiones} onConfirmReceipt={handleConfirmReceipt} />;
       default:
         return null;
     }
@@ -195,64 +229,81 @@ export const SupplyLayout: React.FC = () => {
 
   return (
     <div className="supply-layout-container">
+      <div className="logistica-header">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ 
+            background: 'var(--brand-primary)', 
+            color: 'white', 
+            width: '32px', 
+            height: '32px', 
+            borderRadius: '8px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            fontWeight: 800,
+            fontSize: '18px',
+            boxShadow: '0 4px 10px rgba(29, 153, 204, 0.2)'
+          }}>S</div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 600, color: 'var(--brand-primary)', letterSpacing: '-0.5px', lineHeight: 1.1 }}>SOLARVERSO</h1>
+            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>SUPPLY CHAIN MANAGEMENT</span>
+          </div>
+        </div>
+      </div>
+
       <div className="supply-tab-switcher">
-        <button 
-          className={`tab-btn ${activeTab === 'vessels' ? 'active' : ''}`}
-          onClick={() => setActiveTab('vessels')}
-        >
-          Asignación en Tránsito
-        </button>
         <button 
           className={`tab-btn ${activeTab === 'materials' ? 'active' : ''}`}
           onClick={() => setActiveTab('materials')}
         >
-          Seguimiento de Materiales
+          Suministro de Equipos
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'vessels' ? 'active' : ''}`}
+          onClick={() => setActiveTab('vessels')}
+        >
+          Gestión de Embarques
         </button>
       </div>
 
-      <div className="supply-view-content">
-        {activeTab === 'vessels' ? (
-          <div className="vessels-pipeline">
+      <div className="supply-main-content">
+        {activeTab === 'materials' ? (
+          <>
             <PostPortStepper activePhase={activePhase} onPhaseChange={setActivePhase} />
-            <div className="pipeline-content-area">
-              {renderActiveVesselContent()}
-            </div>
-          </div>
+            {renderActiveVesselContent()}
+          </>
         ) : (
           <MaterialTrackingView 
-            onSwitchToVessels={() => setActiveTab('vessels')} 
+            barcos={barcos} 
+            onSwitchToVessels={() => setActiveTab('materials')}
             onOpenSwap={handleOpenSwap}
-            barcos={barcos}
             filters={filters}
             setFilters={setFilters}
           />
         )}
       </div>
 
-      {isSwapModalOpen && swapData && selectedShip && (
+      {isSwapModalOpen && swapData && (
         <SwapModal 
           isOpen={isSwapModalOpen}
-          onClose={() => {
-            setIsSwapModalOpen(false);
-            setSwapData(null);
-          }}
-          ship={selectedShip}
+          onClose={() => setIsSwapModalOpen(false)}
           slot={swapData.slot}
           slotIndex={swapData.slotIndex}
+          ship={selectedShip || barcos[0]}
           orphans={mgsHuerfanas}
-          onSwap={handlePerformSwap}
+          onSwap={handleConfirmSwap}
         />
       )}
 
-      {isArrivalModalOpen && shipToDeclare && (
-        <DeclareArrivalModal 
-          isOpen={isArrivalModalOpen}
-          onClose={() => {
-            setIsArrivalModalOpen(false);
-            setShipToDeclare(null);
-          }}
-          ship={shipToDeclare}
-          onConfirm={handleConfirmArrival}
+      {isArrivalModalOpen && shipToArrive && (
+        <DeclareArrivalModal
+           isOpen={isArrivalModalOpen}
+           onClose={() => {
+             setIsArrivalModalOpen(false);
+             setShipToArrive(null);
+           }}
+           ship={shipToArrive}
+           onConfirm={handleConfirmArrival}
         />
       )}
 
@@ -277,6 +328,19 @@ export const SupplyLayout: React.FC = () => {
            }}
            ship={shipForIncident}
            onConfirm={handleConfirmResume}
+        />
+      )}
+
+      {isDispatchModalOpen && dispatchSelection.length > 0 && (
+        <DispatchModal
+           isOpen={isDispatchModalOpen}
+           onClose={() => {
+             setIsDispatchModalOpen(false);
+             setDispatchSelection([]);
+           }}
+           selection={dispatchSelection}
+           minigranjas={minigranjas}
+           onConfirm={handleConfirmDispatch}
         />
       )}
     </div>

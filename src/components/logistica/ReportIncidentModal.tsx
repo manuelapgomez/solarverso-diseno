@@ -42,7 +42,7 @@ export const ReportIncidentModal: React.FC<ReportIncidentModalProps> = ({
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder="Ej. Condiciones climáticas adversas, huelga en puerto..."
-              style={{ width: '100%', minHeight: '80px', padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '13px', fontFamily: 'inherit', resize: 'vertical' }}
+              style={{ minHeight: '80px' }}
             />
           </div>
         </div>

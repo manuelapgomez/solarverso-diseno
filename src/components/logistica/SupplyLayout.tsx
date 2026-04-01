@@ -102,10 +102,30 @@ export const SupplyLayout: React.FC = () => {
     setIsIncidentModalOpen(true);
   };
 
-  const handleConfirmIncident = (shipId: string, incident: string) => {
-    setBarcos(barcos.map((ship: Barco) => 
-      ship.id === shipId ? { ...ship, estado: 'Incident', incidente: incident } : ship
-    ));
+  const handleConfirmIncident = (shipId: string, newIncident: any) => {
+    setBarcos(barcos.map((ship: Barco) => {
+      if (ship.id === shipId) {
+        const incident = {
+          ...newIncident,
+          id: `INC-${Date.now()}`,
+          date: new Date().toISOString().split('T')[0],
+          isResolved: false
+        };
+        const updatedIncidents = [...(ship.incidents || []), incident];
+        
+        // Estado Alert si hay detención activa o > 7 incidentes
+        const hasDetention = updatedIncidents.some(i => i.type === 'Detention' && !i.isResolved);
+        const hasTooMany = updatedIncidents.length > 7;
+        const nuevoEstado = (hasDetention || hasTooMany) ? 'Alert' : 'On Route';
+
+        return { 
+          ...ship, 
+          estado: nuevoEstado,
+          incidents: updatedIncidents 
+        };
+      }
+      return ship;
+    }));
     setIsIncidentModalOpen(false);
     setShipForIncident(null);
   };
@@ -116,9 +136,24 @@ export const SupplyLayout: React.FC = () => {
   };
 
   const handleConfirmResume = (shipId: string) => {
-    setBarcos(barcos.map((ship: Barco) => 
-      ship.id === shipId ? { ...ship, estado: 'On Route', incidente: undefined } : ship
-    ));
+    setBarcos(barcos.map((ship: Barco) => {
+      if (ship.id === shipId) {
+        const resolvedIncidents = ship.incidents.map(i => 
+          i.type === 'Detention' ? { ...i, isResolved: true } : i
+        );
+        
+        // Solo quitamos el estado Alert si NO tiene más de 7 incidentes
+        const hasTooMany = resolvedIncidents.length > 7;
+        const nuevoEstado = hasTooMany ? 'Alert' : 'On Route';
+
+        return { 
+          ...ship, 
+          estado: nuevoEstado, 
+          incidents: resolvedIncidents 
+        };
+      }
+      return ship;
+    }));
     setIsResumeModalOpen(false);
     setShipForIncident(null);
   };

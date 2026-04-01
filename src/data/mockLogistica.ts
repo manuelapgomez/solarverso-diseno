@@ -44,7 +44,6 @@ export type SlotCarga = {
   tipoEquipo: "Tracker" | "Shelter" | "Inversor" | "Paneles" | "Reconectadores" | string | null;
   mgsAsignada: string | null;
   nombreMgs: string | null;
-  // Propiedades Notion-Style (Hoja de Vida)
   pedidoCreado?: string;
   productoId?: string;
   proveedor?: string;
@@ -61,7 +60,6 @@ export type SlotCarga = {
   historial?: HistorialAsignacion[];
   faseLogistica?: 'barco' | 'puerto' | 'camion' | 'campo';
   BT_status?: 'pending' | 'approved' | 'rejected' | string;
-  // Cantidades para despacho
   cantidadTotal?: number;
   cantidadDisponible?: number;
 };
@@ -87,12 +85,22 @@ export type Camion = {
   recepcionista?: string;
 };
 
+export type Incident = {
+  id: string;
+  category: string; // e.g., 'Huelga', 'Clima', 'Falla Mecánica', 'Repriorización', 'Cambio de Puerto'
+  type: 'Detention' | 'Route';
+  reason: string;
+  date: string;
+  etaImpact?: number; // Days +/-
+  isResolved?: boolean;
+};
+
 export type Barco = {
   id: string;
   bl_code: string;
   nombre: string;
-  etd: string; // Estimated Time of Departure (desde China)
-  eta: string; // Estimated Time of Arrival (al destino)
+  etd: string; 
+  eta: string; 
   telemetry?: {
     lat: string;
     lng: string;
@@ -101,11 +109,11 @@ export type Barco = {
     lastUpdate: string;
   };
   loading_progress: number;
-  slots: SlotCarga[]; // Capacidad de hasta 15 slots
+  slots: SlotCarga[]; 
   portfolio?: string;
   estado?: 'Pending' | 'On Route' | 'Arrived' | 'Alert' | string;
   terminalArribo?: 'Cartagena' | 'Buenaventura' | null;
-  incidente?: string;
+  incidents: Incident[];
 };
 
 export type MgsHuerfana = {
@@ -113,8 +121,8 @@ export type MgsHuerfana = {
   nombre: string;
   codigo?: string;
   ubicacion?: string;
-  prioridadUnergy: "Baja" | "Media" | "Alta" | "Crítica";
-  equipoFaltante: string; // Ej. 'Tracker', 'Shelter', etc.
+  prioridadUnergy?: string;
+  equipoFaltante?: string;
 };
 
 export type Minigranja = {
@@ -122,9 +130,8 @@ export type Minigranja = {
   nombre: string;
   codigo: string;
   ubicacion: string;
-  estado: "Priorizada" | "En Espera" | "Asignada";
+  estado: string;
   progreso: number;
-  inversionistaId?: string;
 };
 
 export type Portfolio = {
@@ -135,9 +142,7 @@ export type Portfolio = {
   minigranjas: Minigranja[];
 };
 
-// Generador auxiliar de 15 slots por defecto (Pre-cargados con equipo aleatorio)
 const generarTimelineFull = (): LogisticaState[] => [
-  { label: "No Pedido", fechaObjetivo: "2024-01-01", fechaReal: "2024-01-01", status: "completed" },
   { label: "Pedido", fechaObjetivo: "2024-01-15", fechaReal: "2024-01-16", status: "completed" },
   { label: "En Diseño", fechaObjetivo: "2024-02-01", fechaReal: "2024-02-05", status: "completed" },
   { label: "Fabricación", fechaObjetivo: "2024-03-01", status: "current" },
@@ -245,7 +250,6 @@ const baseSlot = (tipo: string, id: string): SlotCarga => {
 };
 
 const slotsMSC = generarSlotsPreCargados("MSC");
-// Asignamos algunos quemados para la demostración
 slotsMSC[0] = { 
   idSlot: "MSC-SLOT-1", 
   tipoEquipo: "Tracker", 
@@ -305,7 +309,6 @@ slotsMSC[1] = { ...baseSlot("Shelter", "MSC-SLOT-2"), mgsAsignada: "MGS-002", no
 slotsMSC[2] = { ...baseSlot("Inversor", "MSC-SLOT-3"), mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2" };
 slotsMSC[3] = { ...baseSlot("Paneles", "MSC-SLOT-4"), mgsAsignada: "MGS-002", nombreMgs: "Uruaco 2" };
 slotsMSC[4] = { ...baseSlot("Tracker", "MSC-SLOT-5"), mgsAsignada: "MGS-005", nombreMgs: "Valle 5" };
-// 10 vacíos...
 
 const slotsPacific = generarSlotsPreCargados("PAC");
 slotsPacific[0] = { ...baseSlot("Tracker", "PAC-SLOT-1"), mgsAsignada: "MGS-003", nombreMgs: "Solar Delta" };
@@ -348,7 +351,8 @@ export const inicialBarcosData: Barco[] = [
     loading_progress: 100,
     slots: slotsMSC,
     portfolio: "Portafolio Andino",
-    estado: "On Route"
+    estado: "On Route",
+    incidents: [],
   },
   {
     id: "SHIP-002",
@@ -360,7 +364,8 @@ export const inicialBarcosData: Barco[] = [
     loading_progress: 100,
     slots: slotsPacific,
     portfolio: "Caribe Solar Grid",
-    estado: "Pending"
+    estado: "Pending",
+    incidents: [],
   },
   {
     id: "SHIP-003",
@@ -373,7 +378,8 @@ export const inicialBarcosData: Barco[] = [
     slots: slotsAtlantic,
     portfolio: "Valle del Cauca Hub",
     estado: "Arrived",
-    terminalArribo: "Cartagena"
+    terminalArribo: "Cartagena",
+    incidents: [],
   },
   {
     id: "SHIP-004",
@@ -385,7 +391,8 @@ export const inicialBarcosData: Barco[] = [
     loading_progress: 100,
     slots: slotsSolaris,
     portfolio: "Portafolio Andino",
-    estado: "On Route"
+    estado: "On Route",
+    incidents: [],
   },
   {
     id: "SHIP-005",
@@ -396,7 +403,8 @@ export const inicialBarcosData: Barco[] = [
     loading_progress: 100,
     slots: slotsEverest,
     portfolio: "Santander Energy Plus",
-    estado: "Pending"
+    estado: "Pending",
+    incidents: [],
   },
   {
     id: "SHIP-006",
@@ -407,7 +415,8 @@ export const inicialBarcosData: Barco[] = [
     loading_progress: 100,
     slots: slotsTitan,
     portfolio: "Portafolio Andino",
-    estado: "Pending"
+    estado: "Pending",
+    incidents: [],
   },
   {
     id: "SHIP-007",
@@ -418,7 +427,8 @@ export const inicialBarcosData: Barco[] = [
     loading_progress: 100,
     slots: slotsAurora,
     portfolio: "Caribe Solar Grid",
-    estado: "Pending"
+    estado: "Pending",
+    incidents: [],
   }
 ];
 
@@ -505,25 +515,11 @@ export const mockPortfolios: Portfolio[] = [
   {
     id: "PORT-003",
     nombre: "Valle del Cauca Hub",
-    inversionista: "Inversiones del Pacífico",
+    inversionista: "Solenium Ventures",
     cantidadMgs: 2,
     minigranjas: [
       { id: "MGS-301", nombre: "Cali Central", codigo: "COLVAL01", ubicacion: "Valle, Col", estado: "Priorizada", progreso: 75 },
       { id: "MGS-302", nombre: "Palmira Solar", codigo: "COLVAL02", ubicacion: "Valle, Col", estado: "Priorizada", progreso: 85 }
     ]
-  },
-  {
-    id: "PORT-004",
-    nombre: "Santander Energy Plus",
-    inversionista: "EcoCapital Partners",
-    cantidadMgs: 5,
-    minigranjas: [
-      { id: "MGS-401", nombre: "Bucaramanga 1", codigo: "COLSAN01", ubicacion: "Santander, Col", estado: "Asignada", progreso: 100 },
-      { id: "MGS-402", nombre: "Giron Solar", codigo: "COLSAN02", ubicacion: "Santander, Col", estado: "Priorizada", progreso: 50 },
-      { id: "MGS-403", nombre: "Piedecuesta", codigo: "COLSAN03", ubicacion: "Santander, Col", estado: "En Espera", progreso: 10 },
-      { id: "MGS-404", nombre: "Lebrija Sol", codigo: "COLSAN04", ubicacion: "Santander, Col", estado: "En Espera", progreso: 5 },
-      { id: "MGS-405", nombre: "Mesa de los Santos", codigo: "COLSAN05", ubicacion: "Santander, Col", estado: "Priorizada", progreso: 95 }
-    ]
   }
 ];
-

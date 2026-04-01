@@ -117,8 +117,8 @@ export const DispatchModal: React.FC<DispatchModalProps> = ({
                   <th>Producto</th>
                   <th style={{ textAlign: 'center' }}>Cantidad</th>
                   <th style={{ textAlign: 'center' }}>Salida</th>
-                  <th>Destino</th>
-                  <th>Destino</th>
+                  <th style={{ textAlign: 'left' }}>Destino</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -176,55 +176,43 @@ export const DispatchModal: React.FC<DispatchModalProps> = ({
             </table>
           </div>
 
-          {/* Integrated Truck Viz - Consistent with TruckView */}
-          <div className="truck-preview-scene-clean" style={{ padding: '40px 24px 80px 24px', background: 'linear-gradient(to bottom, #ffffff, #f1f5f9)', borderTop: '1px solid #e2e8f0' }}>
-             <div className="truck-illustration-wrapper" style={{ maxWidth: '100%', margin: '0 auto', position: 'relative' }}>
+          {/* Integrated Truck Viz - Improved Proportions */}
+          <div className="truck-preview-scene-clean">
+             <div className="truck-illustration-wrapper" style={{ width: '100%', maxWidth: '1000px', margin: '0 auto', position: 'relative' }}>
                 <div 
                   className="truck-trailer-graphic" 
                   style={{ 
                     backgroundImage: `url(${truckImg})`,
-                    backgroundSize: 'contain',
+                    backgroundSize: '170%',
                     backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center',
-                    height: '280px',
+                    backgroundPosition: 'center 48%',
+                    height: '450px',
                     width: '100%',
                     position: 'relative'
                   }}
                 >
                   <div className="truck-cargo-container" style={{ 
-                    top: '35%', 
-                    left: '31%', 
-                    width: '55%', 
-                    height: '20%', 
+                    position: 'absolute',
+                    top: '41%', 
+                    left: '26%', 
+                    width: '64%', 
+                    height: '28%', 
                     display: 'flex', 
-                    gap: '4px', 
-                    alignItems: 'flex-end',
+                    gap: '12px', 
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     zIndex: 10
                   }}>
-                    {loadItems.filter(i => i.cantidadCargar > 0).map((item) => {
-                      const typeClass = item.tipo.toLowerCase().replace(/[^a-z0-9]/g, '-');
-                      return (
-                        <div 
-                          key={item.slotId} 
-                          className={`cargo-small-box cargo-color-${typeClass}`}
-                          style={{ 
-                            flex: 1,
-                            height: '100%', 
-                            borderWidth: '1.5px',
-                            boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.4), 0 3px 6px rgba(0,0,0,0.12)',
-                            borderRadius: '4px'
-                          }}
-                        >
-                          <div className="container-ribs" style={{ opacity: 0.2 }}></div>
-                          <span className="block-label" style={{ zIndex: 5, fontSize: '12px', fontWeight: 900, textShadow: '0 1px 1px rgba(255,255,255,0.6)' }}>
-                            {item.tipo.substring(0, 3).toUpperCase()}
-                          </span>
-                          <div style={{ position: 'absolute', bottom: '3px', right: '3px', zIndex: 5, background: 'rgba(255,255,255,0.95)', padding: '1px 4px', borderRadius: '4px', fontSize: '10px', fontWeight: 900, color: '#0f172a' }}>
-                            {item.cantidadCargar}U
-                          </div>
-                        </div>
-                      );
-                    })}
+                    {loadItems.filter(i => i.cantidadCargar > 0).map((item) => (
+                      <div key={item.slotId} className="load-card-premium-mini">
+                        <span className="card-lbl">
+                          {item.tipo.substring(0, 3).toUpperCase()}
+                        </span>
+                        <span className="card-qty-pill">
+                          {item.cantidadCargar} unidades
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </div>
              </div>

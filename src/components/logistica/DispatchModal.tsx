@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { type SlotCarga, type Minigranja } from '../../data/mockLogistica';
+import truckImg from '../../assets/logistica/truck_flatbed.png';
 
 interface SelectionItem {
   slot: SlotCarga;
@@ -35,6 +36,7 @@ interface LoadItem {
   idMgs: string;
   nombreMgs: string;
   fecha: string;
+  fechaIdeal: string;
   shipId: string;
 }
 
@@ -46,16 +48,23 @@ export const DispatchModal: React.FC<DispatchModalProps> = ({
   onConfirm 
 }) => {
   const [loadItems, setLoadItems] = useState<LoadItem[]>(() => 
-    selection.map(sel => ({
-      slotId: sel.slot.idSlot,
-      tipo: sel.slot.tipoEquipo || 'Equipo',
-      cantidadMax: sel.slot.cantidadDisponible || 0,
-      cantidadCargar: 0,
-      idMgs: sel.slot.mgsAsignada || '',
-      nombreMgs: sel.slot.nombreMgs || '',
-      fecha: new Date().toISOString().split('T')[0],
-      shipId: sel.shipId
-    }))
+    selection.map(sel => {
+      // Intentar encontrar la fecha ideal de llegada al destino (Transporte al Proyecto)
+      const transporteStep = sel.slot.timeline?.find(s => s.label === "Transporte al Proyecto");
+      const fechaIdeal = transporteStep?.fechaObjetivo || new Date().toISOString().split('T')[0];
+      
+      return {
+        slotId: sel.slot.idSlot,
+        tipo: sel.slot.tipoEquipo || 'Equipo',
+        cantidadMax: sel.slot.cantidadDisponible || 0,
+        cantidadCargar: 0,
+        idMgs: sel.slot.mgsAsignada || '',
+        nombreMgs: sel.slot.nombreMgs || '',
+        fecha: fechaIdeal, // Por defecto usamos la ideal
+        fechaIdeal: fechaIdeal,
+        shipId: sel.shipId
+      };
+    })
   );
 
   const handleUpdateItem = (slotId: string, field: keyof LoadItem, value: any) => {
@@ -139,8 +148,26 @@ export const DispatchModal: React.FC<DispatchModalProps> = ({
                       </div>
                     </td>
                     <td className="col-date">
-                      <div className="date-display-premium">
-                        {new Date(item.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).replace(' de ', '.').replace(' ', '/')}
+                      <div className="date-input-wrapper-premium">
+                        <input 
+                          type="date" 
+                          className={`date-input-premium ${item.fecha <= item.fechaIdeal ? 'on-time' : 'delayed'}`}
+                          value={item.fecha}
+                          onChange={(e) => handleUpdateItem(item.slotId, 'fecha', e.target.value)}
+                          onClick={(e) => e.stopPropagation()} // Prevent double trigger
+                        />
+                        <div className="date-display-premium-overlay" style={{ color: item.fecha <= item.fechaIdeal ? '#3b82f6' : '#ef4444', pointerEvents: 'none' }}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ opacity: 0.7 }}><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                          {(() => {
+                            try {
+                              const d = new Date(item.fecha + 'T00:00:00');
+                              if (isNaN(d.getTime())) return item.fecha; // fallback
+                              return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).replace(/ de /g, '.').replace(/ /g, '/');
+                            } catch (e) {
+                              return item.fecha;
+                            }
+                          })()}
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -149,22 +176,57 @@ export const DispatchModal: React.FC<DispatchModalProps> = ({
             </table>
           </div>
 
-          {/* Truck Visualization Area */}
-          <div className="truck-preview-scene-clean">
-             <div className="truck-illustration-wrapper">
-               <img src="https://cdni.iconscout.com/illustration/premium/thumb/delivery-truck-8406793-6677943.png" alt="Truck" className="base-truck-img" />
-               
-               <div className="truck-load-deck">
-                 {loadItems.filter(i => i.cantidadCargar > 0).map((item) => (
-                   <div 
-                      key={item.slotId} 
-                      className={`load-card-premium-mini type-${item.tipo.toLowerCase()}`}
-                    >
-                     <span className="card-lbl">{item.tipo.substring(0, 3).toUpperCase()}</span>
-                     <span className="card-qty">{item.cantidadCargar} unidades</span>
-                   </div>
-                 ))}
-               </div>
+          {/* Integrated Truck Viz - Consistent with TruckView */}
+          <div className="truck-preview-scene-clean" style={{ padding: '40px 24px 80px 24px', background: 'linear-gradient(to bottom, #ffffff, #f1f5f9)', borderTop: '1px solid #e2e8f0' }}>
+             <div className="truck-illustration-wrapper" style={{ maxWidth: '100%', margin: '0 auto', position: 'relative' }}>
+                <div 
+                  className="truck-trailer-graphic" 
+                  style={{ 
+                    backgroundImage: `url(${truckImg})`,
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    height: '280px',
+                    width: '100%',
+                    position: 'relative'
+                  }}
+                >
+                  <div className="truck-cargo-container" style={{ 
+                    top: '35%', 
+                    left: '31%', 
+                    width: '55%', 
+                    height: '20%', 
+                    display: 'flex', 
+                    gap: '4px', 
+                    alignItems: 'flex-end',
+                    zIndex: 10
+                  }}>
+                    {loadItems.filter(i => i.cantidadCargar > 0).map((item) => {
+                      const typeClass = item.tipo.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                      return (
+                        <div 
+                          key={item.slotId} 
+                          className={`cargo-small-box cargo-color-${typeClass}`}
+                          style={{ 
+                            flex: 1,
+                            height: '100%', 
+                            borderWidth: '1.5px',
+                            boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.4), 0 3px 6px rgba(0,0,0,0.12)',
+                            borderRadius: '4px'
+                          }}
+                        >
+                          <div className="container-ribs" style={{ opacity: 0.2 }}></div>
+                          <span className="block-label" style={{ zIndex: 5, fontSize: '12px', fontWeight: 900, textShadow: '0 1px 1px rgba(255,255,255,0.6)' }}>
+                            {item.tipo.substring(0, 3).toUpperCase()}
+                          </span>
+                          <div style={{ position: 'absolute', bottom: '3px', right: '3px', zIndex: 5, background: 'rgba(255,255,255,0.95)', padding: '1px 4px', borderRadius: '4px', fontSize: '10px', fontWeight: 900, color: '#0f172a' }}>
+                            {item.cantidadCargar}U
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
              </div>
           </div>
         </div>

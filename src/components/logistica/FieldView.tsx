@@ -31,7 +31,7 @@ export const FieldView: React.FC<FieldViewProps> = ({ minigranjas, camiones, onC
           <div className="field-projects-grid">
             {minigranjas.map(mgs => {
               // Calculate summary of equipment received for this project
-              const receivedForThisMgs = arrivedTrucks.filter(t => t.destino === mgs.nombre);
+              const receivedForThisMgs = arrivedTrucks.filter(t => t.items.some(i => i.nombreMgsDestino === mgs.nombre));
               const itemsCount = receivedForThisMgs.reduce((acc, t) => {
                 t.items.forEach(item => {
                   acc[item.tipo] = (acc[item.tipo] || 0) + item.cantidad;
@@ -89,7 +89,7 @@ export const FieldView: React.FC<FieldViewProps> = ({ minigranjas, camiones, onC
                   <div className="truck-reception-info">
                     <div>
                       <span className="truck-placa-badge">{truck.placa}</span>
-                      <span className="truck-dest-mini">Destino: <strong>{truck.destino}</strong></span>
+                      <span className="truck-dest-mini">Destino: <strong>{truck.items[0]?.nombreMgsDestino || 'N/A'}</strong></span>
                     </div>
                     <div style={{ marginTop: '4px', fontSize: '12px', color: '#64748b' }}>
                       Cargamento: {truck.items.map(i => `${i.cantidad} ${i.tipo}`).join(', ')}

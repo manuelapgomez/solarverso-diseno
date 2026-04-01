@@ -254,7 +254,7 @@ export const SupplyLayout: React.FC = () => {
       case 'puerto':
         return <PortView barcos={barcos} onOpenDispatch={handleOpenDispatch} />;
       case 'camion':
-        return <TruckView barcos={barcos} onOpenSwap={handleOpenSwap} camionesProceso={camiones} />;
+        return <TruckView camionesProceso={camiones} />;
       case 'campo':
         return <FieldView minigranjas={minigranjas} camiones={camiones} onConfirmReceipt={handleConfirmReceipt} />;
       default:

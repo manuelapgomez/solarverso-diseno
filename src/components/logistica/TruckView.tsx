@@ -1,15 +1,13 @@
 import React from 'react';
-import { type Barco, type SlotCarga, type Camion } from '../../data/mockLogistica';
+import { type Camion } from '../../data/mockLogistica';
 import './logistica.css';
 import truckImg from '../../assets/logistica/truck_flatbed.png';
 
 interface TruckViewProps {
-  barcos: Barco[];
-  onOpenSwap: (slot: SlotCarga, slotIndex: number, shipId: string) => void;
   camionesProceso?: Camion[];
 }
 
-export const TruckView: React.FC<TruckViewProps> = ({ barcos, onOpenSwap, camionesProceso = [] }) => {
+export const TruckView: React.FC<TruckViewProps> = ({ camionesProceso = [] }) => {
   return (
     <div className="logistica-container">
       <div className="dashboard-main">

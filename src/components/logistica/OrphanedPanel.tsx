@@ -69,20 +69,20 @@ export const OrphanedPanel: React.FC<OrphanedPanelProps> = ({ orphans }) => {
           <div 
             key={orphan.id} 
             className="orphaned-badge" 
-            data-priority={orphan.prioridadUnergy} 
+            data-priority={orphan.prioridadUnergy || 'Baja'} 
             title={`Esperando: ${orphan.equipoFaltante} - Clic para ver seguimiento`}
             onClick={() => setSelectedOrphan(orphan)}
             style={{ cursor: 'pointer' }}
           >
             <strong>{orphan.nombre}</strong>
-            <span className={`badge-detail ${getPriorityColor(orphan.prioridadUnergy)}`}>
+            <span className={`badge-detail ${getPriorityColor(orphan.prioridadUnergy || 'Baja')}`}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="12" y1="8" x2="12" y2="12"></line>
                 <line x1="12" y1="16" x2="12.01" y2="16"></line>
               </svg>
               Falta {orphan.equipoFaltante}
-              <span className="priority-tag">{orphan.prioridadUnergy}</span>
+              <span className="priority-tag">{orphan.prioridadUnergy || 'Baja'}</span>
             </span>
           </div>
         ))}

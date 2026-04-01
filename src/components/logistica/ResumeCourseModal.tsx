@@ -31,10 +31,12 @@ export const ResumeCourseModal: React.FC<ResumeCourseModalProps> = ({
             ¿Estás seguro que el incidente registrado en el <strong>{ship.nombre}</strong> ha sido resuelto?
           </p>
           
-          {ship.incidente && (
+          {ship.incidents && ship.incidents.some(i => i.type === 'Detention' && !i.isResolved) && (
             <div style={{ background: '#fef2f2', padding: '12px', borderRadius: '8px', border: '1px solid #fee2e2', marginBottom: '16px' }}>
               <span style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: '#ef4444', textTransform: 'uppercase', marginBottom: '4px' }}>Incidente Actual</span>
-              <p style={{ margin: 0, fontSize: '13px', color: '#991b1b' }}>{ship.incidente}</p>
+              <p style={{ margin: 0, fontSize: '13px', color: '#991b1b' }}>
+                {ship.incidents.find(i => i.type === 'Detention' && !i.isResolved)?.reason || 'Error: No se encontró el motivo del incidente'}
+              </p>
             </div>
           )}
 

@@ -4,7 +4,7 @@ import { VesselPremiumCard } from "./VesselPremiumCard";
 import { ShipDetailSlide } from "./ShipDetailSlide";
 import { OrphanedPanel } from "./OrphanedPanel";
 import { PortfoliosPanel } from "./PortfoliosPanel";
-import { mockPortfolios, type SlotCarga, type Barco, type MgsHuerfana } from "../../data/mockLogistica";
+import { mockPortfolios, type SlotCarga, type Barco, type MgsHuerfana, type SpecEquipo } from "../../data/mockLogistica";
 import { SupplyFiltersBar, type FiltersState } from "./SupplyFiltersBar";
 
 interface VesselAssignmentViewProps {
@@ -30,6 +30,7 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
 }) => {
   const [selectedShipId, setSelectedShipId] = useState<string | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [activeReqFilter, setActiveReqFilter] = useState<{specs: SpecEquipo, type: string} | null>(null);
 
   // Deep Filtering Logic
   const filteredBarcos = useMemo(() => {
@@ -47,9 +48,28 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
       // Status Filter (Multi-select)
       const statusMatch = filters.status.length === 0 || filters.status.includes(ship.estado as any);
 
-      return searchMatch && portfolioMatch && statusMatch;
+      // Dynamic Equipment Requirement Match
+      let reqMatch = true;
+      if (activeReqFilter) {
+          reqMatch = ship.slots.some(slot => {
+              if (slot.tipoEquipo !== activeReqFilter.type) return false;
+              if (!activeReqFilter.specs) return true;
+              
+              const slotSpecs = slot.especificaciones;
+              if (!slotSpecs) return true; // If we demanded specs, but slot has none attached yet, don't throw it out completely loosely.
+
+              for (const key of Object.keys(activeReqFilter.specs)) {
+                  if ((activeReqFilter.specs as any)[key] !== (slotSpecs as any)[key]) {
+                      return false;
+                  }
+              }
+              return true;
+          });
+      }
+
+      return searchMatch && portfolioMatch && statusMatch && reqMatch;
     });
-  }, [barcos, filters]);
+  }, [barcos, filters, activeReqFilter]);
 
   const handleOpenShipDetail = (id: string) => {
     setSelectedShipId(id);
@@ -82,7 +102,12 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
             </div>
           </div>
 
-          <PortfoliosPanel portfolios={mockPortfolios} />
+          <PortfoliosPanel 
+            portfolios={mockPortfolios} 
+            onFilterTrigger={(specs, tipo) => {
+              setActiveReqFilter({ specs, type: tipo });
+            }}
+          />
         </header>
 
         {/* Content Area */}
@@ -94,6 +119,24 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
             <OrphanedPanel orphans={mgsHuerfanas} />
 
             <SupplyFiltersBar filters={filters} setFilters={setFilters} />
+
+            {activeReqFilter && (
+              <div className="active-filter-banner" style={{ background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '12px', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '-8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                  <div>
+                    <h4 style={{ margin: 0, color: '#1e3a8a', fontSize: '14px', fontWeight: 800 }}>Inventario Filtrado por Especificación: {activeReqFilter.type.toUpperCase()}</h4>
+                    <p style={{ margin: '4px 0 0 0', color: '#2563eb', fontSize: '12px', fontWeight: 600 }}>Solo mostrando embarques compatibles con los requerimientos del proyecto.</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setActiveReqFilter(null)} 
+                  style={{ background: 'white', color: '#1e3a8a', border: '1px solid #93c5fd', borderRadius: '8px', padding: '8px 16px', fontSize: '12px', fontWeight: 800, cursor: 'pointer', transition: 'all 0.2s' }}
+                >
+                  Limpiar Filtro
+                </button>
+              </div>
+            )}
 
             <div className="ships-grid-container" onClick={() => setSelectedShipId(null)}>
               {filteredBarcos.map(ship => (

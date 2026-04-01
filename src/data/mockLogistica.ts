@@ -31,6 +31,7 @@ export type SpecEquipo = {
   corrosionSuelo?: string;
   zonaVientos?: string;
   tamanoEquipo?: { code: string; quantity: number }[];
+  [key: string]: any;
 };
 
 export type HistorialAsignacion = {
@@ -51,7 +52,6 @@ export type SlotCarga = {
   ocZentrak?: string;
   estadoActual?: string;
   fechaTentativa?: string;
-  cantidadSinStock?: number;
   bls?: string[];
   especificaciones?: SpecEquipo;
   documentos?: DocChecklist[];
@@ -125,6 +125,13 @@ export type MgsHuerfana = {
   equipoFaltante?: string;
 };
 
+export type EquipmentRequirement = {
+  tipo: 'Tracker' | 'Shelter' | 'Inversor' | 'Paneles' | 'Reconectadores';
+  estado: 'Faltante' | 'Ingreso a Zona Franca' | 'Licencia de importación' | 'Nacionalización' | 'Entregado' | string;
+  fecha?: string;
+  specs?: SpecEquipo;
+};
+
 export type Minigranja = {
   id: string;
   nombre: string;
@@ -132,6 +139,7 @@ export type Minigranja = {
   ubicacion: string;
   estado: string;
   progreso: number;
+  requerimientos?: EquipmentRequirement[];
 };
 
 export type Portfolio = {
@@ -172,7 +180,6 @@ const generarSlotsPreCargados = (prefijo: string): SlotCarga[] => {
       ocZentrak: `OC-Z-${Math.floor(Math.random() * 9000) + 1000}`,
       estadoActual: "Fabricación",
       fechaTentativa: "15/01/2026",
-      cantidadSinStock: Math.floor(Math.random() * 2000) + 500,
       bls: ["# 101010101010101", "# 202020202020202"],
       especificaciones: {
         hileras: "24 Mesas",
@@ -228,7 +235,6 @@ const baseSlot = (tipo: string, id: string): SlotCarga => {
     ocZentrak: `OC-Z-${Math.floor(Math.random() * 9000) + 1000}`,
     estadoActual: "Fabricación",
     fechaTentativa: "15/01/2026",
-    cantidadSinStock: 2016,
     bls: ["# 101010101010101"],
     especificaciones: {
       hileras: "24 Mesas",
@@ -262,7 +268,6 @@ slotsMSC[0] = {
   ocZentrak: "OC-Z-9901",
   estadoActual: "Fabricación",
   fechaTentativa: "15/01/2026",
-  cantidadSinStock: 2016,
   bls: ["# 101010101010101", "# 101010101010101"],
   especificaciones: {
     hileras: "24 Mesas",
@@ -495,10 +500,42 @@ export const mockPortfolios: Portfolio[] = [
     inversionista: "Green Energy Fund LLC",
     cantidadMgs: 4,
     minigranjas: [
-      { id: "MGS-101", nombre: "Andes 1", codigo: "COLAND01", ubicacion: "Antioquia, Col", estado: "Priorizada", progreso: 100 },
-      { id: "MGS-102", nombre: "Andes 2", codigo: "COLAND02", ubicacion: "Antioquia, Col", estado: "En Espera", progreso: 40 },
-      { id: "MGS-103", nombre: "Caldas Solar", codigo: "COLCAL01", ubicacion: "Caldas, Col", estado: "Priorizada", progreso: 80 },
-      { id: "MGS-104", nombre: "Risaralda Eco", codigo: "COLRIS01", ubicacion: "Risaralda, Col", estado: "Asignada", progreso: 100 }
+      { id: "MGS-101", nombre: "Uruaco 2", codigo: "COLATLT14P2_LURUACO_SUR", ubicacion: "Uruaco - Luruaco, Atlántico", estado: "Priorizada", progreso: 100, 
+        requerimientos: [
+          { tipo: "Paneles", estado: "Faltante", specs: { modelo: "Bifacial 600W", cantidad: 4000 } },
+          { tipo: "Inversor", estado: "Faltante", specs: { capacidad: "200kW" } },
+          { tipo: "Reconectadores", estado: "Ingreso a Zona Franca", fecha: "FEB.26/25", specs: { voltaje: "34.5kV" } },
+          { tipo: "Tracker", estado: "Licencia de importación", fecha: "FEB.26/25", specs: { hileras: "1P", corrosionAtmosferica: "Alta", corrosionSuelo: "Media", zonaVientos: "Baja" } },
+          { tipo: "Shelter", estado: "Nacionalización", fecha: "FEB.26/25", specs: { tipo: "Contenedor 20ft" } }
+        ]
+      },
+      { id: "MGS-102", nombre: "Andes 2", codigo: "COLAND02", ubicacion: "Antioquia, Col", estado: "En Espera", progreso: 40,
+        requerimientos: [
+          { tipo: "Paneles", estado: "Entregado", fecha: "JAN.10/25" },
+          { tipo: "Inversor", estado: "Nacionalización", fecha: "MAR.01/25" },
+          { tipo: "Reconectadores", estado: "Entregado", fecha: "JAN.12/25" },
+          { tipo: "Tracker", estado: "Faltante", specs: { hileras: "2P", zonaVientos: "Alta" } },
+          { tipo: "Shelter", estado: "Entregado", fecha: "JAN.15/25" }
+        ]
+      },
+      { id: "MGS-103", nombre: "Caldas Solar", codigo: "COLCAL01", ubicacion: "Caldas, Col", estado: "Priorizada", progreso: 80,
+        requerimientos: [
+          { tipo: "Paneles", estado: "Nacionalización", fecha: "FEB.20/25" },
+          { tipo: "Inversor", estado: "Nacionalización", fecha: "FEB.20/25" },
+          { tipo: "Reconectadores", estado: "Faltante" },
+          { tipo: "Tracker", estado: "Faltante", specs: { hileras: "1P" } },
+          { tipo: "Shelter", estado: "Ingreso a Zona Franca", fecha: "MAR.05/25" }
+        ]
+      },
+      { id: "MGS-104", nombre: "Risaralda Eco", codigo: "COLRIS01", ubicacion: "Risaralda, Col", estado: "Asignada", progreso: 100,
+        requerimientos: [
+          { tipo: "Paneles", estado: "Entregado", fecha: "DEC.10/24" },
+          { tipo: "Inversor", estado: "Entregado", fecha: "DEC.15/24" },
+          { tipo: "Reconectadores", estado: "Entregado", fecha: "DEC.20/24" },
+          { tipo: "Tracker", estado: "Entregado", fecha: "JAN.05/25" },
+          { tipo: "Shelter", estado: "Entregado", fecha: "JAN.08/25" }
+        ]
+      }
     ]
   },
   {
@@ -507,9 +544,33 @@ export const mockPortfolios: Portfolio[] = [
     inversionista: "Nordic Renewables",
     cantidadMgs: 3,
     minigranjas: [
-      { id: "MGS-201", nombre: "Atlántico Norte", codigo: "COLATL01", ubicacion: "Atlántico, Col", estado: "Priorizada", progreso: 60 },
-      { id: "MGS-202", nombre: "Atlántico Sur", codigo: "COLATL02", ubicacion: "Atlántico, Col", estado: "Priorizada", progreso: 90 },
-      { id: "MGS-203", nombre: "Bolívar Eco", codigo: "COLBOL01", ubicacion: "Bolívar, Col", estado: "En Espera", progreso: 20 }
+      { id: "MGS-201", nombre: "Atlántico Norte", codigo: "COLATL01", ubicacion: "Atlántico, Col", estado: "Priorizada", progreso: 60,
+        requerimientos: [
+          { tipo: "Paneles", estado: "Faltante" },
+          { tipo: "Inversor", estado: "Faltante" },
+          { tipo: "Reconectadores", estado: "Faltante" },
+          { tipo: "Tracker", estado: "Faltante", specs: { zonaVientos: "Huracanada" } },
+          { tipo: "Shelter", estado: "Licencia de importación", fecha: "FEB.15/25" }
+        ]
+      },
+      { id: "MGS-202", nombre: "Atlántico Sur", codigo: "COLATL02", ubicacion: "Atlántico, Col", estado: "Priorizada", progreso: 90,
+        requerimientos: [
+          { tipo: "Paneles", estado: "Ingreso a Zona Franca", fecha: "FEB.28/25" },
+          { tipo: "Inversor", estado: "Ingreso a Zona Franca", fecha: "FEB.28/25" },
+          { tipo: "Reconectadores", estado: "Faltante" },
+          { tipo: "Tracker", estado: "Faltante" },
+          { tipo: "Shelter", estado: "Faltante" }
+        ]
+      },
+      { id: "MGS-203", nombre: "Bolívar Eco", codigo: "COLBOL01", ubicacion: "Bolívar, Col", estado: "En Espera", progreso: 20,
+        requerimientos: [
+          { tipo: "Paneles", estado: "Faltante" },
+          { tipo: "Inversor", estado: "Faltante" },
+          { tipo: "Reconectadores", estado: "Faltante" },
+          { tipo: "Tracker", estado: "Faltante" },
+          { tipo: "Shelter", estado: "Faltante" }
+        ]
+      }
     ]
   },
   {
@@ -518,8 +579,24 @@ export const mockPortfolios: Portfolio[] = [
     inversionista: "Solenium Ventures",
     cantidadMgs: 2,
     minigranjas: [
-      { id: "MGS-301", nombre: "Cali Central", codigo: "COLVAL01", ubicacion: "Valle, Col", estado: "Priorizada", progreso: 75 },
-      { id: "MGS-302", nombre: "Palmira Solar", codigo: "COLVAL02", ubicacion: "Valle, Col", estado: "Priorizada", progreso: 85 }
+      { id: "MGS-301", nombre: "Cali Central", codigo: "COLVAL01", ubicacion: "Valle, Col", estado: "Priorizada", progreso: 75,
+        requerimientos: [
+          { tipo: "Paneles", estado: "Nacionalización", fecha: "MAR.01/25" },
+          { tipo: "Inversor", estado: "Faltante" },
+          { tipo: "Reconectadores", estado: "Faltante" },
+          { tipo: "Tracker", estado: "Nacionalización", fecha: "MAR.01/25" },
+          { tipo: "Shelter", estado: "Nacionalización", fecha: "MAR.01/25" }
+        ]
+      },
+      { id: "MGS-302", nombre: "Palmira Solar", codigo: "COLVAL02", ubicacion: "Valle, Col", estado: "Priorizada", progreso: 85,
+        requerimientos: [
+          { tipo: "Paneles", estado: "Ingreso a Zona Franca", fecha: "MAR.05/25" },
+          { tipo: "Inversor", estado: "Ingreso a Zona Franca", fecha: "MAR.05/25" },
+          { tipo: "Reconectadores", estado: "Faltante" },
+          { tipo: "Tracker", estado: "Faltante" },
+          { tipo: "Shelter", estado: "Faltante" }
+        ]
+      }
     ]
   }
 ];

@@ -47,6 +47,7 @@ export const SupplyLayout: React.FC = () => {
     portfolio: [],
     investor: [],
     status: [],
+    equipment: [],
     period: 'All',
     assigned: 'All'
   });
@@ -264,27 +265,7 @@ export const SupplyLayout: React.FC = () => {
 
   return (
     <div className="supply-layout-container">
-      <div className="logistica-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ 
-            background: 'var(--brand-primary)', 
-            color: 'white', 
-            width: '32px', 
-            height: '32px', 
-            borderRadius: '8px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            fontWeight: 800,
-            fontSize: '18px',
-            boxShadow: '0 4px 10px rgba(29, 153, 204, 0.2)'
-          }}>S</div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 600, color: 'var(--brand-primary)', letterSpacing: '-0.5px', lineHeight: 1.1 }}>SOLARVERSO</h1>
-            <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase' }}>SUPPLY CHAIN MANAGEMENT</span>
-          </div>
-        </div>
-      </div>
+
 
       <div className="supply-tab-switcher">
         <button 

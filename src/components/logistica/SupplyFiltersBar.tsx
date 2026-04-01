@@ -6,6 +6,7 @@ export interface FiltersState {
   search: string;
   portfolio: string[];
   investor: string[];
+  equipment: string[];
   status: string[];
   period: string;
   assigned: string;
@@ -103,6 +104,22 @@ export const SupplyFiltersBar: React.FC<SupplyFiltersBarProps> = ({ filters, set
             <div className="v-divider"></div>
           </>
         )}
+
+        {/* Equipment Category */}
+        <div className="filter-group">
+          <span className="group-label">Equipo:</span>
+          {["Tracker", "Shelter", "Inversor", "Panel", "Reconectador"].map(eq => (
+            <button 
+              key={eq}
+              className={`filter-pill ${filters.equipment.includes(eq) ? "active" : ""}`}
+              onClick={() => toggleFilter("equipment", eq)}
+            >
+              {eq}
+            </button>
+          ))}
+        </div>
+
+        <div className="v-divider"></div>
 
         {/* Status Pills (Outline) */}
         <div className="filter-group">

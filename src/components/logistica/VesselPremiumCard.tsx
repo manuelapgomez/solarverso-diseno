@@ -17,13 +17,6 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
   // Calculamos slots llenos
   const filledSlotsCount = ship.slots.filter(s => s.mgsAsignada !== null).length;
   const totalSlots = ship.slots.length;
-  const capacityPercent = totalSlots > 0 ? Math.round((filledSlotsCount / totalSlots) * 100) : 0;
-
-  const equipmentCount = filledSlotsCount * 10;
-
-  // Agrupamiento de minigranjas únicas para mostrar capacidad ocupada
-  const uniqueMgs = new Set(ship.slots.filter(s => s.mgsAsignada).map(s => s.mgsAsignada));
-  const minigranjasCount = uniqueMgs.size;
   const availableSlots = totalSlots - filledSlotsCount;
 
   // Nueva lógica de alertas condicionales
@@ -37,7 +30,7 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
     <div className={`vessel-card-premium-v2 ${isActive ? 'active' : ''} ${showAlertState ? 'alert-state' : ''}`} onClick={(e) => {
       e.stopPropagation();
       if ((e.target as HTMLElement).closest('.cargo-slot') || (e.target as HTMLElement).closest('.mini-slot') || (e.target as HTMLElement).closest('.arrival-declare-btn') || (e.target as HTMLElement).closest('.report-incident-btn') || (e.target as HTMLElement).closest('.alert-resume-btn')) return;
-      
+
       // Si está en alerta por detención, el click principal abre el reanudar (si el usuario lo prefiere así)
       if (hasActiveDetention && onResumeCourse) {
         onResumeCourse(ship.id);
@@ -102,9 +95,9 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
           <span className="identity-label" style={{
             fontSize: '10px',
             textTransform: 'uppercase',
-            letterSpacing: '0.15em', 
+            letterSpacing: '0.15em',
             color: '#94a3b8',
-            fontWeight: 600, 
+            fontWeight: 600,
             marginBottom: '2px',
             display: 'block'
           }}>SHIP</span>
@@ -114,32 +107,6 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
           </div>
         </div>
 
-        {/* 3. PROGRESO DE CARGA Y ASIGNACIÓN - Signals vs Noise */}
-        <div className="progress-container" style={{ gap: '12px' }}>
-          <div>
-            <div className="progress-header" style={{ marginBottom: '6px' }}>
-              <span style={{ color: '#94a3b8', fontSize: '10px', fontWeight: 700 }}>PHYSICAL CAPACITY</span>
-              <span style={{ color: '#10b981', fontSize: '11px', fontWeight: 800 }}>100% READY</span>
-            </div>
-            <div className="progress-bar-bg" style={{ height: '4px', background: '#f1f5f9' }}>
-              <div className="progress-bar-fill" style={{ width: '100%', background: 'linear-gradient(90deg, #10b981, #34d399)' }}></div>
-            </div>
-          </div>
-
-          <div>
-            <div className="progress-header" style={{ marginBottom: '6px' }}>
-              <span style={{ color: '#94a3b8', fontSize: '10px', fontWeight: 700 }}>DESTINATION ASSIGNMENT</span>
-              <span style={{ color: 'var(--brand-primary)', fontSize: '11px', fontWeight: 800 }}>{capacityPercent}%</span>
-            </div>
-            <div className="progress-bar-bg" style={{ height: '4px', background: '#f1f5f9' }}>
-              <div className="progress-bar-fill" style={{
-                width: `${capacityPercent}%`,
-                background: 'linear-gradient(90deg, #1d99cc, #60a5fa)',
-                boxShadow: isActive ? '0 0 12px rgba(29, 153, 204, 0.4)' : 'none'
-              }}></div>
-            </div>
-          </div>
-        </div>
 
         {/* 4. TRANSIT COMPARISON - NEW PREMIUM VISUALIZATION */}
         <div className="transit-comparison-container" style={{ marginTop: '16px', padding: '12px', background: 'rgba(248, 250, 252, 0.8)', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
@@ -177,29 +144,11 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
           </div>
         </div>
 
-        {/* 5. METADATA GRID - High hierarchy for Total Units */}
-        <div className="ship-meta-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px', marginTop: '12px' }}>
-          <div className="meta-item" style={{ background: 'rgba(248, 250, 252, 0.6)', padding: '10px 12px', borderRadius: '8px', backdropFilter: 'blur(4px)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748b', fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '2px' }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-              Cargo Load Summary
-            </div>
-            <span style={{ color: '#0f172a', fontWeight: 800, fontSize: '18px', letterSpacing: '-0.01em' }}>{equipmentCount} <span style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600 }}>EQUIPMENT UNITS</span></span>
-          </div>
-        </div>
 
         {/* 5. LOCATIONS & CAPACITY - Secondary disclosure */}
         <div className="capacity-section" style={{ borderTop: '1px solid rgba(226, 232, 240, 0.5)', paddingTop: '16px', marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', position: 'relative' }}>
 
           <div className="meta-locations" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: '#64748b', fontWeight: 500 }}>
-              <span style={{ opacity: 0.6, fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.1em', width: '30px' }}>ORG</span>
-              <span style={{ color: '#334155', fontWeight: 600 }}>Shanghai, CN</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: '#64748b', fontWeight: 500 }}>
-              <span style={{ opacity: 0.6, fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.1em', width: '30px' }}>DST</span>
-              <span style={{ color: 'var(--brand-primary)', fontWeight: 700 }}>Barranquilla, CO</span>
-            </div>
 
             {/* INCIDENT REPORT BUTTON */}
             {!hasActiveDetention && onReportIncident && (
@@ -217,7 +166,6 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
-            <span style={{ fontSize: '10px', color: '#94a3b8', fontWeight: 600 }}>{minigranjasCount} MULTI-DROP</span>
 
             {hasActiveDetention ? (
               <button
@@ -225,7 +173,7 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
                 onClick={(e) => { e.stopPropagation(); if (onResumeCourse) onResumeCourse(ship.id); }}
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                Reanudar
+                Solventar
               </button>
             ) : (
               <span className="status-pill status-ready">

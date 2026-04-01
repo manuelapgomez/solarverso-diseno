@@ -133,16 +133,25 @@ export const MaterialTrackingView: React.FC<MaterialTrackingViewProps> = ({
                       <>
                         <h4 className="portfolio-divider-title">{port.name} — Proyectos</h4>
                         <div className="material-projects-grid">
-                          <div className="grid-header-row">
+                          <div 
+                            className="grid-header-row" 
+                            style={{ 
+                              display: 'grid', 
+                              gridTemplateColumns: `minmax(250px, 300px) repeat(${['Panel', 'Inversor', 'Reconectador', 'Tracker', 'Shelter'].filter(eq => filters.equipment.length === 0 || filters.equipment.includes(eq)).length}, 1fr)`,
+                              gap: '16px' 
+                            }}
+                          >
                             <div className="header-cell">Proyecto</div>
-                            <div className="header-cell">Paneles</div>
-                            <div className="header-cell">Inversores</div>
-                            <div className="header-cell">Reconectador</div>
-                            <div className="header-cell">Tracker</div>
-                            <div className="header-cell">Shelter</div>
+                            {(filters.equipment.length === 0 || filters.equipment.includes('Panel')) && <div className="header-cell">Paneles</div>}
+                            {(filters.equipment.length === 0 || filters.equipment.includes('Inversor')) && <div className="header-cell">Inversores</div>}
+                            {(filters.equipment.length === 0 || filters.equipment.includes('Reconectador')) && <div className="header-cell">Reconectador</div>}
+                            {(filters.equipment.length === 0 || filters.equipment.includes('Tracker')) && <div className="header-cell">Tracker</div>}
+                            {(filters.equipment.length === 0 || filters.equipment.includes('Shelter')) && <div className="header-cell">Shelter</div>}
                           </div>
 
-                          {port.projects.map((project: MaterialProject) => (
+                          {port.projects.map((project: MaterialProject) => {
+                            const activeColsCount = ['Panel', 'Inversor', 'Reconectador', 'Tracker', 'Shelter'].filter(eq => filters.equipment.length === 0 || filters.equipment.includes(eq)).length;
+                            return (
                             <div key={project.id} className="project-row-premium">
                               <div className="project-info-main">
                                 <div className="name-box">
@@ -156,15 +165,23 @@ export const MaterialTrackingView: React.FC<MaterialTrackingViewProps> = ({
                                   </div>
                                 </div>
                               </div>
-                              <div className="project-status-cells">
-                                <div className="status-grid-item">{renderMaterialCell(project.materials.panels, 'Panel')}</div>
-                                <div className="status-grid-item">{renderMaterialCell(project.materials.inverters, 'Inversor')}</div>
-                                <div className="status-grid-item">{renderMaterialCell(project.materials.reconectador, 'Reconectador')}</div>
-                                <div className="status-grid-item">{renderMaterialCell(project.materials.tracker, 'Tracker')}</div>
-                                <div className="status-grid-item">{renderMaterialCell(project.materials.shelter, 'Shelter')}</div>
+                              <div 
+                                className="project-status-cells"
+                                style={{
+                                  display: 'grid',
+                                  gridTemplateColumns: `repeat(${activeColsCount}, 1fr)`,
+                                  gap: '16px'
+                                }}
+                              >
+                                {(filters.equipment.length === 0 || filters.equipment.includes('Panel')) && <div className="status-grid-item">{renderMaterialCell(project.materials.panels, 'Panel')}</div>}
+                                {(filters.equipment.length === 0 || filters.equipment.includes('Inversor')) && <div className="status-grid-item">{renderMaterialCell(project.materials.inverters, 'Inversor')}</div>}
+                                {(filters.equipment.length === 0 || filters.equipment.includes('Reconectador')) && <div className="status-grid-item">{renderMaterialCell(project.materials.reconectador, 'Reconectador')}</div>}
+                                {(filters.equipment.length === 0 || filters.equipment.includes('Tracker')) && <div className="status-grid-item">{renderMaterialCell(project.materials.tracker, 'Tracker')}</div>}
+                                {(filters.equipment.length === 0 || filters.equipment.includes('Shelter')) && <div className="status-grid-item">{renderMaterialCell(project.materials.shelter, 'Shelter')}</div>}
                               </div>
                             </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </>
                     ) : null}

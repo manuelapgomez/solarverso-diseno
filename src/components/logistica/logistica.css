@@ -5886,3 +5886,67 @@
   background: #f1f5f9;
   border-color: var(--brand-primary);
 }
+
+.shipcard-hull-wrapper {
+  height: 232px; /* Altura sintonizada con el barco para evitar saltos de texto */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.plane-hull-graphic.mini {
+  width: 100%;
+  height: 100%;
+  max-width: 800px;
+  display: flex;
+  align-items: flex-start; /* Grid stays at the top */
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  background: transparent !important; 
+  overflow: visible; 
+}
+
+/* Specific Base Illustration for Aircraft - Using pseudo to offset PNG air */
+.plane-hull-graphic.mini::before {
+  content: '';
+  position: absolute;
+  /* El PNG tiene mucho aire. Con bottom -30% forzamos que las ruedas bajen al nivel del casco del barco */
+  bottom: -32%; 
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 100%;
+  background-image: url('../../assets/logistica/cargo_plane.png');
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: contain;
+  z-index: -1;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.06));
+}
+
+.plane-grid {
+  width: 85% !important; 
+  margin-top: 4% !important; /* Margen superior igual al del barco */
+  margin-left: 0 !important;
+  position: relative;
+  z-index: 10;
+}
+
+.plane-grid .mini-slot {
+  height: 32px !important; 
+  background: rgba(255, 255, 255, 0.6) !important; 
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+}
+
+.plane-grid .mini-slot .cargo-type-label {
+  font-size: 5.5px !important; /* Texto más pequeño proporcional */
+  opacity: 0.8;
+}
+
+.plane-grid .mini-slot.filled {
+  background: linear-gradient(135deg, rgba(29, 153, 204, 0.7) 0%, rgba(23, 131, 176, 0.7) 100%) !important;
+  box-shadow: 0 2px 8px rgba(29, 153, 204, 0.2) !important;
+}

@@ -64,9 +64,9 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
       )}
 
       {/* 1. SECCIÓN DE SLOTS (TOP PRIORITY) - Premium Industrial Visualization */}
-      <div className="shipcard-hull-wrapper" style={{ order: -2 }}>
-        <div className="ship-hull-graphic mini">
-          <div className="cargo-grid mini">
+      <div className={`shipcard-hull-wrapper ${ship.tipo === 'aereo' ? 'aereo-wrapper' : ''}`} style={{ order: -2 }}>
+        <div className={`${ship.tipo === 'aereo' ? 'plane-hull-graphic' : 'ship-hull-graphic'} mini`}>
+          <div className={`cargo-grid mini ${ship.tipo === 'aereo' ? 'plane-grid' : ''}`}>
             {ship.slots.map((slot, index) => {
               const isFilled = slot.mgsAsignada !== null;
               return (
@@ -100,10 +100,10 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
             fontWeight: 600,
             marginBottom: '2px',
             display: 'block'
-          }}>SHIP</span>
+          }}>{ship.tipo === 'aereo' ? 'Aircraft' : 'Ship'}</span>
           <h3 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em', margin: '0 0 2px 0' }}>{ship.nombre}</h3>
           <div className="ship-bl-sm" style={{ color: '#64748b', fontSize: '10px', fontFamily: 'var(--font-family-monospace)', fontWeight: 500, letterSpacing: '0.05em' }}>
-            BL/ID: <span style={{ color: '#0f172a', fontWeight: 'bold' }}>{ship.bl_code.toUpperCase()}</span> <span style={{ color: 'var(--brand-primary)', fontWeight: '600', marginLeft: '6px', cursor: 'help', letterSpacing: '0' }}>+1 MORE</span>
+            {ship.tipo === 'aereo' ? 'AWB' : 'BL'}/ID: <span style={{ color: '#0f172a', fontWeight: 'bold' }}>{ship.bl_code.toUpperCase()}</span> <span style={{ color: 'var(--brand-primary)', fontWeight: '600', marginLeft: '6px', cursor: 'help', letterSpacing: '0' }}>+1 MORE</span>
           </div>
         </div>
 
@@ -114,7 +114,7 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
             <div className="transit-node">
               <span style={{ fontSize: '9px', fontWeight: 800, color: '#94a3b8', display: 'block', marginBottom: '2px' }}>DEPARTURE (ETD)</span>
               <span style={{ fontSize: '13px', fontWeight: 700, color: '#334155' }}>{ship.etd}</span>
-              <span style={{ fontSize: '10px', color: '#64748b', display: 'block' }}>Shanghai, CN</span>
+              <span style={{ fontSize: '10px', color: '#64748b', display: 'block' }}>{ship.tipo === 'aereo' ? 'Narita, JP' : 'Shanghai, CN'}</span>
             </div>
 
             <div className="transit-connector" style={{ flex: 1, margin: '0 12px', position: 'relative', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -132,14 +132,24 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
                 justifyContent: 'center',
                 zIndex: 2
               }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="2.5"><path d="M22 17H2l2-2h16l2 2z"></path><path d="M20 15V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7"></path><path d="M12 6V2"></path></svg>
+                {ship.tipo === 'aereo' ? (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="2.5">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+                  </svg>
+                ) : (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="2.5">
+                    <path d="M22 17H2l2-2h16l2 2z"></path>
+                    <path d="M20 15V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7"></path>
+                    <path d="M12 6V2"></path>
+                  </svg>
+                )}
               </div>
             </div>
 
             <div className="transit-node" style={{ textAlign: 'right' }}>
               <span style={{ fontSize: '9px', fontWeight: 800, color: 'var(--brand-primary)', display: 'block', marginBottom: '2px' }}>ARRIVAL (ETA)</span>
               <span style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>{ship.eta}</span>
-              <span style={{ fontSize: '10px', color: '#64748b', display: 'block' }}>Barranquilla, CO</span>
+              <span style={{ fontSize: '10px', color: '#64748b', display: 'block' }}>{ship.tipo === 'aereo' ? 'Bogotá, CO' : 'Barranquilla, CO'}</span>
             </div>
           </div>
         </div>

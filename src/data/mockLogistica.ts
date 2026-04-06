@@ -99,6 +99,7 @@ export type Barco = {
   id: string;
   bl_code: string;
   nombre: string;
+  tipo: 'maritimo' | 'aereo';
   etd: string; 
   eta: string; 
   telemetry?: {
@@ -112,7 +113,7 @@ export type Barco = {
   slots: SlotCarga[]; 
   portfolio?: string;
   estado?: 'Pending' | 'On Route' | 'Arrived' | 'Alert' | string;
-  terminalArribo?: 'Cartagena' | 'Buenaventura' | null;
+  terminalArribo?: 'Cartagena' | 'Buenaventura' | 'Bogotá' | 'Medellín' | null;
   incidents: Incident[];
 };
 
@@ -129,6 +130,7 @@ export type EquipmentRequirement = {
   tipo: 'Tracker' | 'Shelter' | 'Inversor' | 'Paneles' | 'Reconectadores';
   estado: 'Faltante' | 'Ingreso a Zona Franca' | 'Licencia de importación' | 'Nacionalización' | 'Entregado' | string;
   fecha?: string;
+  oc?: string;
   specs?: SpecEquipo;
 };
 
@@ -350,6 +352,7 @@ export const inicialBarcosData: Barco[] = [
     id: "SHIP-001",
     bl_code: "BL-7890123",
     nombre: "MSC Katrina",
+    tipo: "maritimo",
     etd: "2026-03-05",
     eta: "2026-04-15",
     telemetry: { lat: "12.3° N", lng: "74.8° W", speed: "18.5 kn", heading: "285°", lastUpdate: "3m ago" },
@@ -360,9 +363,24 @@ export const inicialBarcosData: Barco[] = [
     incidents: [],
   },
   {
+    id: "PLANE-001",
+    bl_code: "AWB-1020304",
+    nombre: "Atlas Air 747",
+    tipo: "aereo",
+    etd: "2026-04-01",
+    eta: "2026-04-03",
+    telemetry: { lat: "35.2° N", lng: "139.7° E", speed: "480 kn", heading: "95°", lastUpdate: "1m ago" },
+    loading_progress: 100,
+    slots: generarSlotsPreCargados("ATL747"), // 15 slots como el barco
+    portfolio: "Valle del Cauca Hub",
+    estado: "On Route",
+    incidents: [],
+  },
+  {
     id: "SHIP-002",
     bl_code: "BL-8901234",
     nombre: "Pacific Voyager",
+    tipo: "maritimo",
     etd: "2026-03-24",
     eta: "2026-05-02",
     telemetry: { lat: "22.1° N", lng: "114.2° E", speed: "14.2 kn", heading: "180°", lastUpdate: "12m ago" },
@@ -376,6 +394,7 @@ export const inicialBarcosData: Barco[] = [
     id: "SHIP-003",
     bl_code: "BL-9012345",
     nombre: "Atlantic Express",
+    tipo: "maritimo",
     etd: "2026-04-10",
     eta: "2026-05-20",
     telemetry: { lat: "10.5° N", lng: "75.5° W", speed: "16.8 kn", heading: "90°", lastUpdate: "Just now" },
@@ -387,9 +406,23 @@ export const inicialBarcosData: Barco[] = [
     incidents: [],
   },
   {
+    id: "PLANE-002",
+    bl_code: "AWB-5544332",
+    nombre: "CargoLux LX-V",
+    tipo: "aereo",
+    etd: "2026-04-05",
+    eta: "2026-04-07",
+    loading_progress: 100,
+    slots: generarSlotsPreCargados("CGLX"),
+    portfolio: "Portafolio Andino",
+    estado: "Pending",
+    incidents: [],
+  },
+  {
     id: "SHIP-004",
     bl_code: "BL-1122334",
     nombre: "Solaris Carrier",
+    tipo: "maritimo",
     etd: "2026-05-01",
     eta: "2026-06-10",
     telemetry: { lat: "1.2° S", lng: "103.8° E", speed: "19.2 kn", heading: "270°", lastUpdate: "5m ago" },
@@ -403,6 +436,7 @@ export const inicialBarcosData: Barco[] = [
     id: "SHIP-005",
     bl_code: "BL-5566778",
     nombre: "Everest Line",
+    tipo: "maritimo",
     etd: "2026-05-15",
     eta: "2026-06-25",
     loading_progress: 100,
@@ -415,6 +449,7 @@ export const inicialBarcosData: Barco[] = [
     id: "SHIP-006",
     bl_code: "BL-3344556",
     nombre: "Titan Ocean",
+    tipo: "maritimo",
     etd: "2026-06-02",
     eta: "2026-07-12",
     loading_progress: 100,
@@ -427,6 +462,7 @@ export const inicialBarcosData: Barco[] = [
     id: "SHIP-007",
     bl_code: "BL-9988776",
     nombre: "Aurora Line",
+    tipo: "maritimo",
     etd: "2026-06-25",
     eta: "2026-08-05",
     loading_progress: 100,
@@ -504,18 +540,18 @@ export const mockPortfolios: Portfolio[] = [
         requerimientos: [
           { tipo: "Paneles", estado: "Faltante", specs: { modelo: "Bifacial 600W", cantidad: 4000 } },
           { tipo: "Inversor", estado: "Faltante", specs: { capacidad: "200kW" } },
-          { tipo: "Reconectadores", estado: "Ingreso a Zona Franca", fecha: "FEB.26/25", specs: { voltaje: "34.5kV" } },
-          { tipo: "Tracker", estado: "Licencia de importación", fecha: "FEB.26/25", specs: { hileras: "1P", corrosionAtmosferica: "Alta", corrosionSuelo: "Media", zonaVientos: "Baja" } },
-          { tipo: "Shelter", estado: "Nacionalización", fecha: "FEB.26/25", specs: { tipo: "Contenedor 20ft" } }
+          { tipo: "Reconectadores", estado: "Ingreso a Zona Franca", fecha: "FEB.26/25", oc: "OC-12199", specs: { voltaje: "34.5kV" } },
+          { tipo: "Tracker", estado: "Licencia de importación", fecha: "FEB.26/25", oc: "OC-12502", specs: { hileras: "1P", corrosionAtmosferica: "Alta", corrosionSuelo: "Media", zonaVientos: "Baja" } },
+          { tipo: "Shelter", estado: "Nacionalización", fecha: "FEB.26/25", oc: "OC-13005", specs: { tipo: "Contenedor 20ft" } }
         ]
       },
       { id: "MGS-102", nombre: "Andes 2", codigo: "COLAND02", ubicacion: "Antioquia, Col", estado: "En Espera", progreso: 40,
         requerimientos: [
-          { tipo: "Paneles", estado: "Entregado", fecha: "JAN.10/25" },
-          { tipo: "Inversor", estado: "Nacionalización", fecha: "MAR.01/25" },
-          { tipo: "Reconectadores", estado: "Entregado", fecha: "JAN.12/25" },
+          { tipo: "Paneles", estado: "Entregado", fecha: "JAN.10/25", oc: "OC-11882" },
+          { tipo: "Inversor", estado: "Nacionalización", fecha: "MAR.01/25", oc: "OC-123205" },
+          { tipo: "Reconectadores", estado: "Entregado", fecha: "JAN.12/25", oc: "OC-11991" },
           { tipo: "Tracker", estado: "Faltante", specs: { hileras: "2P", zonaVientos: "Alta" } },
-          { tipo: "Shelter", estado: "Entregado", fecha: "JAN.15/25" }
+          { tipo: "Shelter", estado: "Entregado", fecha: "JAN.15/25", oc: "OC-12005" }
         ]
       },
       { id: "MGS-103", nombre: "Caldas Solar", codigo: "COLCAL01", ubicacion: "Caldas, Col", estado: "Priorizada", progreso: 80,
@@ -581,11 +617,11 @@ export const mockPortfolios: Portfolio[] = [
     minigranjas: [
       { id: "MGS-301", nombre: "Cali Central", codigo: "COLVAL01", ubicacion: "Valle, Col", estado: "Priorizada", progreso: 75,
         requerimientos: [
-          { tipo: "Paneles", estado: "Nacionalización", fecha: "MAR.01/25" },
+          { tipo: "Paneles", estado: "Nacionalización", fecha: "MAR.01/25", oc: "OC-123205" },
           { tipo: "Inversor", estado: "Faltante" },
           { tipo: "Reconectadores", estado: "Faltante" },
-          { tipo: "Tracker", estado: "Nacionalización", fecha: "MAR.01/25" },
-          { tipo: "Shelter", estado: "Nacionalización", fecha: "MAR.01/25" }
+          { tipo: "Tracker", estado: "Nacionalización", fecha: "MAR.01/25", oc: "OC-123205" },
+          { tipo: "Shelter", estado: "Nacionalización", fecha: "MAR.01/25", oc: "OC-123205" }
         ]
       },
       { id: "MGS-302", nombre: "Palmira Solar", codigo: "COLVAL02", ubicacion: "Valle, Col", estado: "Priorizada", progreso: 85,

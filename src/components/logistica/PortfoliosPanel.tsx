@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import "./logistica.css";
 import "./portfolios-panel.css";
 import { type Portfolio, type SpecEquipo, type EquipmentRequirement } from "../../data/mockLogistica";
@@ -10,22 +11,101 @@ interface PortfoliosPanelProps {
 }
 
 const getStatusIcon = (status: string) => {
-  if (status === 'Faltante') return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>;
-  if (status === 'No Pedido') return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>;
-  if (status === 'Pedido') return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>;
-  if (status === 'En Diseño' || status === 'Inspección') return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>;
-  if (status === 'Zarpe' || status === 'Booking') return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>;
-  if (status === 'Transporte al Proyecto') return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>;
-  // Default doc icon
-  return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>;
+  const s = status.toLowerCase();
+  
+  if (s.includes('faltante')) return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" strokeWidth="2.5">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+      <line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>
+    </svg>
+  );
+  
+  if (s.includes('no pedido') || s.includes('en espera')) return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5">
+      <circle cx="12" cy="12" r="10"></circle>
+      <polyline points="12 6 12 12 16 14"></polyline>
+    </svg>
+  );
+
+  if (s.includes('pedido') || s.includes('diseño')) return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+    </svg>
+  );
+
+  if (s.includes('inspección') || s.includes('fabricación')) return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5">
+      <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7-4-7 4v12z"></path>
+      <path d="M9 12l2 2 4-4"></path>
+    </svg>
+  );
+
+  if (s.includes('zarpe') || s.includes('booking') || s.includes('barco')) return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5">
+      <path d="M2 21h20"></path><path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4a11.6 11.6 0 0 0 1.62 6"></path>
+      <path d="M12 10V2"></path><path d="M12 2l5 4-5 4"></path>
+    </svg>
+  );
+
+  if (s.includes('transporte') || s.includes('camión')) return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5">
+      <rect x="1" y="3" width="15" height="13"></rect>
+      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+      <circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle>
+    </svg>
+  );
+
+  if (s.includes('nacionalización') || s.includes('zona franca')) return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5">
+      <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+      <line x1="12" y1="22.08" x2="12" y2="12"></line>
+    </svg>
+  );
+
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>
+    </svg>
+  );
 };
+
+const TinyHVIcon = ({ onClick }: { onClick?: () => void }) => (
+  <svg 
+    width="14" 
+    height="14" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="#cbd5e1" 
+    strokeWidth="2" 
+    style={{marginLeft: '4px', cursor: 'pointer'}}
+    onClick={onClick}
+    className="hv-icon-link"
+  >
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+    <polyline points="14 2 14 8 20 8"></polyline>
+    <line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line>
+  </svg>
+);
 
 export const PortfoliosPanel: React.FC<PortfoliosPanelProps> = ({ portfolios, onFilterTrigger }) => {
   const [panelState, setPanelState] = useState<'collapsed' | 'peeking' | 'expanded'>('collapsed');
   const [selectedPortfolioId, setSelectedPortfolioId] = useState<string | null>(null);
   const [modalState, setModalState] = useState<{ isOpen: boolean; req?: EquipmentRequirement; mgsName?: string }>({ isOpen: false });
+  const [mounted, setMounted] = React.useState(false);
 
-  const EQUIPOS_ORDEN = ["Paneles", "Shelter", "Inversor", "Reconectadores", "Tracker"];
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const EQUIPOS_ORDEN = [
+    { key: "Paneles", label: "Paneles" },
+    { key: "Shelter", label: "Shelter" },
+    { key: "Inversor", label: "Inversores" },
+    { key: "Reconectadores", label: "Reconectadores" },
+    { key: "Tracker", label: "Trackers" }
+  ];
 
   const togglePanelState = () => {
     if (panelState === 'collapsed') {
@@ -51,9 +131,21 @@ export const PortfoliosPanel: React.FC<PortfoliosPanelProps> = ({ portfolios, on
 
   const selectedPort = portfolios.find(p => p.id === selectedPortfolioId);
 
-  return (
+  const content = (
     <>
-      <div className={`portfolios-panel ${panelState}`}>
+      <div 
+        className={`portfolios-overlay ${panelState === 'expanded' ? 'active' : ''}`} 
+        onClick={() => {
+          if (panelState === 'expanded') {
+            setPanelState('peeking');
+            setSelectedPortfolioId(null);
+          } else if (panelState === 'peeking') {
+            setPanelState('collapsed');
+          }
+        }}
+      />
+
+      <div className={`portfolios-panel ${panelState}`} data-diag="antigravity-v1">
         {/* Drag handle / Píldora Drawer */}
         <div className="panel-handle-pill" onClick={togglePanelState}>
           <div className="handle-bar"></div>
@@ -114,10 +206,9 @@ export const PortfoliosPanel: React.FC<PortfoliosPanelProps> = ({ portfolios, on
                   {/* Headers */}
                   <div className="mgs-grid-header-row">
                     <div className="mgs-grid-header-cell align-left">Proyecto</div>
-                    {EQUIPOS_ORDEN.map(eq => {
-                      const displayTitle = eq === 'Inversor' ? 'Inversores' : eq === 'Tracker' ? 'Trackers' : eq;
-                      return <div key={eq} className="mgs-grid-header-cell">{displayTitle}</div>;
-                    })}
+                    {EQUIPOS_ORDEN.map(eq => (
+                      <div key={eq.key} className="mgs-grid-header-cell">{eq.label}</div>
+                    ))}
                   </div>
 
                   {/* Rows */}
@@ -133,46 +224,41 @@ export const PortfoliosPanel: React.FC<PortfoliosPanelProps> = ({ portfolios, on
                         </div>
                       </div>
 
-                      {/* Celdas Equivalentes por Equipamiento */}
-                      {EQUIPOS_ORDEN.map(tipo => {
-                        const req = mgs.requerimientos?.find(r => r.tipo === tipo);
+                      {/* Celdas Equipamiento */}
+                      {EQUIPOS_ORDEN.map(eq => {
+                        const req = mgs.requerimientos?.find(r => r.tipo === eq.key);
                         
                         if (!req) return (
-                          <div key={tipo} className="mgs-grid-cell">
+                          <div key={eq.key} className="mgs-grid-cell">
                              <div className="eq-grid-status-icon"><span style={{color: '#94a3b8'}}>N/A</span></div>
                           </div>
                         );
 
-                        const isFaltante = req.estado === 'Faltante';
+                        const isFaltante = req.estado.toLowerCase().includes('faltante');
+                        const isNoPedido = req.estado.toLowerCase().includes('no pedido');
 
-                        return (
-                          <div key={tipo} className="mgs-grid-cell">
-                            <div className={`eq-grid-status-icon ${isFaltante ? 'warning' : ''}`}>
+ return (
+                          <div key={eq.key} className="mgs-grid-cell">
+                            {/* Fila Superior: Icono + Estado + HV */}
+                            <div className={`eq-grid-top-row ${isFaltante ? 'warning' : ''}`}>
                               {getStatusIcon(req.estado)}
-                              <span>{req.estado}</span>
+                              <span className="status-label">{req.estado}</span>
+                              <TinyHVIcon onClick={() => setModalState({ isOpen: true, req, mgsName: mgs.nombre })} />
                             </div>
                             
-                            {/* Fecha y Badge Acción */}
-                            <div className="eq-grid-bottom-info">
-                              {!isFaltante && <span className="eq-grid-date">{req.fecha || 'FEB.26/25'}</span>}
-                              
-                              {isFaltante ? (
-                                <button 
-                                  className="eq-grid-badge faltante"
-                                  onClick={() => setModalState({ isOpen: true, req, mgsName: mgs.nombre })}
-                                >
-                                  {req.estado}
-                                </button>
-                              ) : (
+                            {/* Fila Inferior: Fecha + Badge (excepto Faltante/No Pedido) */}
+                            {!isFaltante && !isNoPedido && (
+                              <div className="eq-grid-bottom-row">
+                                <span className="eq-grid-date">{req.fecha || 'FEB.26/25'}</span>
                                 <button 
                                   className="eq-grid-badge"
                                   onClick={() => setModalState({ isOpen: true, req, mgsName: mgs.nombre })}
                                 >
-                                  OC #123205
+                                  {req.oc || 'OC #123205'}
                                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
                                 </button>
-                              )}
-                            </div>
+                              </div>
+                            )}
                           </div>
                         );
                       })}
@@ -190,6 +276,7 @@ export const PortfoliosPanel: React.FC<PortfoliosPanelProps> = ({ portfolios, on
         onClose={() => setModalState({ isOpen: false })}
         equipmentType={modalState.req?.tipo || ''}
         projectName={modalState.mgsName || ''}
+        oc={modalState.req?.oc}
         specs={modalState.req?.specs}
         onFilterTrigger={(specs, tipo) => {
           if (onFilterTrigger) {
@@ -200,4 +287,8 @@ export const PortfoliosPanel: React.FC<PortfoliosPanelProps> = ({ portfolios, on
       />
     </>
   );
+
+  if (!mounted) return null;
+
+  return createPortal(content, document.body);
 };

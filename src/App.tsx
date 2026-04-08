@@ -1,12 +1,8 @@
-import { Header } from './components/common/Header'
-import { SupplyLayout } from './components/logistica/SupplyLayout'
+import { MainLayout } from './components/layout/MainLayout'
 
 function App() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Header />
-      <SupplyLayout />
-    </div>
+    <MainLayout />
   )
 }
 

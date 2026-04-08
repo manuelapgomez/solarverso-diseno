@@ -27,7 +27,7 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
   const showAlertState = hasActiveDetention || isOverLimit;
 
   return (
-    <div className={`vessel-card-premium-v2 ${isActive ? 'active' : ''} ${showAlertState ? 'alert-state' : ''}`} onClick={(e) => {
+    <div className={`ship-card ${isActive ? 'active' : ''} ${showAlertState ? 'alert-state' : ''}`} onClick={(e) => {
       e.stopPropagation();
       if ((e.target as HTMLElement).closest('.cargo-slot') || (e.target as HTMLElement).closest('.mini-slot') || (e.target as HTMLElement).closest('.arrival-declare-btn') || (e.target as HTMLElement).closest('.report-incident-btn') || (e.target as HTMLElement).closest('.alert-resume-btn')) return;
 
@@ -63,136 +63,80 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
         </button>
       )}
 
-      {/* 1. SECCIÓN DE SLOTS (TOP PRIORITY) - Premium Industrial Visualization */}
-      <div className={`shipcard-hull-wrapper ${ship.tipo === 'aereo' ? 'aereo-wrapper' : ''}`} style={{ order: -2 }}>
-        <div className={`${ship.tipo === 'aereo' ? 'plane-hull-graphic' : 'ship-hull-graphic'} mini`}>
-          <div className={`cargo-grid mini ${ship.tipo === 'aereo' ? 'plane-grid' : ''}`}>
-            {ship.slots.map((slot, index) => {
-              const isFilled = slot.mgsAsignada !== null;
-              return (
-                <div
-                  key={slot.idSlot}
-                  className={`cargo-slot mini-slot ${isFilled ? 'filled' : 'unassigned'} ${hasActiveDetention ? 'disabled' : ''}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (hasActiveDetention) return;
-                    onOpenSwap(slot, index);
-                  }}
-                  title={hasActiveDetention ? "Operaciones Suspendidas" : isFilled ? `Reasignar: ${slot.tipoEquipo}` : `Asignar destino para: ${slot.tipoEquipo}`}
-                >
-                  <span className="cargo-type-label">{slot.tipoEquipo}</span>
-                </div>
-              );
-            })}
+      {/* 1. SECCIÓN DE SLOTS & SHIP (CENTER) */}
+      <div className="vessel-main-visual">
+         <div className={`shipcard-hull-wrapper ${ship.tipo === 'aereo' ? 'aereo-wrapper' : ''}`}>
+          <div className={`${ship.tipo === 'aereo' ? 'plane-hull-graphic' : 'ship-hull-graphic'} mini`}>
+            <div className={`cargo-grid mini ${ship.tipo === 'aereo' ? 'plane-grid' : ''}`}>
+              {ship.slots.map((slot, index) => {
+                const isFilled = slot.mgsAsignada !== null;
+                return (
+                  <div
+                    key={slot.idSlot}
+                    className={`cargo-slot mini-slot ${isFilled ? 'filled' : 'unassigned'} ${hasActiveDetention ? 'disabled' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (hasActiveDetention) return;
+                      onOpenSwap(slot, index);
+                    }}
+                    title={hasActiveDetention ? "Operaciones Suspendidas" : isFilled ? `Reasignar: ${slot.tipoEquipo}` : `Asignar destino para: ${slot.tipoEquipo}`}
+                  >
+                    <span className="cargo-type-label">{slot.tipoEquipo}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* INFO WRAPPER FOR MORE LATERAL BREATHING ROOM */}
-      <div className="vessel-details-content">
-        {/* 2. IDENTIDAD DEL BUQUE - Scanning optimized */}
-        <div className="ship-identity" style={{ background: 'transparent', border: 'none', padding: '0' }}>
-          <span className="identity-label" style={{
-            fontSize: '10px',
-            textTransform: 'uppercase',
-            letterSpacing: '0.15em',
-            color: '#94a3b8',
-            fontWeight: 600,
-            marginBottom: '2px',
-            display: 'block'
-          }}>{ship.tipo === 'aereo' ? 'Aircraft' : 'Ship'}</span>
-          <h3 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em', margin: '0 0 2px 0' }}>{ship.nombre}</h3>
-          <div className="ship-bl-sm" style={{ color: '#64748b', fontSize: '10px', fontFamily: 'var(--font-family-monospace)', fontWeight: 500, letterSpacing: '0.05em' }}>
-            {ship.tipo === 'aereo' ? 'AWB' : 'BL'}/ID: <span style={{ color: '#0f172a', fontWeight: 'bold' }}>{ship.bl_code.toUpperCase()}</span> <span style={{ color: 'var(--brand-primary)', fontWeight: '600', marginLeft: '6px', cursor: 'help', letterSpacing: '0' }}>+1 MORE</span>
-          </div>
+      {/* 2. IDENTIDAD Y ACCIONES (BELOW VISUAL) */}
+      <div className="vessel-identity-row">
+        <h3 className="vessel-id-title">{ship.bl_code.toUpperCase()}</h3>
+        
+        {/* INCIDENT REPORT BUTTON */}
+        {!hasActiveDetention && onReportIncident && (
+          <button
+            className="report-incident-btn-v2"
+            onClick={(e) => { e.stopPropagation(); onReportIncident(ship.id); }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Bitácora Logística
+          </button>
+        )}
+      </div>
+
+      {/* 3. TIEMPOS Y TRÁNSITO (BOTTOM) */}
+      <div className="vessel-transit-footer">
+        <div className="transit-node-v2">
+          <span className="node-label">SALIDA (ETD)</span>
+          <span className="node-date">{ship.etd}</span>
+          <span className="node-loc">{ship.tipo === 'aereo' ? 'Shanghai, CN' : 'Shanghai, CN'}</span>
         </div>
 
-
-        {/* 4. TRANSIT COMPARISON - NEW PREMIUM VISUALIZATION */}
-        <div className="transit-comparison-container" style={{ marginTop: '16px', padding: '12px', background: 'rgba(248, 250, 252, 0.8)', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <div className="transit-node">
-              <span style={{ fontSize: '9px', fontWeight: 800, color: '#94a3b8', display: 'block', marginBottom: '2px' }}>DEPARTURE (ETD)</span>
-              <span style={{ fontSize: '13px', fontWeight: 700, color: '#334155' }}>{ship.etd}</span>
-              <span style={{ fontSize: '10px', color: '#64748b', display: 'block' }}>{ship.tipo === 'aereo' ? 'Narita, JP' : 'Shanghai, CN'}</span>
-            </div>
-
-            <div className="transit-connector" style={{ flex: 1, margin: '0 12px', position: 'relative', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ width: '100%', height: '2px', background: 'linear-gradient(90deg, #e2e8f0 0%, var(--brand-primary) 50%, #e2e8f0 100%)', borderRadius: '2px' }}></div>
-              <div style={{
-                position: 'absolute',
-                background: 'white',
-                width: '24px',
-                height: '24px',
-                borderRadius: '50%',
-                border: '1px solid #e2e8f0',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 2
-              }}>
-                {ship.tipo === 'aereo' ? (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="2.5">
-                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
-                  </svg>
-                ) : (
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="2.5">
-                    <path d="M22 17H2l2-2h16l2 2z"></path>
-                    <path d="M20 15V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7"></path>
-                    <path d="M12 6V2"></path>
-                  </svg>
-                )}
-              </div>
-            </div>
-
-            <div className="transit-node" style={{ textAlign: 'right' }}>
-              <span style={{ fontSize: '9px', fontWeight: 800, color: 'var(--brand-primary)', display: 'block', marginBottom: '2px' }}>ARRIVAL (ETA)</span>
-              <span style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>{ship.eta}</span>
-              <span style={{ fontSize: '10px', color: '#64748b', display: 'block' }}>{ship.tipo === 'aereo' ? 'Bogotá, CO' : 'Barranquilla, CO'}</span>
-            </div>
-          </div>
-        </div>
-
-
-        {/* 5. LOCATIONS & CAPACITY - Secondary disclosure */}
-        <div className="capacity-section" style={{ borderTop: '1px solid rgba(226, 232, 240, 0.5)', paddingTop: '16px', marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', position: 'relative' }}>
-
-          <div className="meta-locations" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-
-            {/* INCIDENT REPORT BUTTON */}
-            {!hasActiveDetention && onReportIncident && (
-              <button
-                className="report-incident-btn"
-                onClick={(e) => { e.stopPropagation(); onReportIncident(ship.id); }}
-                style={{ marginTop: '8px' }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                  Bitácora Logística
-                </div>
-              </button>
-            )}
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
-
-            {hasActiveDetention ? (
-              <button
-                className="alert-resume-btn"
-                onClick={(e) => { e.stopPropagation(); if (onResumeCourse) onResumeCourse(ship.id); }}
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                Solventar
-              </button>
+        <div className="transit-progress-v2">
+          <div className="progress-line"></div>
+          <div className="progress-icon-circle">
+            {ship.tipo === 'aereo' ? (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="2.5">
+                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+              </svg>
             ) : (
-              <span className="status-pill status-ready">
-                {availableSlots} FREE SLOTS
-              </span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-primary)" strokeWidth="2.5">
+                <path d="M22 17H2l2-2h16l2 2z"></path>
+                <path d="M20 15V8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7"></path>
+              </svg>
             )}
           </div>
         </div>
+
+        <div className="transit-node-v2 align-right">
+          <span className="node-label highlight">LLEGADA (ETA)</span>
+          <span className="node-date">{ship.eta}</span>
+          <span className="node-loc">{ship.tipo === 'aereo' ? 'Barranquilla, CO' : 'Barranquilla, CO'}</span>
+        </div>
       </div>
+
     </div>
   );
 };

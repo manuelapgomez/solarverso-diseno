@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { VesselAssignmentView } from './VesselAssignmentView';
-import { MaterialTrackingView } from './MaterialTrackingView';
 import { SwapModal } from './SwapModal';
 import { 
   type SlotCarga, 
@@ -25,8 +24,8 @@ import { DispatchModal } from './DispatchModal';
 import './logistica.css';
 
 export const SupplyLayout: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'vessels' | 'materials'>('materials');
-  const [activePhase, setActivePhase] = useState<'barco' | 'puerto' | 'camion' | 'campo'>('barco');
+  const [activePhase, setActivePhase] = useState<'barco' | 'puerto' | 'camion'>('barco');
+  const [activeSubPhase, setActiveSubPhase] = useState<'camion' | 'campo'>('camion');
   
   // Arrival Modal State
   const [isArrivalModalOpen, setIsArrivalModalOpen] = useState(false);
@@ -255,11 +254,40 @@ export const SupplyLayout: React.FC = () => {
       case 'puerto':
         return <PortView barcos={barcos} onOpenDispatch={handleOpenDispatch} />;
       case 'camion':
-        return <TruckView camionesProceso={camiones} />;
-      case 'campo':
-        return <FieldView minigranjas={minigranjas} camiones={camiones} onConfirmReceipt={handleConfirmReceipt} />;
+        return (
+          <>
+            <div className="sub-navigation-pills">
+              <button 
+                className={`sub-pill ${activeSubPhase === 'camion' ? 'active' : ''}`}
+                onClick={() => setActiveSubPhase('camion')}
+              >
+                Camiones en Tránsito
+              </button>
+              <button 
+                className={`sub-pill ${activeSubPhase === 'campo' ? 'active' : ''}`}
+                onClick={() => setActiveSubPhase('campo')}
+              >
+                Equipo en Campo
+              </button>
+            </div>
+            {activeSubPhase === 'camion' ? (
+              <TruckView camionesProceso={camiones} />
+            ) : (
+              <FieldView minigranjas={minigranjas} camiones={camiones} onConfirmReceipt={handleConfirmReceipt} />
+            )}
+          </>
+        );
       default:
         return null;
+    }
+  };
+
+  const getPhaseTitle = () => {
+    switch (activePhase) {
+      case 'barco': return 'Suministro: Asignación en Tránsito';
+      case 'puerto': return 'Suministro: Puerto Internacional';
+      case 'camion': return 'Suministro: Camiones y Proyectos';
+      default: return 'Suministro: Logística Integral';
     }
   };
 
@@ -267,36 +295,18 @@ export const SupplyLayout: React.FC = () => {
     <div className="supply-layout-container">
 
 
-      <div className="supply-tab-switcher">
-        <button 
-          className={`tab-btn ${activeTab === 'materials' ? 'active' : ''}`}
-          onClick={() => setActiveTab('materials')}
-        >
-          Suministro de Equipos
-        </button>
-        <button 
-          className={`tab-btn ${activeTab === 'vessels' ? 'active' : ''}`}
-          onClick={() => setActiveTab('vessels')}
-        >
-          Gestión de Embarques
-        </button>
-      </div>
-
       <div className="supply-main-content">
-        {activeTab === 'materials' ? (
-          <>
-            <PostPortStepper activePhase={activePhase} onPhaseChange={setActivePhase} />
-            {renderActiveVesselContent()}
-          </>
-        ) : (
-          <MaterialTrackingView 
-            barcos={barcos} 
-            onSwitchToVessels={() => setActiveTab('materials')}
-            onOpenSwap={handleOpenSwap}
-            filters={filters}
-            setFilters={setFilters}
-          />
-        )}
+        <header className="supply-header-section">
+          <div className="title-area">
+            <h1>{getPhaseTitle()}</h1>
+            <p className="subtitle">Dashboard de Logística Integral</p>
+          </div>
+          <PostPortStepper activePhase={activePhase} onPhaseChange={setActivePhase} />
+        </header>
+        
+        <div className="supply-view-viewport">
+          {renderActiveVesselContent()}
+        </div>
       </div>
 
       {isSwapModalOpen && swapData && (

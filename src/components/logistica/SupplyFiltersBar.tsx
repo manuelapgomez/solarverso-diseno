@@ -43,96 +43,62 @@ export const SupplyFiltersBar: React.FC<SupplyFiltersBarProps> = ({ filters, set
   };
 
   return (
-    <div className="filters-bar">
-      <div className="search-wrapper">
-        <svg className="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        <input 
-          type="text" 
-          placeholder="Buscar Buque, BL o Minigranja..." 
-          value={filters.search}
-          onChange={handleSearchChange}
-          className="search-input"
-        />
+    <div className="supply-filters-container">
+      <div className="tools-bar">
+        <div className="search-wrapper">
+          <svg className="tool-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="text" 
+            placeholder="Buscar por nombre, código o ubicación..." 
+            value={filters.search}
+            onChange={handleSearchChange}
+            className="search-input"
+          />
+        </div>
+
+        <button className="tool-btn" title="Sort">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="15 10 12 7 9 10"></polyline>
+            <polyline points="15 14 12 17 9 14"></polyline>
+          </svg>
+        </button>
+
+        <button className="tool-btn filter-toggle-btn" title="Filters">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            <path d="M6 9l6 6 6-6" opacity="0.5"></path>
+          </svg>
+        </button>
       </div>
 
-      <div className="pills-container">
-        {/* Inversionista Category (Always visible) */}
-        <div className="filter-group">
-          <span className="group-label">Inversionista:</span>
-          {["FMO", "IDB Invest"].map(inv => (
-            <button 
-              key={inv}
-              className={`filter-pill ${filters.investor.includes(inv) ? "active" : ""}`}
-              onClick={() => toggleFilter("investor", inv)}
-            >
-              {inv}
-            </button>
-          ))}
+      <div className="active-pills-row">
+        {/* Mocking the specific pills from reference */}
+        <div className="filter-pill-teal">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span>Periodo del proyecto: Q4 Oct - Dic</span>
+        </div>
+        
+        <div className="filter-pill-teal outline">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <span>Priorización</span>
         </div>
 
-        <div className="v-divider"></div>
-
-        {/* Portafolio Category (Dependent on Investor) */}
-        {filters.investor.length > 0 && (
-          <>
-            <div className="filter-group">
-              <span className="group-label">Portafolio:</span>
-              {mockPortfolios
-                .filter(p => {
-                  // If we need strict data binding, we would use mockMaterialTrackingData here
-                  // For now, let's assume mockPortfolios IDs or names can be matched roughly or just show all if investor selected
-                  // To be precise: match investor name prefix or cross-ref with mockMaterialTrackingData
-                  const investorPortfolios = filters.investor.flatMap(invName => {
-                    const group = mockMaterialTrackingData.find(g => g.investor === invName);
-                    return group ? group.portfolios.map(p => p.id) : [];
-                  });
-                  return investorPortfolios.includes(p.id);
-                })
-                .map(p => (
-                  <button 
-                    key={p.id}
-                    className={`filter-pill ${filters.portfolio.includes(p.id) ? "active" : ""}`}
-                    onClick={() => toggleFilter("portfolio", p.id)}
-                  >
-                    {p.nombre}
-                  </button>
-                ))}
-            </div>
-            <div className="v-divider"></div>
-          </>
-        )}
-
-        {/* Equipment Category */}
-        <div className="filter-group">
-          <span className="group-label">Equipo:</span>
-          {["Tracker", "Shelter", "Inversor", "Panel", "Reconectador"].map(eq => (
-            <button 
-              key={eq}
-              className={`filter-pill ${filters.equipment.includes(eq) ? "active" : ""}`}
-              onClick={() => toggleFilter("equipment", eq)}
-            >
-              {eq}
-            </button>
-          ))}
+        <div className="filter-pill-teal active">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21 8V20.9932C21 21.5501 20.5552 22 20.0066 22H3.9934C3.44476 22 3 21.5501 3 20.9932V8L1 4.49992L1.00003 2H23L22.9999 4.49992L21 8Z"></path></svg>
+          <span>Suministro</span>
         </div>
 
-        <div className="v-divider"></div>
+        <div className="filter-pill-teal">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span>Inversionista: Ayurá</span>
+        </div>
 
-        {/* Status Pills (Outline) */}
-        <div className="filter-group">
-          <span className="group-label">Estado:</span>
-          {["On Route", "Pending", "Arrived"].map(st => (
-            <button 
-              key={st}
-              className={`filter-pill-outline ${filters.status.includes(st) ? "active" : ""} status-${st.toLowerCase().replace(" ", "-")}`}
-              onClick={() => toggleFilter("status", st)}
-            >
-              {st}
-            </button>
-          ))}
+        <div className="filter-pill-teal">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          <span>Portafolio: Ayurá 1</span>
         </div>
       </div>
     </div>

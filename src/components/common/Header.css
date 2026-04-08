@@ -15,14 +15,56 @@
 .header-left, .header-right {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
-.vertical-divider {
-  width: 1px;
-  height: 24px;
-  background: #e5e7eb;
-  margin: 0 8px;
+.hamburger-btn {
+  background: transparent;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.hamburger-btn:hover {
+  background: #f3f4f6;
+  color: #1e293b;
+}
+
+.platform-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 4px;
+}
+
+.breadcrumb-icon-btn {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  border-radius: 6px;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.breadcrumb-icon-btn:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.breadcrumb-chevron {
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
 }
 
 .icon-btn {
@@ -91,26 +133,25 @@
 }
 
 .user-profile {
-  margin-left: 8px;
+  margin-right: 8px;
 }
 
 .avatar {
   width: 32px;
   height: 32px;
-  background: #e5e7eb;
+  background: #cbd5e1;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-text-medium);
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: none;
   transition: all 0.2s;
 }
 
 .avatar:hover {
-  border-color: var(--brand-primary);
-  background: #d1d5db;
+  background: #94a3b8;
 }

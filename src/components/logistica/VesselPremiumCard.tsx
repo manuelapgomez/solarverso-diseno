@@ -17,7 +17,6 @@ export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
   // Calculamos slots llenos
   const filledSlotsCount = ship.slots.filter(s => s.mgsAsignada !== null).length;
   const totalSlots = ship.slots.length;
-  const availableSlots = totalSlots - filledSlotsCount;
 
   // Nueva lógica de alertas condicionales
   const incidentHistory = ship.incidents || [];

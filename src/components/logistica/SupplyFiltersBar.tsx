@@ -1,6 +1,4 @@
 import React from "react";
-import { mockPortfolios } from "../../data/mockLogistica";
-import { mockMaterialTrackingData } from "../../data/mockMaterials";
 
 export interface FiltersState {
   search: string;
@@ -23,24 +21,7 @@ export const SupplyFiltersBar: React.FC<SupplyFiltersBarProps> = ({ filters, set
     setFilters(prev => ({ ...prev, search: e.target.value }));
   };
 
-  const toggleFilter = (key: keyof FiltersState, value: string) => {
-    setFilters(prev => {
-      const current = prev[key];
-      if (Array.isArray(current)) {
-        const isSelected = current.includes(value);
-        return {
-          ...prev,
-          [key]: isSelected 
-            ? current.filter(item => item !== value)
-            : [...current, value]
-        };
-      }
-      return {
-        ...prev,
-        [key]: prev[key] === value ? "All" : value
-      };
-    });
-  };
+
 
   return (
     <div className="supply-filters-container">

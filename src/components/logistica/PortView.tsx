@@ -5,9 +5,10 @@ import './logistica.css';
 interface PortViewProps {
   barcos: Barco[];
   onOpenDispatch: (selection: { slot: SlotCarga; slotIndex: number; shipId: string }[]) => void;
+  onOpenSwap: (slot: SlotCarga, slotIndex: number, shipId: string) => void;
 }
 
-export const PortView: React.FC<PortViewProps> = ({ barcos, onOpenDispatch }) => {
+export const PortView: React.FC<PortViewProps> = ({ barcos, onOpenDispatch, onOpenSwap }) => {
   const [selectedSlots, setSelectedSlots] = useState<{ shipId: string, idx: number }[]>([]);
 
   const toggleSelect = (shipId: string, idx: number, e: React.MouseEvent) => {
@@ -56,32 +57,36 @@ export const PortView: React.FC<PortViewProps> = ({ barcos, onOpenDispatch }) =>
                   const equipo = slot.tipoEquipo || 'generico';
                   const tipoClass = equipo.toLowerCase().replace(/[^a-z0-9]/g, '-');
                   const isSelected = selectedSlots.some(s => s.shipId === ship.id && s.idx === idx);
-                  const isAvailable = (slot.cantidadDisponible || 0) > 0;
+                  const displayUnits = slot.cantidadTotal ?? slot.cantidadDisponible ?? 30;
 
                   return (
                     <div 
                       key={`${ship.id}-slot-${idx}`} 
-                      className={`port-container-unit literal-container type-${tipoClass} ${!slot.mgsAsignada ? 'unassigned' : ''} ${isSelected ? 'selected' : ''} ${!isAvailable ? 'empty' : ''}`}
-                      onClick={(e) => isAvailable && toggleSelect(ship.id, idx, e)}
-                      title={isAvailable ? `Equipo: ${slot.nombreMgs} - Disponible: ${slot.cantidadDisponible}` : 'Contenedor Vacío'}
+                      className={`port-container-unit literal-container type-${tipoClass} ${!slot.mgsAsignada ? 'unassigned' : ''} ${isSelected ? 'selected' : ''}`}
+                      onClick={(e) => toggleSelect(ship.id, idx, e)}
+                      title={`Equipo: ${slot.nombreMgs || 'Sin Asignar'} - Unidades: ${displayUnits}`}
                     >
-                      {isAvailable && (
-                        <div className="container-checkbox-wrapper">
-                          <div className={`custom-checkbox ${isSelected ? 'checked' : ''}`}>
-                            {isSelected && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4"><polyline points="20 6 9 17 4 12"/></svg>}
-                          </div>
+                      <div className="container-checkbox-wrapper">
+                        <div className={`custom-checkbox ${isSelected ? 'checked' : ''}`}>
+                          {isSelected && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4"><polyline points="20 6 9 17 4 12"/></svg>}
                         </div>
-                      )}
+                      </div>
                       
                       <div className="container-ribs"></div>
                       <div className="literal-container-content">
-                        <span className="container-logo">{equipo.substring(0, 3).toUpperCase()}</span>
-                        <span className="container-full-type">{equipo.toUpperCase()}</span>
-                        {slot.cantidadDisponible !== undefined && (
-                          <div className="container-qty-badge">
-                            {slot.cantidadDisponible} unidades
-                          </div>
-                        )}
+                        <div 
+                           style={{ display: 'flex', gap: '8px', cursor: 'pointer', transition: 'color 0.2s', alignItems: 'center' }} 
+                           onClick={(e) => { e.stopPropagation(); onOpenSwap(slot, idx, ship.id); }}
+                           className="clickable-container-name"
+                           title="Ver hoja de vida del producto"
+                        >
+                          <span className="container-logo">{equipo.substring(0, 3).toUpperCase()}</span>
+                          <span className="container-full-type hover:underline">{equipo.toUpperCase()}</span>
+                        </div>
+                        
+                        <div className="container-qty-badge">
+                          {displayUnits} unidades
+                        </div>
                       </div>
                     </div>
                   );

@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { TransportModal } from "./TransportModal";
 import "./logistica.css";
 import { VesselPremiumCard } from "./VesselPremiumCard";
 import { ShipDetailSlide } from "./ShipDetailSlide";
@@ -30,6 +31,7 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
 }) => {
   const [selectedShipId, setSelectedShipId] = useState<string | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isTransportModalOpen, setIsTransportModalOpen] = useState(false);
   const [activeReqFilter, setActiveReqFilter] = useState<{specs: SpecEquipo, type: string} | null>(null);
 
   // Deep Filtering Logic
@@ -95,9 +97,13 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
               <button className="btn-icon-secondary">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
               </button>
-              <button className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button 
+                className="btn-primary" 
+                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                onClick={() => setIsTransportModalOpen(true)}
+              >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                Nuevo Buque
+                Nuevo Transporte
               </button>
             </div>
           </div>
@@ -177,6 +183,15 @@ export const VesselAssignmentView: React.FC<VesselAssignmentViewProps> = ({
           )}
         </div>
       </div>
+
+      <TransportModal 
+        isOpen={isTransportModalOpen}
+        onClose={() => setIsTransportModalOpen(false)}
+        onSubmit={(data) => {
+          console.log(`Nuevo transporte creado:`, data);
+          // TODO: implement actual creation logic if needed
+        }}
+      />
     </div>
   );
 };

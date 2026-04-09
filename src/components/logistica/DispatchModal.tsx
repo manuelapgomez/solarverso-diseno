@@ -138,12 +138,38 @@ export const DispatchModal: React.FC<DispatchModalProps> = ({
                       </div>
                     </td>
                     <td className="col-destination">
-                      <div className="dest-stack">
-                        <strong className="dest-name">{item.nombreMgs}</strong>
-                        <span className="dest-code">{minigranjas.find(m => m.id === item.idMgs)?.codigo || 'COLATLT14P2_LURUACO_SUR'}</span>
+                      <div className="dest-stack" style={{ position: 'relative' }}>
+                        <select 
+                          className="dest-select-inline hover:bg-slate-50 transition-colors" 
+                          value={item.idMgs || ''} 
+                          onChange={(e) => handleUpdateItem(item.slotId, 'idMgs', e.target.value)}
+                          style={{
+                            width: '100%',
+                            border: '1px solid transparent',
+                            borderBottom: '1px solid #e2e8f0',
+                            padding: '4px 0',
+                            fontWeight: 600,
+                            color: '#0f172a',
+                            marginBottom: '6px',
+                            fontSize: '14px',
+                            backgroundColor: 'transparent',
+                            cursor: 'pointer',
+                            outline: 'none',
+                            appearance: 'none', // Remove native arrow to style neatly
+                          }}
+                        >
+                          <option value="" disabled>Seleccione un proyecto destino...</option>
+                          {minigranjas.map(mg => (
+                            <option key={mg.id} value={mg.id}>{mg.nombre}</option>
+                          ))}
+                        </select>
+                        <div style={{ position: 'absolute', right: '4px', top: '8px', pointerEvents: 'none', color: '#94a3b8' }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                        <span className="dest-code">{minigranjas.find(m => m.id === item.idMgs)?.codigo || 'CO_CODIGO_PENDIENTE'}</span>
                         <div className="dest-loc">
                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                           <span>{minigranjas.find(m => m.id === item.idMgs)?.ubicacion || 'Uruaco - Luruaco, Atlántico'}</span>
+                           <span>{minigranjas.find(m => m.id === item.idMgs)?.ubicacion || 'Ubicación pendiente...'}</span>
                         </div>
                       </div>
                     </td>

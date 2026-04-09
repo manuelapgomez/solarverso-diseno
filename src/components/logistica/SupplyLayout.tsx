@@ -252,7 +252,7 @@ export const SupplyLayout: React.FC = () => {
           />
         );
       case 'puerto':
-        return <PortView barcos={barcos} onOpenDispatch={handleOpenDispatch} />;
+        return <PortView barcos={barcos} onOpenDispatch={handleOpenDispatch} onOpenSwap={handleOpenSwap} />;
       case 'camion':
         return (
           <>

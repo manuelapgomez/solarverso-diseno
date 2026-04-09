@@ -14,10 +14,6 @@ interface VesselPremiumCardProps {
 export const VesselPremiumCard: React.FC<VesselPremiumCardProps> = ({
   ship, isActive, onClick, onOpenSwap, onDeclareArrival, onReportIncident, onResumeCourse
 }) => {
-  // Calculamos slots llenos
-  const filledSlotsCount = ship.slots.filter(s => s.mgsAsignada !== null).length;
-  const totalSlots = ship.slots.length;
-
   // Nueva lógica de alertas condicionales
   const incidentHistory = ship.incidents || [];
   const incidentCount = incidentHistory.length;
